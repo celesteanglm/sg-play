@@ -109,10 +109,13 @@ async function refreshLiveCache() {
 
   const batchPayload = await batchResponse.json();
   const stations = normalizeChargerStations(batchPayload);
+  const ltaLastUpdatedTime = batchPayload.LastUpdatedTime || batchPayload.lastUpdatedTime || "";
   const fetchedAtMs = Date.now();
 
   liveCache = {
     fetchedAtMs,
+    ltaLastUpdatedTime,
+    ltaUpdatedAt: normalizeLtaTimestamp(ltaLastUpdatedTime),
     refreshSlotMs: getCurrentRefreshSlotMs(fetchedAtMs),
     stations,
   };
@@ -157,7 +160,8 @@ function buildLivePayload(cache, cacheStatus, warning = "") {
     source: "lta-datamall",
     sourceLabel: cacheStatus === "stale" ? "Cached LTA DataMall" : "Live LTA DataMall",
     ltaConfigured: true,
-    updatedAt: cacheMeta.refreshedAt,
+    updatedAt: cache.ltaUpdatedAt || "",
+    lastUpdatedTime: cache.ltaLastUpdatedTime || "",
     count: cache.stations.length,
     warning,
     cache: cacheMeta,
@@ -172,6 +176,7 @@ async function buildSamplePayload(warning, ltaConfigured) {
     source: "sample",
     sourceLabel: "Sample fallback",
     ltaConfigured,
+    updatedAt: normalizeLtaTimestamp(sample.lastUpdatedTime) || sample.lastUpdatedTime || "",
     warning,
     cache: {
       status: "sample",
@@ -193,6 +198,21 @@ function buildCacheMeta(fetchedAtMs, status = "fresh") {
     expiresAt: new Date(expiresAtMs).toISOString(),
     ageSeconds: Math.max(0, Math.round((Date.now() - fetchedAtMs) / 1000)),
   };
+}
+
+function normalizeLtaTimestamp(value) {
+  if (typeof value !== "string") return "";
+
+  const match = value
+    .trim()
+    .match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/);
+
+  if (!match) return "";
+
+  const [, year, month, day, hour, minute, second = "00"] = match;
+  const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}+08:00`);
+
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString();
 }
 
 function getCurrentRefreshSlotMs(nowMs = Date.now()) {

@@ -2,8 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import {
+  ArrowLeft,
   BatteryCharging,
   CircleDot,
+  Clock,
   ExternalLink,
   Filter,
   Info,
@@ -46,6 +48,33 @@ const QUICK_FILTERS = [
 ];
 
 export default function App() {
+  const [path, setPath] = useState(() => window.location.pathname);
+
+  useEffect(() => {
+    function handlePopState() {
+      setPath(window.location.pathname);
+    }
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  function navigate(nextPath) {
+    if (window.location.pathname === nextPath) return;
+
+    window.history.pushState(null, "", nextPath);
+    setPath(nextPath);
+  }
+
+  if (path === "/data") {
+    return <DataInfoPage onNavigate={navigate} />;
+  }
+
+  return <ChargerMapPage onNavigate={navigate} />;
+}
+
+function ChargerMapPage({ onNavigate }) {
   const [stations, setStations] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [query, setQuery] = useState("");
@@ -102,7 +131,7 @@ export default function App() {
           loading: false,
           sourceLabel: payload.sourceLabel || "LTA DataMall",
           warning: payload.warning || "",
-          updatedAt: payload.updatedAt || payload.generatedAt || "",
+          updatedAt: payload.updatedAt || payload.lastUpdatedTime || "",
           cache: payload.cache || null,
         });
       } catch (error) {
@@ -120,7 +149,7 @@ export default function App() {
           loading: false,
           sourceLabel: "Sample fallback",
           warning: error instanceof Error ? error.message : "Unable to load chargers.",
-          updatedAt: payload.generatedAt || "",
+          updatedAt: payload.updatedAt || payload.lastUpdatedTime || "",
           cache: null,
         });
       } finally {
@@ -329,6 +358,9 @@ export default function App() {
               </p>
             </div>
             <div className="brand-actions">
+              <button className="icon-button" type="button" onClick={() => onNavigate("/data")} aria-label="Data sources">
+                <Info size={19} />
+              </button>
               <a className="icon-button feedback-button" href={feedbackHref} aria-label="Send feedback">
                 <Mail size={17} />
                 <span className="feedback-label">Feedback</span>
@@ -504,6 +536,142 @@ export default function App() {
             ))}
           </div>
         </div>
+      </section>
+    </main>
+  );
+}
+
+function DataInfoPage({ onNavigate }) {
+  const [sourceInfo, setSourceInfo] = useState({
+    loading: true,
+    sourceLabel: "",
+    warning: "",
+    updatedAt: "",
+    cache: null,
+  });
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadSourceInfo() {
+      try {
+        const response = await fetch("/api/chargers");
+        if (!response.ok) throw new Error(`API returned ${response.status}`);
+        const payload = await response.json();
+
+        if (!mounted) return;
+
+        setSourceInfo({
+          loading: false,
+          sourceLabel: payload.sourceLabel || "LTA DataMall",
+          warning: payload.warning || "",
+          updatedAt: payload.updatedAt || payload.lastUpdatedTime || "",
+          cache: payload.cache || null,
+        });
+      } catch (error) {
+        if (!mounted) return;
+
+        setSourceInfo({
+          loading: false,
+          sourceLabel: "Unavailable",
+          warning: error instanceof Error ? error.message : "Unable to load data source status.",
+          updatedAt: "",
+          cache: null,
+        });
+      }
+    }
+
+    loadSourceInfo();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const ltaUpdateTime = formatFeedTimeValue(sourceInfo.updatedAt);
+  const serverRefreshLabel = sourceInfo.cache?.refreshedAt ? formatSourceTimestamp(sourceInfo.cache.refreshedAt) : "Not available";
+  const cacheExpiryLabel = sourceInfo.cache?.expiresAt ? formatSourceTimestamp(sourceInfo.cache.expiresAt) : "At the next 5-minute slot";
+
+  return (
+    <main className="info-page">
+      <header className="info-header">
+        <button className="back-button" type="button" onClick={() => onNavigate("/")} aria-label="Back to map">
+          <ArrowLeft size={18} />
+          Map
+        </button>
+        <div>
+          <p>Data sources</p>
+          <h1>Reliability and freshness</h1>
+        </div>
+      </header>
+
+      <section className="info-status" aria-label="Current feed status">
+        <div>
+          <span>Current source</span>
+          <strong>{sourceInfo.loading ? "Checking" : sourceInfo.sourceLabel || "Unknown"}</strong>
+        </div>
+        <div>
+          <span>LTA DataMall update</span>
+          <strong>{ltaUpdateTime}</strong>
+        </div>
+        <div>
+          <span>Server refresh</span>
+          <strong>{serverRefreshLabel}</strong>
+        </div>
+      </section>
+
+      {sourceInfo.warning ? <div className="info-warning">{sourceInfo.warning}</div> : null}
+
+      <section className="info-section">
+        <div className="info-section-heading">
+          <Info size={19} />
+          <h2>Primary data source</h2>
+        </div>
+        <p>
+          BoCharge uses LTA DataMall's EV Charging Points Batch feed as the production source for Singapore charger
+          locations, operators, plug types, prices, and connector availability.
+        </p>
+        <p>
+          LTA publishes this as a batch file behind a temporary download link. The app requests that batch server-side so
+          the LTA account key is never exposed in browser code.
+        </p>
+      </section>
+
+      <section className="info-section">
+        <div className="info-section-heading">
+          <Clock size={19} />
+          <h2>Freshness model</h2>
+        </div>
+        <ul>
+          <li>The visible timestamp is the LTA DataMall batch update time, not the time your browser loaded the page.</li>
+          <li>The server refreshes around 5-minute clock boundaries to match LTA's documented update cadence.</li>
+          <li>Browser refreshes are also aligned to the next 5-minute boundary.</li>
+          <li>Current API cache expiry: {cacheExpiryLabel}.</li>
+        </ul>
+      </section>
+
+      <section className="info-section">
+        <div className="info-section-heading">
+          <PlugZap size={19} />
+          <h2>Reliability notes</h2>
+        </div>
+        <ul>
+          <li>Availability can lag real-world charger usage because operators and LTA update the feed asynchronously.</li>
+          <li>Provider apps remain the best confirmation point before driving to a charger.</li>
+          <li>If a live LTA refresh fails, the app can show the last successful cached LTA payload with a warning.</li>
+          <li>If no LTA key is configured, the app falls back to a bundled snapshot and labels it as sample data.</li>
+        </ul>
+      </section>
+
+      <section className="info-section">
+        <div className="info-section-heading">
+          <MapPin size={19} />
+          <h2>Derived fields</h2>
+        </div>
+        <p>
+          Area filters such as North, South, East, West, and Central are derived from charger coordinates. They are
+          lightweight map buckets, not official planning-region boundaries.
+        </p>
       </section>
     </main>
   );
@@ -825,10 +993,14 @@ function toggleValue(values, value) {
 }
 
 function formatFeedTime(value) {
-  if (!value) return "Freshness TBC";
+  return `LTA DataMall updated at: ${formatFeedTimeValue(value)}`;
+}
 
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Updated recently";
+function formatFeedTimeValue(value) {
+  if (!value) return "TBC";
+
+  const date = parseFeedTime(value);
+  if (Number.isNaN(date.getTime())) return "recently";
 
   const parts = new Intl.DateTimeFormat("en-SG", {
     timeZone: SG_TIME_ZONE,
@@ -840,7 +1012,43 @@ function formatFeedTime(value) {
   const minute = parts.find((part) => part.type === "minute")?.value || "00";
   const dayPeriod = (parts.find((part) => part.type === "dayPeriod")?.value || "").toLowerCase().replaceAll(".", "");
 
-  return `Updated ${hour}.${minute}${dayPeriod} SGT`;
+  return `${hour}.${minute}${dayPeriod} SGT`;
+}
+
+function parseFeedTime(value) {
+  if (typeof value === "string") {
+    const match = value
+      .trim()
+      .match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/);
+
+    if (match) {
+      const [, year, month, day, hour, minute, second = "00"] = match;
+      return new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}+08:00`);
+    }
+  }
+
+  return new Date(value);
+}
+
+function formatSourceTimestamp(value) {
+  const date = parseFeedTime(value);
+  if (Number.isNaN(date.getTime())) return "Not available";
+
+  const parts = new Intl.DateTimeFormat("en-SG", {
+    timeZone: SG_TIME_ZONE,
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).formatToParts(date);
+  const day = parts.find((part) => part.type === "day")?.value || "";
+  const month = parts.find((part) => part.type === "month")?.value || "";
+  const hour = parts.find((part) => part.type === "hour")?.value || "0";
+  const minute = parts.find((part) => part.type === "minute")?.value || "00";
+  const dayPeriod = (parts.find((part) => part.type === "dayPeriod")?.value || "").toLowerCase().replaceAll(".", "");
+
+  return `${day} ${month}, ${hour}.${minute}${dayPeriod} SGT`;
 }
 
 function getMsUntilNextRefreshBoundary(nowMs = Date.now(), intervalMs = CLIENT_REFRESH_MS) {
