@@ -8,6 +8,7 @@ import {
   Filter,
   Info,
   LocateFixed,
+  Mail,
   MapPin,
   Navigation,
   PlugZap,
@@ -18,20 +19,37 @@ import { normalizeChargerStations, stationSearchText } from "./lib/chargers.js";
 import { canOpenProviderApp, getProviderAppTarget, getProviderProfile, openProviderApp } from "./data/providerApps.js";
 
 const SINGAPORE_CENTER = [1.3521, 103.8198];
+const AREA_CENTER = { latitude: SINGAPORE_CENTER[0], longitude: SINGAPORE_CENTER[1] };
 const DEFAULT_ZOOM = 11;
-const CLIENT_REFRESH_MS = 60 * 60 * 1000;
+const CLIENT_REFRESH_MS = 5 * 60 * 1000;
+const SG_TIME_ZONE = "Asia/Singapore";
+const FEEDBACK_EMAIL = "celesteanglm@gmail.com";
 const SHEET_DRAG_THRESHOLD_PX = 44;
-const UTILITY_FILTERS = [
-  { id: "all", label: "All", Icon: CircleDot, color: "#08283f", textColor: "#ffffff" },
-  { id: "available", label: "Open now", Icon: BatteryCharging, color: "#18bf73", textColor: "#073825" },
-  { id: "fast", label: "Fast", Icon: PlugZap, color: "#08a7d8", textColor: "#06283a" },
+const AREA_FILTERS = [
+  { id: "north", label: "North", color: "#17875a", textColor: "#ffffff" },
+  { id: "south", label: "South", color: "#0f4c81", textColor: "#ffffff" },
+  { id: "east", label: "East", color: "#f97316", textColor: "#17201c" },
+  { id: "west", label: "West", color: "#7c3aed", textColor: "#ffffff" },
+  { id: "central", label: "Central", color: "#08a7d8", textColor: "#06283a" },
+];
+const ALL_FILTER = { id: "all", label: "All", Icon: CircleDot, color: "#08283f", textColor: "#ffffff" };
+const QUICK_FILTERS = [
+  {
+    id: "available",
+    stateKey: "availableOnly",
+    label: "Available now",
+    Icon: BatteryCharging,
+    color: "#18bf73",
+    textColor: "#073825",
+  },
+  { id: "fast", stateKey: "fastOnly", label: "Fast", Icon: PlugZap, color: "#08a7d8", textColor: "#06283a" },
 ];
 
 export default function App() {
   const [stations, setStations] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState("all");
+  const [selectedFilters, setSelectedFilters] = useState(createEmptyFilterState);
   const [feed, setFeed] = useState({
     loading: true,
     sourceLabel: "Loading",
@@ -45,12 +63,15 @@ export default function App() {
   const mapRef = useRef(null);
   const sheetTouchStartY = useRef(null);
   const sheetDidDrag = useRef(false);
+  const areaFilters = useMemo(() => buildAreaFilterOptions(stations), [stations]);
   const operatorFilters = useMemo(() => buildOperatorFilterOptions(stations), [stations]);
-  const activeOperatorFilter = operatorFilters.find((item) => item.id === filter);
+  const activeAreaIds = useMemo(() => new Set(selectedFilters.areas), [selectedFilters.areas]);
+  const activeOperatorIds = useMemo(() => new Set(selectedFilters.operators), [selectedFilters.operators]);
+  const allFiltersActive = !hasActiveFilters(selectedFilters);
   const utilityFilterCounts = useMemo(
     () => ({
       all: stations.length,
-      available: stations.filter((station) => station.status === "available").length,
+      available: stations.filter((station) => station.availableCount > 0).length,
       fast: stations.filter((station) => station.maxPowerKw >= 43).length,
     }),
     [stations],
@@ -59,6 +80,7 @@ export default function App() {
   useEffect(() => {
     let mounted = true;
     let inFlight = false;
+    let refreshTimer = null;
 
     async function loadChargers() {
       if (inFlight) return;
@@ -106,12 +128,19 @@ export default function App() {
       }
     }
 
+    function scheduleNextRefresh() {
+      refreshTimer = window.setTimeout(async () => {
+        await loadChargers();
+        if (mounted) scheduleNextRefresh();
+      }, getMsUntilNextRefreshBoundary());
+    }
+
     loadChargers();
-    const refreshTimer = window.setInterval(loadChargers, CLIENT_REFRESH_MS);
+    scheduleNextRefresh();
 
     return () => {
       mounted = false;
-      window.clearInterval(refreshTimer);
+      if (refreshTimer) window.clearTimeout(refreshTimer);
     };
   }, []);
 
@@ -120,25 +149,35 @@ export default function App() {
 
     return stations.filter((station) => {
       const matchesSearch = !search || stationSearchText(station).includes(search);
-      const matchesFilter =
-        filter === "all" ||
-        (filter === "available" && station.status === "available") ||
-        (filter === "fast" && station.maxPowerKw >= 43) ||
-        (activeOperatorFilter && hasProviderName(station, activeOperatorFilter.operatorName));
+      const matchesAvailability = !selectedFilters.availableOnly || station.availableCount > 0;
+      const matchesSpeed = !selectedFilters.fastOnly || station.maxPowerKw >= 43;
+      const matchesArea = activeAreaIds.size === 0 || activeAreaIds.has(getStationArea(station).id);
+      const matchesOperator = activeOperatorIds.size === 0 || hasProviderFilterId(station, activeOperatorIds);
 
-      return matchesSearch && matchesFilter;
+      return matchesSearch && matchesAvailability && matchesSpeed && matchesArea && matchesOperator;
     });
-  }, [activeOperatorFilter, filter, query, stations]);
+  }, [activeAreaIds, activeOperatorIds, query, selectedFilters.availableOnly, selectedFilters.fastOnly, stations]);
 
   useEffect(() => {
-    if (filter.startsWith("operator:") && !operatorFilters.some((item) => item.id === filter)) {
-      setFilter("all");
-    }
-  }, [filter, operatorFilters]);
+    setSelectedFilters((current) => {
+      const availableAreaIds = new Set(areaFilters.map((item) => item.areaId));
+      const availableOperatorIds = new Set(operatorFilters.map((item) => item.id));
+      const nextAreas = current.areas.filter((areaId) => availableAreaIds.has(areaId));
+      const nextOperators = current.operators.filter((operatorId) => availableOperatorIds.has(operatorId));
+
+      if (nextAreas.length === current.areas.length && nextOperators.length === current.operators.length) return current;
+
+      return {
+        ...current,
+        areas: nextAreas,
+        operators: nextOperators,
+      };
+    });
+  }, [areaFilters, operatorFilters]);
 
   useEffect(() => {
     setLocationNotice("");
-  }, [filter, query]);
+  }, [query, selectedFilters]);
 
   const selectedStation =
     filteredStations.length > 0 ? filteredStations.find((station) => station.id === selectedId) || filteredStations[0] : null;
@@ -236,6 +275,36 @@ export default function App() {
   const openConnectorCount = filteredStations.reduce((sum, station) => sum + station.availableCount, 0);
   const totalConnectors = filteredStations.reduce((sum, station) => sum + station.totalCount, 0);
   const feedUpdatedLabel = formatFeedTime(feed.updatedAt);
+  const feedbackHref = getFeedbackMailto({
+    filterLabel: getActiveFilterLabel(selectedFilters, areaFilters, operatorFilters),
+    query,
+    visibleCount: filteredStations.length,
+  });
+
+  function clearFilters() {
+    setSelectedFilters(createEmptyFilterState());
+  }
+
+  function toggleQuickFilter(stateKey) {
+    setSelectedFilters((current) => ({
+      ...current,
+      [stateKey]: !current[stateKey],
+    }));
+  }
+
+  function toggleAreaFilter(areaId) {
+    setSelectedFilters((current) => ({
+      ...current,
+      areas: toggleValue(current.areas, areaId),
+    }));
+  }
+
+  function toggleOperatorFilter(operatorId) {
+    setSelectedFilters((current) => ({
+      ...current,
+      operators: toggleValue(current.operators, operatorId),
+    }));
+  }
 
   return (
     <main className="app-shell">
@@ -259,9 +328,15 @@ export default function App() {
                   : `${filteredStations.length} visible · ${openConnectorCount} open plugs`}
               </p>
             </div>
-            <button className="icon-button" type="button" onClick={handleLocateMe} aria-label="Use my location">
-              <LocateFixed size={19} />
-            </button>
+            <div className="brand-actions">
+              <a className="icon-button feedback-button" href={feedbackHref} aria-label="Send feedback">
+                <Mail size={17} />
+                <span className="feedback-label">Feedback</span>
+              </a>
+              <button className="icon-button" type="button" onClick={handleLocateMe} aria-label="Use my location">
+                <LocateFixed size={19} />
+              </button>
+            </div>
           </div>
 
           <label className="search-box">
@@ -280,27 +355,46 @@ export default function App() {
             ) : null}
           </label>
 
-          <div className="filter-scroller" aria-label="Charger filters by status, speed, and operator">
+          <div className="filter-scroller" aria-label="Charger filters by availability, speed, area, and operator">
             <span className="filter-rail-label">
               <Filter size={14} aria-hidden="true" />
               Filters
             </span>
-            {UTILITY_FILTERS.map((item) => (
+            <UtilityFilterChip
+              active={allFiltersActive}
+              ariaLabel="Show all chargers and clear selected filters."
+              count={utilityFilterCounts.all}
+              item={ALL_FILTER}
+              onSelect={clearFilters}
+            />
+            {QUICK_FILTERS.map((item) => (
               <UtilityFilterChip
-                active={item.id === filter}
+                active={selectedFilters[item.stateKey]}
+                ariaLabel={`${selectedFilters[item.stateKey] ? "Remove" : "Add"} ${item.label} filter.`}
                 count={utilityFilterCounts[item.id]}
                 item={item}
                 key={item.id}
-                onSelect={() => setFilter(item.id)}
+                onSelect={() => toggleQuickFilter(item.stateKey)}
+              />
+            ))}
+            <span className="filter-divider" aria-hidden="true" />
+            {areaFilters.map((item) => (
+              <UtilityFilterChip
+                active={activeAreaIds.has(item.areaId)}
+                ariaLabel={`${activeAreaIds.has(item.areaId) ? "Remove" : "Add"} ${item.label} area filter. ${item.availableCount} open plugs across ${item.stationCount} stations.`}
+                count={item.availableCount}
+                item={item}
+                key={item.id}
+                onSelect={() => toggleAreaFilter(item.areaId)}
               />
             ))}
             <span className="filter-divider" aria-hidden="true" />
             {operatorFilters.map((item) => (
               <OperatorFilterChip
-                active={item.id === filter}
+                active={activeOperatorIds.has(item.id)}
                 item={item}
                 key={item.id}
-                onSelect={() => setFilter(item.id)}
+                onSelect={() => toggleOperatorFilter(item.id)}
               />
             ))}
           </div>
@@ -529,8 +623,8 @@ function ProviderBadge({ providerName, compact = false }) {
   );
 }
 
-function UtilityFilterChip({ item, active, count, onSelect }) {
-  const Icon = item.Icon;
+function UtilityFilterChip({ item, active, count, onSelect, ariaLabel }) {
+  const Icon = item.Icon || MapPin;
 
   return (
     <button
@@ -541,13 +635,14 @@ function UtilityFilterChip({ item, active, count, onSelect }) {
       }}
       type="button"
       onClick={onSelect}
+      aria-label={ariaLabel}
       aria-pressed={active}
     >
       <span className="chip-icon" aria-hidden="true">
         <Icon size={14} />
       </span>
       <span>{item.label}</span>
-      <span className="chip-count">{count}</span>
+      <span className="chip-count">{formatCompactCount(count)}</span>
     </button>
   );
 }
@@ -565,7 +660,7 @@ function OperatorFilterChip({ item, active, onSelect }) {
       }}
       type="button"
       onClick={onSelect}
-      aria-label={`Filter by operator ${item.operatorName}. ${item.stationCount} stations.`}
+      aria-label={`${active ? "Remove" : "Add"} operator ${item.operatorName} filter. ${item.availableCount} open plugs across ${item.stationCount} stations.`}
       aria-pressed={active}
       title={item.operatorName}
     >
@@ -578,7 +673,7 @@ function OperatorFilterChip({ item, active, onSelect }) {
       </span>
       <span className="operator-chip-copy">
         <span className="operator-chip-name">{item.label}</span>
-        <span className="operator-chip-count">{item.stationCount} sites</span>
+        <span className="operator-chip-count">{formatCompactCount(item.availableCount)} open plugs</span>
       </span>
     </button>
   );
@@ -677,16 +772,81 @@ function getGoogleMapsUrl(station) {
   return `https://www.google.com/maps/dir/?api=1&destination=${destination}&travelmode=driving&dir_action=navigate&destination_name=${destinationName}`;
 }
 
+function getFeedbackMailto({ filterLabel, query, visibleCount }) {
+  const subject = encodeURIComponent("BoCharge feedback");
+  const body = encodeURIComponent(
+    [
+      "Hi, I have feedback about BoCharge:",
+      "",
+      `Current filters: ${filterLabel || "All"}`,
+      `Current search: ${query || "None"}`,
+      `Visible results: ${visibleCount}`,
+      "",
+    ].join("\n"),
+  );
+
+  return `mailto:${FEEDBACK_EMAIL}?subject=${subject}&body=${body}`;
+}
+
+function getActiveFilterLabel(filters, areaFilters, operatorFilters) {
+  const labels = [];
+
+  if (filters.availableOnly) labels.push("Available now");
+  if (filters.fastOnly) labels.push("Fast");
+
+  filters.areas.forEach((areaId) => {
+    const areaFilter = areaFilters.find((item) => item.areaId === areaId);
+    if (areaFilter) labels.push(areaFilter.label);
+  });
+
+  filters.operators.forEach((operatorId) => {
+    const operatorFilter = operatorFilters.find((item) => item.id === operatorId);
+    if (operatorFilter) labels.push(operatorFilter.label);
+  });
+
+  return labels.length > 0 ? labels.join(" + ") : "All";
+}
+
+function createEmptyFilterState() {
+  return {
+    availableOnly: false,
+    fastOnly: false,
+    areas: [],
+    operators: [],
+  };
+}
+
+function hasActiveFilters(filters) {
+  return Boolean(filters.availableOnly || filters.fastOnly || filters.areas.length > 0 || filters.operators.length > 0);
+}
+
+function toggleValue(values, value) {
+  return values.includes(value) ? values.filter((item) => item !== value) : [...values, value];
+}
+
 function formatFeedTime(value) {
   if (!value) return "Freshness TBC";
 
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Updated recently";
 
-  return `Updated ${date.toLocaleTimeString([], {
-    hour: "2-digit",
+  const parts = new Intl.DateTimeFormat("en-SG", {
+    timeZone: SG_TIME_ZONE,
+    hour: "numeric",
     minute: "2-digit",
-  })}`;
+    hour12: true,
+  }).formatToParts(date);
+  const hour = parts.find((part) => part.type === "hour")?.value || "0";
+  const minute = parts.find((part) => part.type === "minute")?.value || "00";
+  const dayPeriod = (parts.find((part) => part.type === "dayPeriod")?.value || "").toLowerCase().replaceAll(".", "");
+
+  return `Updated ${hour}.${minute}${dayPeriod} SGT`;
+}
+
+function getMsUntilNextRefreshBoundary(nowMs = Date.now(), intervalMs = CLIENT_REFRESH_MS) {
+  const remainder = nowMs % intervalMs;
+
+  return remainder === 0 ? intervalMs : intervalMs - remainder;
 }
 
 function getStationPayload(payload) {
@@ -708,6 +868,36 @@ function uniqueProviderNames(providers) {
     seen.add(normalized);
     return true;
   });
+}
+
+function buildAreaFilterOptions(stations) {
+  const areaStats = new Map(
+    AREA_FILTERS.map((area) => [
+      area.id,
+      {
+        id: `area:${area.id}`,
+        areaId: area.id,
+        label: area.label,
+        color: area.color,
+        textColor: area.textColor,
+        stationCount: 0,
+        availableCount: 0,
+        totalCount: 0,
+      },
+    ]),
+  );
+
+  stations.forEach((station) => {
+    const area = getStationArea(station);
+    const existing = areaStats.get(area.id);
+    if (!existing) return;
+
+    existing.stationCount += 1;
+    existing.availableCount += station.availableCount;
+    existing.totalCount += station.totalCount;
+  });
+
+  return AREA_FILTERS.map((area) => areaStats.get(area.id)).filter((area) => area.stationCount > 0);
 }
 
 function buildOperatorFilterOptions(stations) {
@@ -743,16 +933,37 @@ function buildOperatorFilterOptions(stations) {
   });
 
   return [...operators.values()].sort((a, b) => {
+    if (b.availableCount !== a.availableCount) return b.availableCount - a.availableCount;
+    if (b.totalCount !== a.totalCount) return b.totalCount - a.totalCount;
     if (b.stationCount !== a.stationCount) return b.stationCount - a.stationCount;
     return a.label.localeCompare(b.label);
   });
 }
 
-function hasProviderName(station, providerName) {
-  const target = normalizeOperatorFilterValue(providerName);
+function getStationArea(station) {
+  const latDelta = station.latitude - AREA_CENTER.latitude;
+  const lngDelta = station.longitude - AREA_CENTER.longitude;
+  const centralLatSpan = 0.035;
+  const centralLngSpan = 0.045;
+
+  if (Math.abs(latDelta) <= centralLatSpan && Math.abs(lngDelta) <= centralLngSpan) {
+    return { id: "central", label: "Central" };
+  }
+
+  const latitudeWeight = Math.abs(latDelta) / 0.09;
+  const longitudeWeight = Math.abs(lngDelta) / 0.13;
+
+  if (latitudeWeight >= longitudeWeight) {
+    return latDelta >= 0 ? { id: "north", label: "North" } : { id: "south", label: "South" };
+  }
+
+  return lngDelta >= 0 ? { id: "east", label: "East" } : { id: "west", label: "West" };
+}
+
+function hasProviderFilterId(station, operatorIds) {
   const providerNames = uniqueProviderNames(station.providers?.length ? station.providers : [station.provider]);
 
-  return providerNames.some((name) => normalizeOperatorFilterValue(name) === target);
+  return providerNames.some((name) => operatorIds.has(`operator:${normalizeOperatorFilterValue(name)}`));
 }
 
 function normalizeOperatorFilterValue(value) {
@@ -820,6 +1031,10 @@ function getOperatorInitials(operatorName) {
     .map((word) => word[0])
     .join("")
     .toUpperCase();
+}
+
+function formatCompactCount(value) {
+  return Number(value || 0).toLocaleString();
 }
 
 function toArray(value) {
