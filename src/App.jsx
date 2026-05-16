@@ -32,17 +32,24 @@ const AREA_FILTERS = [
   { id: "west", label: "West", color: "#7c3aed", textColor: "#ffffff" },
   { id: "central", label: "Central", color: "#08a7d8", textColor: "#06283a" },
 ];
-const UTILITY_FILTERS = [
-  { id: "all", label: "All", Icon: CircleDot, color: "#08283f", textColor: "#ffffff" },
-  { id: "available", label: "Open now", Icon: BatteryCharging, color: "#18bf73", textColor: "#073825" },
-  { id: "fast", label: "Fast", Icon: PlugZap, color: "#08a7d8", textColor: "#06283a" },
+const ALL_FILTER = { id: "all", label: "All", Icon: CircleDot, color: "#08283f", textColor: "#ffffff" };
+const QUICK_FILTERS = [
+  {
+    id: "available",
+    stateKey: "availableOnly",
+    label: "Available now",
+    Icon: BatteryCharging,
+    color: "#18bf73",
+    textColor: "#073825",
+  },
+  { id: "fast", stateKey: "fastOnly", label: "Fast", Icon: PlugZap, color: "#08a7d8", textColor: "#06283a" },
 ];
 
 export default function App() {
   const [stations, setStations] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState("all");
+  const [selectedFilters, setSelectedFilters] = useState(createEmptyFilterState);
   const [feed, setFeed] = useState({
     loading: true,
     sourceLabel: "Loading",
@@ -57,13 +64,14 @@ export default function App() {
   const sheetTouchStartY = useRef(null);
   const sheetDidDrag = useRef(false);
   const areaFilters = useMemo(() => buildAreaFilterOptions(stations), [stations]);
-  const activeAreaFilter = areaFilters.find((item) => item.id === filter);
   const operatorFilters = useMemo(() => buildOperatorFilterOptions(stations), [stations]);
-  const activeOperatorFilter = operatorFilters.find((item) => item.id === filter);
+  const activeAreaIds = useMemo(() => new Set(selectedFilters.areas), [selectedFilters.areas]);
+  const activeOperatorIds = useMemo(() => new Set(selectedFilters.operators), [selectedFilters.operators]);
+  const allFiltersActive = !hasActiveFilters(selectedFilters);
   const utilityFilterCounts = useMemo(
     () => ({
       all: stations.length,
-      available: stations.filter((station) => station.status === "available").length,
+      available: stations.filter((station) => station.availableCount > 0).length,
       fast: stations.filter((station) => station.maxPowerKw >= 43).length,
     }),
     [stations],
@@ -141,29 +149,35 @@ export default function App() {
 
     return stations.filter((station) => {
       const matchesSearch = !search || stationSearchText(station).includes(search);
-      const matchesFilter =
-        filter === "all" ||
-        (filter === "available" && station.status === "available") ||
-        (filter === "fast" && station.maxPowerKw >= 43) ||
-        (activeAreaFilter && getStationArea(station).id === activeAreaFilter.areaId) ||
-        (activeOperatorFilter && hasProviderName(station, activeOperatorFilter.operatorName));
+      const matchesAvailability = !selectedFilters.availableOnly || station.availableCount > 0;
+      const matchesSpeed = !selectedFilters.fastOnly || station.maxPowerKw >= 43;
+      const matchesArea = activeAreaIds.size === 0 || activeAreaIds.has(getStationArea(station).id);
+      const matchesOperator = activeOperatorIds.size === 0 || hasProviderFilterId(station, activeOperatorIds);
 
-      return matchesSearch && matchesFilter;
+      return matchesSearch && matchesAvailability && matchesSpeed && matchesArea && matchesOperator;
     });
-  }, [activeAreaFilter, activeOperatorFilter, filter, query, stations]);
+  }, [activeAreaIds, activeOperatorIds, query, selectedFilters.availableOnly, selectedFilters.fastOnly, stations]);
 
   useEffect(() => {
-    if (
-      (filter.startsWith("operator:") && !operatorFilters.some((item) => item.id === filter)) ||
-      (filter.startsWith("area:") && !areaFilters.some((item) => item.id === filter))
-    ) {
-      setFilter("all");
-    }
-  }, [areaFilters, filter, operatorFilters]);
+    setSelectedFilters((current) => {
+      const availableAreaIds = new Set(areaFilters.map((item) => item.areaId));
+      const availableOperatorIds = new Set(operatorFilters.map((item) => item.id));
+      const nextAreas = current.areas.filter((areaId) => availableAreaIds.has(areaId));
+      const nextOperators = current.operators.filter((operatorId) => availableOperatorIds.has(operatorId));
+
+      if (nextAreas.length === current.areas.length && nextOperators.length === current.operators.length) return current;
+
+      return {
+        ...current,
+        areas: nextAreas,
+        operators: nextOperators,
+      };
+    });
+  }, [areaFilters, operatorFilters]);
 
   useEffect(() => {
     setLocationNotice("");
-  }, [filter, query]);
+  }, [query, selectedFilters]);
 
   const selectedStation =
     filteredStations.length > 0 ? filteredStations.find((station) => station.id === selectedId) || filteredStations[0] : null;
@@ -262,10 +276,35 @@ export default function App() {
   const totalConnectors = filteredStations.reduce((sum, station) => sum + station.totalCount, 0);
   const feedUpdatedLabel = formatFeedTime(feed.updatedAt);
   const feedbackHref = getFeedbackMailto({
-    filterLabel: getActiveFilterLabel(filter, areaFilters, operatorFilters),
+    filterLabel: getActiveFilterLabel(selectedFilters, areaFilters, operatorFilters),
     query,
     visibleCount: filteredStations.length,
   });
+
+  function clearFilters() {
+    setSelectedFilters(createEmptyFilterState());
+  }
+
+  function toggleQuickFilter(stateKey) {
+    setSelectedFilters((current) => ({
+      ...current,
+      [stateKey]: !current[stateKey],
+    }));
+  }
+
+  function toggleAreaFilter(areaId) {
+    setSelectedFilters((current) => ({
+      ...current,
+      areas: toggleValue(current.areas, areaId),
+    }));
+  }
+
+  function toggleOperatorFilter(operatorId) {
+    setSelectedFilters((current) => ({
+      ...current,
+      operators: toggleValue(current.operators, operatorId),
+    }));
+  }
 
   return (
     <main className="app-shell">
@@ -316,38 +355,46 @@ export default function App() {
             ) : null}
           </label>
 
-          <div className="filter-scroller" aria-label="Charger filters by status, speed, and operator">
+          <div className="filter-scroller" aria-label="Charger filters by availability, speed, area, and operator">
             <span className="filter-rail-label">
               <Filter size={14} aria-hidden="true" />
               Filters
             </span>
-            {UTILITY_FILTERS.map((item) => (
+            <UtilityFilterChip
+              active={allFiltersActive}
+              ariaLabel="Show all chargers and clear selected filters."
+              count={utilityFilterCounts.all}
+              item={ALL_FILTER}
+              onSelect={clearFilters}
+            />
+            {QUICK_FILTERS.map((item) => (
               <UtilityFilterChip
-                active={item.id === filter}
+                active={selectedFilters[item.stateKey]}
+                ariaLabel={`${selectedFilters[item.stateKey] ? "Remove" : "Add"} ${item.label} filter.`}
                 count={utilityFilterCounts[item.id]}
                 item={item}
                 key={item.id}
-                onSelect={() => setFilter(item.id)}
+                onSelect={() => toggleQuickFilter(item.stateKey)}
               />
             ))}
             <span className="filter-divider" aria-hidden="true" />
             {areaFilters.map((item) => (
               <UtilityFilterChip
-                active={item.id === filter}
-                ariaLabel={`Filter ${item.label} area. ${item.availableCount} open plugs across ${item.stationCount} stations.`}
+                active={activeAreaIds.has(item.areaId)}
+                ariaLabel={`${activeAreaIds.has(item.areaId) ? "Remove" : "Add"} ${item.label} area filter. ${item.availableCount} open plugs across ${item.stationCount} stations.`}
                 count={item.availableCount}
                 item={item}
                 key={item.id}
-                onSelect={() => setFilter(item.id)}
+                onSelect={() => toggleAreaFilter(item.areaId)}
               />
             ))}
             <span className="filter-divider" aria-hidden="true" />
             {operatorFilters.map((item) => (
               <OperatorFilterChip
-                active={item.id === filter}
+                active={activeOperatorIds.has(item.id)}
                 item={item}
                 key={item.id}
-                onSelect={() => setFilter(item.id)}
+                onSelect={() => toggleOperatorFilter(item.id)}
               />
             ))}
           </div>
@@ -613,7 +660,7 @@ function OperatorFilterChip({ item, active, onSelect }) {
       }}
       type="button"
       onClick={onSelect}
-      aria-label={`Filter by operator ${item.operatorName}. ${item.availableCount} open plugs across ${item.stationCount} stations.`}
+      aria-label={`${active ? "Remove" : "Add"} operator ${item.operatorName} filter. ${item.availableCount} open plugs across ${item.stationCount} stations.`}
       aria-pressed={active}
       title={item.operatorName}
     >
@@ -731,7 +778,7 @@ function getFeedbackMailto({ filterLabel, query, visibleCount }) {
     [
       "Hi, I have feedback about BoCharge:",
       "",
-      `Current filter: ${filterLabel || "All"}`,
+      `Current filters: ${filterLabel || "All"}`,
       `Current search: ${query || "None"}`,
       `Visible results: ${visibleCount}`,
       "",
@@ -741,17 +788,40 @@ function getFeedbackMailto({ filterLabel, query, visibleCount }) {
   return `mailto:${FEEDBACK_EMAIL}?subject=${subject}&body=${body}`;
 }
 
-function getActiveFilterLabel(filter, areaFilters, operatorFilters) {
-  const utilityFilter = UTILITY_FILTERS.find((item) => item.id === filter);
-  if (utilityFilter) return utilityFilter.label;
+function getActiveFilterLabel(filters, areaFilters, operatorFilters) {
+  const labels = [];
 
-  const areaFilter = areaFilters.find((item) => item.id === filter);
-  if (areaFilter) return areaFilter.label;
+  if (filters.availableOnly) labels.push("Available now");
+  if (filters.fastOnly) labels.push("Fast");
 
-  const operatorFilter = operatorFilters.find((item) => item.id === filter);
-  if (operatorFilter) return operatorFilter.label;
+  filters.areas.forEach((areaId) => {
+    const areaFilter = areaFilters.find((item) => item.areaId === areaId);
+    if (areaFilter) labels.push(areaFilter.label);
+  });
 
-  return "All";
+  filters.operators.forEach((operatorId) => {
+    const operatorFilter = operatorFilters.find((item) => item.id === operatorId);
+    if (operatorFilter) labels.push(operatorFilter.label);
+  });
+
+  return labels.length > 0 ? labels.join(" + ") : "All";
+}
+
+function createEmptyFilterState() {
+  return {
+    availableOnly: false,
+    fastOnly: false,
+    areas: [],
+    operators: [],
+  };
+}
+
+function hasActiveFilters(filters) {
+  return Boolean(filters.availableOnly || filters.fastOnly || filters.areas.length > 0 || filters.operators.length > 0);
+}
+
+function toggleValue(values, value) {
+  return values.includes(value) ? values.filter((item) => item !== value) : [...values, value];
 }
 
 function formatFeedTime(value) {
@@ -890,11 +960,10 @@ function getStationArea(station) {
   return lngDelta >= 0 ? { id: "east", label: "East" } : { id: "west", label: "West" };
 }
 
-function hasProviderName(station, providerName) {
-  const target = normalizeOperatorFilterValue(providerName);
+function hasProviderFilterId(station, operatorIds) {
   const providerNames = uniqueProviderNames(station.providers?.length ? station.providers : [station.provider]);
 
-  return providerNames.some((name) => normalizeOperatorFilterValue(name) === target);
+  return providerNames.some((name) => operatorIds.has(`operator:${normalizeOperatorFilterValue(name)}`));
 }
 
 function normalizeOperatorFilterValue(value) {
