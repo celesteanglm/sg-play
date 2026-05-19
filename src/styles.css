@@ -341,6 +341,10 @@ button {
   font-weight: 800;
 }
 
+.search-box input::-webkit-search-cancel-button {
+  display: none;
+}
+
 .search-box input::placeholder {
   color: #6d7d76;
   font-weight: 700;
