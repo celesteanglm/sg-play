@@ -815,19 +815,19 @@ function ChargerMapPage({ onNavigate }) {
                 </button>
               );
             })}
-          </div>
 
-          {hasMoreResults ? (
-            <div className="station-list-footer">
-              <button
-                type="button"
-                className="show-more-button"
-                onClick={() => setVisibleResultCount((count) => count + RESULT_PAGE_SIZE)}
-              >
-                Show more
-              </button>
-            </div>
-          ) : null}
+            {hasMoreResults ? (
+              <div className="station-list-footer">
+                <button
+                  type="button"
+                  className="show-more-button"
+                  onClick={() => setVisibleResultCount((count) => count + RESULT_PAGE_SIZE)}
+                >
+                  Show more
+                </button>
+              </div>
+            ) : null}
+          </div>
         </div>
       </section>
     </main>
