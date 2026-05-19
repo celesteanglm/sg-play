@@ -85,9 +85,7 @@ button {
   max-width: 676px;
 }
 
-.brand-row,
-.search-box,
-.filter-scroller {
+.brand-row {
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(190, 216, 206, 0.96);
   box-shadow: var(--shadow-tight);
@@ -305,6 +303,14 @@ button {
   text-decoration: none;
 }
 
+.sheet-search-area {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
 .search-box {
   display: grid;
   grid-template-columns: 20px 1fr 28px;
@@ -313,6 +319,8 @@ button {
   padding: 0 10px 0 13px;
   border-radius: 8px;
   color: #49635b;
+  background: #f4faf7;
+  border: 1px solid var(--border);
   outline: 2px solid transparent;
   outline-offset: 2px;
 }
@@ -358,6 +366,8 @@ button {
   overflow-x: auto;
   border-radius: 8px;
   scrollbar-width: none;
+  background: #f4faf7;
+  border: 1px solid var(--border);
 }
 
 .filter-scroller::-webkit-scrollbar {
@@ -555,14 +565,12 @@ button {
 .filter-context-notice {
   padding: 10px 12px;
   color: #405049;
-  background: rgba(255, 255, 255, 0.93);
-  border: 1px solid rgba(190, 216, 206, 0.96);
+  background: #f4faf7;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  box-shadow: var(--shadow-tight);
   font-size: 12px;
   font-weight: 800;
   line-height: 1.35;
-  backdrop-filter: blur(18px);
 }
 
 .filter-context-notice {
@@ -1594,7 +1602,13 @@ button {
   }
 
   .bottom-sheet.sheet-collapsed {
-    height: max(122px, calc(108px + env(safe-area-inset-bottom)));
+    height: max(100px, calc(92px + env(safe-area-inset-bottom)));
+  }
+
+  .bottom-sheet.sheet-collapsed .sheet-search-area .filter-scroller,
+  .bottom-sheet.sheet-collapsed .location-notice,
+  .bottom-sheet.sheet-collapsed .filter-context-notice {
+    display: none;
   }
 
   .sheet-handle {
