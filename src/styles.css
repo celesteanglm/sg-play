@@ -1316,7 +1316,6 @@ button {
 
 .station-list-footer {
   display: flex;
-  flex: 0 0 auto;
   justify-content: center;
   padding: 10px 0 2px;
 }
