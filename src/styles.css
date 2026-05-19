@@ -577,6 +577,31 @@ button {
   color: #16493f;
   background: rgba(240, 253, 246, 0.94);
   border-color: rgba(24, 191, 115, 0.28);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.notice-dismiss {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  margin-top: -1px;
+  color: #2d7a60;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.notice-dismiss:hover {
+  opacity: 1;
+  background: rgba(24, 191, 115, 0.15);
 }
 
 .station-marker {

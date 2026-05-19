@@ -545,6 +545,9 @@ function ChargerMapPage({ onNavigate }) {
     ? "Showing only Central chargers that are available now. Central and Available now are selected; select more areas or clear filters to see more."
     : "";
 
+  const [filterNoticeDismissed, setFilterNoticeDismissed] = useState(false);
+  useEffect(() => { setFilterNoticeDismissed(false); }, [filterContextNotice]);
+
   function clearFilters() {
     setSelectedFilters(createAllFilterState());
   }
@@ -736,7 +739,14 @@ function ChargerMapPage({ onNavigate }) {
           </div>
 
           {topNotice ? <div className="location-notice">{topNotice}</div> : null}
-          {filterContextNotice ? <div className="filter-context-notice">{filterContextNotice}</div> : null}
+          {filterContextNotice && !filterNoticeDismissed ? (
+            <div className="filter-context-notice">
+              {filterContextNotice}
+              <button type="button" className="notice-dismiss" onClick={() => setFilterNoticeDismissed(true)} aria-label="Dismiss">
+                <X size={14} />
+              </button>
+            </div>
+          ) : null}
         </div>
 
         <div className="sheet-content">
