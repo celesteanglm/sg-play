@@ -22,7 +22,7 @@ const oneMapBaseUrl = process.env.ONEMAP_BASE_URL || "https://www.onemap.gov.sg"
 const oneMapApiToken = process.env.ONEMAP_API_TOKEN || "";
 const oneMapEmail = process.env.ONEMAP_EMAIL || "";
 const oneMapPassword = process.env.ONEMAP_PASSWORD || "";
-const gaMeasurementId = normalizePublicEnvValue(process.env.GA_MEASUREMENT_ID || process.env.VITE_GA_MEASUREMENT_ID);
+const gaMeasurementId = normalizePublicEnvValue(process.env.GA_MEASUREMENT_ID);
 const weatherBaseUrl = process.env.NEA_WEATHER_BASE_URL || "https://api-open.data.gov.sg/v2/real-time/api";
 const openMeteoForecastUrl = process.env.OPEN_METEO_FORECAST_URL || "https://api.open-meteo.com/v1/forecast";
 const configuredOneMapCacheTtlMs = Number(process.env.ONEMAP_CACHE_TTL_MS || 30 * 24 * 60 * 60 * 1000);
@@ -179,7 +179,7 @@ app.get(/.*/, (_req, res) => {
 });
 
 app.listen(port, host, () => {
-  console.log(`BoCharge API listening on http://${host}:${port}`);
+  console.log(`PlaySG API listening on http://${host}:${port}`);
   if (ltaAccountKey) scheduleAlignedLiveRefresh();
 });
 

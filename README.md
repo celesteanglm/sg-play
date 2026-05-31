@@ -44,6 +44,7 @@ The repository also includes an hourly GitHub Actions workflow at `.github/workf
 
 ```bash
 npm install
+cp .env.example .env
 npm run dev
 ```
 
@@ -65,8 +66,19 @@ npm run build
 npm run data:playgrounds
 ```
 
+## Environment
+
+PlaySG does not require private API keys for the playground map or weather planning features.
+
+- `GA_MEASUREMENT_ID`: optional Google Analytics measurement ID. Leave blank locally to disable analytics.
+- `NEA_WEATHER_BASE_URL`: optional override for the public data.gov.sg weather API.
+- `OPEN_METEO_FORECAST_URL`: optional override for the public Open-Meteo forecast API.
+- `WEATHER_CACHE_TTL_MS`: optional server-side weather cache duration.
+- `WEATHER_FETCH_TIMEOUT_MS`: optional weather fetch timeout.
+- `PORT` and `HOST`: optional Express server bind settings.
+
 ## Notes
 
-The Express server still serves the built frontend and optional legacy API endpoints from the original Singapore EV charger reference app. The playground experience itself loads the static playground dataset from `/data/playgrounds.json`.
+The Express server still contains optional legacy EV charger endpoints from the original reference app. The PlaySG playground experience itself does not call OneMap or LTA DataMall and does not need OneMap credentials or an LTA API key.
 
 Keep the visible OpenStreetMap attribution in the map UI.

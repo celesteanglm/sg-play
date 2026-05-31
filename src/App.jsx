@@ -867,8 +867,10 @@ function PlaygroundDetail({ playground, distanceMeters }) {
 }
 
 function WeatherBrief({ error, weather }) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const [selectedForecastIndex, setSelectedForecastIndex] = useState(0);
   const forecastDays = weather?.weeklyOutlook?.length ? weather.weeklyOutlook : weather?.outlook || [];
+  const panelId = "weather-details-panel";
 
   useEffect(() => {
     if (selectedForecastIndex >= forecastDays.length) {
@@ -906,7 +908,7 @@ function WeatherBrief({ error, weather }) {
   const selectedForecast = forecastDays[selectedForecastIndex] || forecastDays[0] || null;
 
   return (
-    <section className="weather-card" aria-label="Singapore weather forecast">
+    <section className={isExpanded ? "weather-card expanded" : "weather-card"} aria-label="Singapore weather forecast">
       <div className="weather-main">
         <span className="weather-icon" aria-hidden="true">
           <CloudSun size={21} />
@@ -914,11 +916,10 @@ function WeatherBrief({ error, weather }) {
         <div className="weather-copy">
           <span>Today in SG</span>
           <strong>{day.forecastText || "Forecast updating"}</strong>
-          <p>{weather.parentCue || "Check the forecast before heading out."}</p>
         </div>
       </div>
 
-      <div className="weather-metrics" aria-label="Weather details">
+      <div className="weather-metrics" aria-label="Weather summary">
         <span>
           <ThermometerSun size={14} aria-hidden="true" />
           {day.temperature?.label || "Temp TBC"}
@@ -927,16 +928,40 @@ function WeatherBrief({ error, weather }) {
           <Droplets size={14} aria-hidden="true" />
           {day.humidity?.label || "Humidity TBC"}
         </span>
-        <span>
+        <span className="weather-period-chip">
           <Umbrella size={14} aria-hidden="true" />
           {period ? formatRegionalForecast(period) : day.validText || "24-hour forecast"}
         </span>
       </div>
 
-      {forecastDays.length > 0 ? (
-        <>
+      <button
+        className="weather-info-button"
+        type="button"
+        onClick={() => setIsExpanded((current) => !current)}
+        aria-controls={panelId}
+        aria-expanded={isExpanded}
+        aria-label={isExpanded ? "Hide weather details" : "Show weather details"}
+        title={isExpanded ? "Hide weather details" : "Show weather details"}
+      >
+        <Info size={16} aria-hidden="true" />
+      </button>
+
+      {isExpanded && forecastDays.length > 0 ? (
+        <div className="weather-expanded-panel" id={panelId}>
+          <div className="weather-expanded-heading">
+            <div>
+              <span>{weather.outlookLabel || `Next ${forecastDays.length} days`}</span>
+              <strong>Weather planning</strong>
+            </div>
+            <button type="button" onClick={() => setIsExpanded(false)} aria-label="Close weather details">
+              <X size={15} aria-hidden="true" />
+            </button>
+          </div>
+
+          <p className="weather-parent-cue">{weather.parentCue || "Check the forecast before heading out."}</p>
+
           <div className="weather-outlook-header">
-            <span>{weather.outlookLabel || `Next ${forecastDays.length} days`}</span>
+            <span>Daily outlook</span>
             <small>Tap a day for details</small>
           </div>
 
@@ -981,7 +1006,7 @@ function WeatherBrief({ error, weather }) {
           {weather.weeklyWarning ? (
             <p className="weather-source-note weather-outlook-note">{weather.weeklyWarning}</p>
           ) : null}
-        </>
+        </div>
       ) : null}
     </section>
   );

@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve BoCharge. This project is a small production web app, so changes should stay scoped and easy to verify.
+Thanks for helping improve PlaySG. This project is a small production web app, so changes should stay scoped and easy to verify.
 
 ## Local Setup
 
@@ -12,7 +12,7 @@ cp .env.example .env
 npm run dev
 ```
 
-The app works without API keys by using `public/data/sample-chargers.json`. Add `LTA_ACCOUNT_KEY` to `.env` only if you need to test the live LTA feed.
+The playground map and weather planning features work without private API keys. Leave `GA_MEASUREMENT_ID` blank locally unless you specifically want local analytics traffic.
 
 ## Checks
 
@@ -34,6 +34,6 @@ This runs the production dependency audit and the Vite build.
 
 ## Data And Credentials
 
-Keep API keys server-side. Never add LTA, OneMap, analytics, or deployment credentials to client-side `VITE_` variables unless the value is intentionally public.
+Keep private deployment credentials server-side. Google Analytics is configured at runtime with `GA_MEASUREMENT_ID`; do not add build-time `VITE_` analytics variables.
 
-If you update generated sample data, make sure the update complies with the source terms listed in `NOTICE.md`.
+If you update generated playground data, make sure the update complies with the source terms listed in `NOTICE.md`.

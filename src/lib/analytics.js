@@ -1,9 +1,8 @@
-const BUILD_GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID?.trim();
 const ANALYTICS_CONFIG_ENDPOINT = "/api/config";
 const GA_SCRIPT_ID = "google-analytics-gtag";
 
 let initialized = false;
-let measurementId = BUILD_GA_MEASUREMENT_ID || "";
+let measurementId = "";
 let measurementIdPromise = null;
 
 export async function initAnalytics() {

@@ -17,11 +17,6 @@ Report security concerns by emailing `celeste@agents.world` with:
 
 ## Credential Handling
 
-Production deployments should keep these values server-side:
+Production deployments should keep private credentials server-side. PlaySG currently does not require private API keys for the playground map or weather planning features.
 
-- `LTA_ACCOUNT_KEY`
-- `ONEMAP_API_TOKEN`
-- `ONEMAP_EMAIL`
-- `ONEMAP_PASSWORD`
-
-The client should only receive intentionally public configuration such as an optional Google Analytics measurement ID.
+Google Analytics is configured through the runtime server value `GA_MEASUREMENT_ID`. The client should only receive intentionally public configuration, such as that measurement ID returned from `/api/config`.
