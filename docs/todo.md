@@ -18,6 +18,5 @@ Product and data-quality ideas for the playground map.
 
 ## Technical Cleanup
 
-- Remove legacy EV charger endpoints, provider app metadata, and sample charger data when no longer useful as scaffold references.
-- Add a lightweight regression check for generated dataset shape and source metadata.
 - Keep environment variables documented in `.env.example`, `README.md`, and `docs/data-sources.md`.
+- Expand `npm run data:check` when adding new generated fields or source datasets.

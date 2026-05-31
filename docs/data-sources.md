@@ -16,6 +16,12 @@ Regenerate it with:
 npm run data:playgrounds
 ```
 
+Validate the generated shape and source metadata with:
+
+```bash
+npm run data:check
+```
+
 The generator is:
 
 ```text
@@ -85,4 +91,3 @@ If a top-level `data/` folder is added later, large or reproducible raw files sh
 - Surface details are sparse because official amenity data is inconsistent.
 - Size categories describe managed area or park area, not playground equipment footprint.
 - There is no crowd-submitted enrichment layer yet.
-- Legacy EV charger server endpoints and sample data still exist from the source project and should be removed once PlaySG no longer needs compatibility with that scaffold.

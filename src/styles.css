@@ -953,108 +953,6 @@ button {
   line-height: 1;
 }
 
-.operator-chip {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 34px;
-  max-width: 190px;
-  padding: 3px 8px 3px 3px;
-  color: #17352f;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(247, 251, 250, 0.96)),
-    #ffffff;
-  border: 1px solid #d8e8e2;
-  border-color: color-mix(in srgb, var(--provider-color, #d8e8e2) 38%, #d8e8e2);
-  border-radius: 8px;
-  cursor: pointer;
-  transition:
-    transform 140ms ease,
-    box-shadow 140ms ease,
-    border-color 140ms ease,
-    background 140ms ease;
-}
-
-.operator-chip:hover {
-  background: #ffffff;
-  box-shadow: 0 9px 18px rgba(8, 40, 63, 0.11);
-  transform: translateY(-1px);
-}
-
-.operator-chip.active {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 248, 220, 0.94)),
-    #ffffff;
-  border-color: var(--provider-color, var(--ink));
-  box-shadow:
-    inset 0 -3px 0 color-mix(in srgb, var(--provider-color, #08283f) 58%, rgba(8, 40, 63, 0.16)),
-    0 9px 18px rgba(8, 40, 63, 0.12);
-}
-
-.operator-chip-icon {
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  overflow: hidden;
-  color: var(--provider-text, #ffffff);
-  background: var(--provider-color, #52605b);
-  border-radius: 8px;
-  box-shadow: inset 0 -2px 0 rgba(8, 40, 63, 0.16);
-  font-size: 10px;
-  font-weight: 900;
-  line-height: 1;
-}
-
-.operator-chip-icon > span {
-  max-width: 22px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.operator-chip-logo {
-  display: block;
-  max-width: 21px;
-  max-height: 21px;
-  object-fit: contain;
-}
-
-.operator-chip-logo-kigo,
-.operator-chip-logo-volt {
-  width: 22px;
-  height: 22px;
-  background: #ffffff;
-  border-radius: 7px;
-}
-
-.operator-chip-copy {
-  display: grid;
-  gap: 1px;
-  min-width: 0;
-  text-align: left;
-}
-
-.operator-chip-name {
-  max-width: 132px;
-  overflow: hidden;
-  color: var(--ink);
-  font-size: 11px;
-  font-weight: 900;
-  line-height: 1.05;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.operator-chip-count {
-  color: #697a73;
-  font-size: 9px;
-  font-weight: 900;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
 .location-notice,
 .filter-context-notice {
   padding: 10px 12px;
@@ -1244,30 +1142,6 @@ button {
   box-shadow: 0 4px 14px rgba(8, 167, 216, 0.35);
 }
 
-.search-place-marker {
-  background: transparent;
-  border: 0;
-}
-
-.search-place-pin {
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  background: rgba(242, 165, 26, 0.18);
-  border: 1px solid rgba(242, 165, 26, 0.36);
-  border-radius: 999px;
-}
-
-.search-place-pin span {
-  width: 11px;
-  height: 11px;
-  background: var(--amber);
-  border: 3px solid #ffffff;
-  border-radius: 999px;
-  box-shadow: 0 4px 14px rgba(242, 165, 26, 0.34);
-}
-
 .leaflet-popup-content-wrapper {
   border-radius: 8px;
   border: 1px solid rgba(8, 40, 63, 0.08);
@@ -1455,7 +1329,7 @@ button {
   display: grid;
 }
 
-.provider-line {
+.category-line {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1463,7 +1337,6 @@ button {
   margin-bottom: 8px;
 }
 
-.provider-badge,
 .status-pill,
 .type-pill {
   display: inline-flex;
@@ -1513,62 +1386,6 @@ button {
   color: #586760;
   background: #f3f6f4;
   border: 1px dashed #cddbd5;
-}
-
-.provider-badge {
-  color: var(--provider-text, #ffffff);
-  background: var(--provider-color, #17201c);
-  box-shadow: inset 0 -2px 0 rgba(8, 40, 63, 0.12);
-}
-
-.provider-stack {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 5px;
-  min-width: 0;
-}
-
-.provider-stack.compact {
-  justify-content: flex-end;
-  gap: 3px;
-}
-
-.provider-more {
-  display: inline-flex;
-  align-items: center;
-  height: 24px;
-  padding: 0 8px;
-  border-radius: 8px;
-  color: #42514b;
-  background: #edf2f0;
-  font-size: 11px;
-  font-weight: 900;
-}
-
-.provider-more.compact {
-  height: 22px;
-  padding: 0 7px;
-  font-size: 10px;
-}
-
-.provider-badge.compact {
-  height: 22px;
-  padding: 0 7px;
-  font-size: 10px;
-}
-
-.provider-badge-logo {
-  display: block;
-  width: 15px;
-  height: 15px;
-  object-fit: contain;
-  border-radius: 4px;
-}
-
-.provider-badge-logo-kigo,
-.provider-badge-logo-volt {
-  background: #ffffff;
 }
 
 .status-pill.available {
@@ -1736,18 +1553,6 @@ button {
   cursor: not-allowed;
 }
 
-.provider-unavailable {
-  display: grid;
-  gap: 6px;
-}
-
-.provider-unavailable p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.35;
-}
-
 .nearby-header {
   display: flex;
   flex: 0 0 auto;
@@ -1872,27 +1677,6 @@ button {
   gap: 4px;
   justify-items: end;
   min-width: 92px;
-}
-
-.row-meta .provider-stack {
-  max-width: 126px;
-}
-
-.row-meta .provider-badge {
-  display: inline-flex;
-  max-width: 78px;
-  overflow: hidden;
-  color: var(--provider-text, #ffffff);
-  font-size: 10px;
-  line-height: 1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.row-meta .provider-badge span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .row-meta b {
@@ -2388,20 +2172,6 @@ button {
     display: none;
   }
 
-  .operator-chip {
-    height: 34px;
-    max-width: 176px;
-  }
-
-  .operator-chip-icon {
-    width: 24px;
-    height: 24px;
-  }
-
-  .operator-chip-name {
-    max-width: 112px;
-  }
-
   .bottom-sheet {
     position: fixed;
     left: 0;
@@ -2632,14 +2402,6 @@ button {
     width: 42px;
     min-width: 42px;
     padding: 0;
-  }
-
-  .operator-chip {
-    max-width: 168px;
-  }
-
-  .operator-chip-name {
-    max-width: 104px;
   }
 
   .summary-strip {
