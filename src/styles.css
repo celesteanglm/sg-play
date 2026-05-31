@@ -91,7 +91,7 @@ button {
 
 .brand-row,
 .search-box,
-.filter-scroller {
+.filter-bar {
   background: rgba(255, 253, 247, 0.94);
   border: 1px solid rgba(178, 219, 202, 0.96);
   box-shadow: var(--shadow-tight);
@@ -722,18 +722,35 @@ button {
   margin-top: -2px;
 }
 
-.filter-scroller {
+.filter-shell {
+  position: relative;
+  z-index: 940;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 44px;
+  min-width: 0;
+  padding: 5px 6px;
+  border-radius: 8px;
+}
+
+.filter-quick-chips {
+  flex: 1 1 auto;
   display: flex;
   align-items: center;
   gap: 6px;
-  min-height: 44px;
-  padding: 5px 6px;
+  min-width: 0;
   overflow-x: auto;
-  border-radius: 8px;
   scrollbar-width: none;
 }
 
-.filter-scroller::-webkit-scrollbar {
+.filter-quick-chips::-webkit-scrollbar {
   display: none;
 }
 
@@ -751,40 +768,121 @@ button {
   text-transform: uppercase;
 }
 
-.filter-group-label {
+.filter-panel-toggle {
   flex: 0 0 auto;
-  display: grid;
-  gap: 1px;
-  min-width: 92px;
-  padding: 0 4px;
-  color: #405049;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 10px;
+  color: var(--ink);
+  background: rgba(23, 50, 77, 0.06);
+  border: 1px solid rgba(23, 50, 77, 0.12);
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.filter-panel-toggle:hover,
+.filter-panel-toggle.open {
+  background: #ffffff;
+  border-color: rgba(72, 184, 239, 0.32);
+  box-shadow: 0 8px 16px rgba(39, 83, 68, 0.1);
+}
+
+.filter-panel-toggle.has-filters {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 243, 196, 0.98)),
+    var(--surface-warm);
+  border-color: var(--amber);
+}
+
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  color: #ffffff;
+  background: var(--ink);
+  border-radius: 999px;
+  font-size: 10px;
   line-height: 1;
 }
 
-.filter-group-label b,
-.filter-group-label small {
-  display: block;
-  white-space: nowrap;
+.filter-panel {
+  position: absolute;
+  z-index: 950;
+  top: calc(100% + 7px);
+  left: 0;
+  right: 0;
+  display: grid;
+  gap: 10px;
+  max-height: min(480px, calc(100dvh - 260px));
+  padding: 11px;
+  overflow-y: auto;
+  background: rgba(255, 253, 247, 0.97);
+  border: 1px solid rgba(178, 219, 202, 0.96);
+  border-radius: 8px;
+  box-shadow: 0 18px 36px rgba(28, 49, 42, 0.18);
+  backdrop-filter: blur(20px) saturate(1.12);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(39, 83, 68, 0.22) transparent;
 }
 
-.filter-group-label b {
+.filter-section {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.filter-section-heading {
+  display: grid;
+  gap: 2px;
+  padding: 0 2px;
+}
+
+.filter-section-heading strong {
   color: var(--ink);
   font-size: 11px;
   font-weight: 950;
+  line-height: 1;
   text-transform: uppercase;
 }
 
-.filter-group-label small {
-  color: #708178;
-  font-size: 10px;
-  font-weight: 800;
+.filter-section-heading span {
+  color: #60766c;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.25;
 }
 
-.filter-divider {
-  flex: 0 0 auto;
-  width: 1px;
-  height: 24px;
-  background: rgba(23, 50, 77, 0.11);
+.filter-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+.filter-chip-grid .chip {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.filter-chip-grid .chip > span:not(.chip-icon):not(.chip-count) {
+  min-width: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chip {
@@ -2239,10 +2337,14 @@ button {
     display: none;
   }
 
-  .filter-scroller {
+  .filter-bar {
     gap: 5px;
     min-height: 42px;
     padding: 5px;
+  }
+
+  .filter-quick-chips {
+    gap: 5px;
   }
 
   .filter-rail-label {
@@ -2252,16 +2354,29 @@ button {
     font-size: 0;
   }
 
-  .filter-group-label {
-    min-width: 68px;
+  .filter-panel-toggle {
+    height: 32px;
+    padding: 0 8px;
   }
 
-  .filter-group-label small {
-    display: none;
+  .filter-panel {
+    max-height: calc(100dvh - 330px - max(12px, env(safe-area-inset-bottom)));
+    padding: 9px;
   }
 
-  .filter-divider {
-    height: 22px;
+  .filter-section-heading span {
+    font-size: 10.5px;
+  }
+
+  .filter-chip-grid {
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filter-chip-grid .chip {
+    justify-content: flex-start;
+    width: 100%;
   }
 
   .chip {

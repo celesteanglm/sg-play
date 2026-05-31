@@ -25,13 +25,13 @@
     "react",
     "vite"
   ],
-  "homepage": "https://github.com/celesteanglm/sg-electric-chargers#readme",
+  "homepage": "https://github.com/celesteanglm/sg-play#readme",
   "bugs": {
-    "url": "https://github.com/celesteanglm/sg-electric-chargers/issues"
+    "url": "https://github.com/celesteanglm/sg-play/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/celesteanglm/sg-electric-chargers.git"
+    "url": "git+https://github.com/celesteanglm/sg-play.git"
   },
   "license": "MIT",
   "engines": {
