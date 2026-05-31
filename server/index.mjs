@@ -24,6 +24,7 @@ const oneMapEmail = process.env.ONEMAP_EMAIL || "";
 const oneMapPassword = process.env.ONEMAP_PASSWORD || "";
 const gaMeasurementId = normalizePublicEnvValue(process.env.GA_MEASUREMENT_ID || process.env.VITE_GA_MEASUREMENT_ID);
 const weatherBaseUrl = process.env.NEA_WEATHER_BASE_URL || "https://api-open.data.gov.sg/v2/real-time/api";
+const openMeteoForecastUrl = process.env.OPEN_METEO_FORECAST_URL || "https://api.open-meteo.com/v1/forecast";
 const configuredOneMapCacheTtlMs = Number(process.env.ONEMAP_CACHE_TTL_MS || 30 * 24 * 60 * 60 * 1000);
 const oneMapSearchCacheTtlMs =
   Number.isFinite(configuredOneMapCacheTtlMs) && configuredOneMapCacheTtlMs > 0
@@ -39,6 +40,22 @@ const weatherFetchTimeoutMs =
   Number.isFinite(configuredWeatherFetchTimeoutMs) && configuredWeatherFetchTimeoutMs > 0
     ? configuredWeatherFetchTimeoutMs
     : 10000;
+const SINGAPORE_WEATHER_POINT = {
+  latitude: 1.3521,
+  longitude: 103.8198,
+};
+const OPEN_METEO_DAILY_FIELDS = [
+  "weather_code",
+  "temperature_2m_max",
+  "temperature_2m_min",
+  "apparent_temperature_max",
+  "apparent_temperature_min",
+  "precipitation_sum",
+  "precipitation_probability_max",
+  "uv_index_max",
+  "wind_speed_10m_max",
+  "wind_direction_10m_dominant",
+];
 
 let liveCache = null;
 let liveRefreshPromise = null;
@@ -295,12 +312,49 @@ async function refreshWeatherPayload() {
     fetchWeatherJson("twenty-four-hr-forecast"),
     fetchWeatherJson("four-day-outlook"),
   ]);
-  const payload = normalizeWeatherPayload(dayForecast, fourDayOutlook);
+  let weeklyForecast = null;
+  let weeklyWarning = "";
+
+  try {
+    weeklyForecast = await fetchOpenMeteoForecast();
+  } catch (error) {
+    weeklyWarning = error instanceof Error ? error.message : "7-day model forecast unavailable.";
+    console.warn(`Open-Meteo weather refresh failed: ${weeklyWarning}`);
+  }
+
+  const payload = normalizeWeatherPayload(dayForecast, fourDayOutlook, weeklyForecast, weeklyWarning);
 
   weatherCache = {
     expiresAtMs: Date.now() + weatherCacheTtlMs,
     payload,
   };
+
+  return payload;
+}
+
+async function fetchOpenMeteoForecast() {
+  const url = new URL(openMeteoForecastUrl);
+
+  url.searchParams.set("latitude", String(SINGAPORE_WEATHER_POINT.latitude));
+  url.searchParams.set("longitude", String(SINGAPORE_WEATHER_POINT.longitude));
+  url.searchParams.set("timezone", "Asia/Singapore");
+  url.searchParams.set("forecast_days", "8");
+  url.searchParams.set("daily", OPEN_METEO_DAILY_FIELDS.join(","));
+
+  const response = await fetch(url, {
+    headers: { accept: "application/json" },
+    signal: AbortSignal.timeout(weatherFetchTimeoutMs),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Open-Meteo forecast returned ${response.status}`);
+  }
+
+  const payload = await response.json();
+
+  if (payload?.error) {
+    throw new Error(payload.reason || "Open-Meteo forecast returned an error.");
+  }
 
   return payload;
 }
@@ -324,22 +378,32 @@ async function fetchWeatherJson(pathname) {
   return payload;
 }
 
-function normalizeWeatherPayload(dayForecastPayload, fourDayPayload) {
+function normalizeWeatherPayload(dayForecastPayload, fourDayPayload, weeklyForecastPayload = null, weeklyWarning = "") {
   const dayRecord = toArray(dayForecastPayload?.data?.records)[0] || {};
   const general = dayRecord.general || {};
   const outlookRecord = toArray(fourDayPayload?.data?.records)[0] || {};
   const day = normalizeDayForecast(general, dayRecord.periods || []);
   const outlook = toArray(outlookRecord.forecasts).map(normalizeOutlookForecast).filter(Boolean).slice(0, 4);
+  const modelOutlook = normalizeOpenMeteoDailyForecasts(weeklyForecastPayload).slice(1, 8);
+  const weeklyOutlook = buildWeeklyOutlook(outlook, modelOutlook).slice(0, 7);
   const updatedAt = dayRecord.updatedTimestamp || dayRecord.timestamp || outlookRecord.updatedTimestamp || outlookRecord.timestamp || "";
+  const hasSevenDayForecast = weeklyOutlook.length >= 7;
 
   return {
     ok: true,
-    sourceLabel: "NEA weather forecast",
-    sourceUrl: "https://data.gov.sg/datasets?formats=API&page=1&resultId=d_ce2eb1e307bda31993c533285834ef2b",
+    sourceLabel: hasSevenDayForecast ? "NEA + Open-Meteo weather forecast" : "NEA weather forecast",
+    sourceUrl: "https://data.gov.sg/datasets?formats=API&page=1&resultId=d_f131f6e343bf8168e4057a04c4326a0a",
+    modelSourceUrl: "https://open-meteo.com/en/docs",
     updatedAt,
     generatedAt: new Date().toISOString(),
     day,
     outlook,
+    weeklyOutlook,
+    outlookLabel: hasSevenDayForecast ? "Next 7 days" : `Next ${outlook.length} days`,
+    outlookNote: hasSevenDayForecast
+      ? "NEA provides the official 4-day outlook; days 5-7 use Open-Meteo model data."
+      : "NEA/data.gov.sg currently provides the official next 4 days.",
+    weeklyWarning,
     parentCue: getWeatherParentCue(day),
   };
 }
@@ -395,16 +459,96 @@ function normalizeWeatherPeriods(periods, validPeriod) {
 
 function normalizeOutlookForecast(forecast) {
   if (!forecast) return null;
+  const wind = forecast.wind || {};
 
   return {
     day: cleanOneMapValue(forecast.day || ""),
     date: cleanOneMapValue(forecast.timestamp || ""),
+    dateKey: getDateKey(forecast.timestamp || ""),
     forecastText: cleanOneMapValue(forecast.forecast?.text || forecast.forecast?.summary || ""),
     summary: cleanOneMapValue(forecast.forecast?.summary || forecast.forecast?.text || ""),
     forecastCode: cleanOneMapValue(forecast.forecast?.code || ""),
     temperature: normalizeRange(forecast.temperature, "C"),
     humidity: normalizeRange(forecast.relativeHumidity, "%"),
+    wind: {
+      direction: cleanOneMapValue(wind.direction || ""),
+      speed: normalizeRange(wind.speed, "km/h"),
+      label: [cleanOneMapValue(wind.direction || ""), normalizeRange(wind.speed, "km/h").label].filter(Boolean).join(", "),
+    },
+    sourceKind: "official",
+    sourceLabel: "NEA official outlook",
+    sourceNote: "Official NEA 4-day outlook from data.gov.sg.",
   };
+}
+
+function normalizeOpenMeteoDailyForecasts(payload) {
+  const daily = payload?.daily || {};
+  const times = toArray(daily.time);
+
+  return times
+    .map((time, index) => {
+      const dateKey = getDateKey(time);
+      if (!dateKey) return null;
+
+      const weatherCode = toNumber(daily.weather_code?.[index]);
+      const forecastText = getOpenMeteoWeatherText(weatherCode);
+      const windDirection = toNumber(daily.wind_direction_10m_dominant?.[index]);
+      const windDirectionLabel = formatWindDirection(windDirection);
+      const windSpeed = normalizeScalar(daily.wind_speed_10m_max?.[index], "km/h", 0);
+
+      return {
+        day: getDayNameFromDateKey(dateKey),
+        date: dateKey,
+        dateKey,
+        forecastText,
+        summary: forecastText,
+        forecastCode: Number.isFinite(weatherCode) ? String(weatherCode) : "",
+        temperature: normalizeNumberRange(daily.temperature_2m_min?.[index], daily.temperature_2m_max?.[index], "C"),
+        humidity: normalizeRange(null, "%"),
+        apparentTemperature: normalizeNumberRange(
+          daily.apparent_temperature_min?.[index],
+          daily.apparent_temperature_max?.[index],
+          "C",
+        ),
+        precipitation: normalizeScalar(daily.precipitation_sum?.[index], "mm", 1),
+        precipitationProbability: normalizeScalar(daily.precipitation_probability_max?.[index], "%", 0),
+        uvIndex: normalizeScalar(daily.uv_index_max?.[index], "", 1),
+        wind: {
+          direction: windDirectionLabel,
+          degrees: Number.isFinite(windDirection) ? Math.round(windDirection) : null,
+          speed: windSpeed,
+          label: [windDirectionLabel, windSpeed.label].filter(Boolean).join(", "),
+        },
+        sourceKind: "model",
+        sourceLabel: "Open-Meteo model",
+        sourceNote: "Model forecast from Open-Meteo for Singapore coordinates.",
+      };
+    })
+    .filter(Boolean);
+}
+
+function buildWeeklyOutlook(officialOutlook, modelOutlook) {
+  if (!modelOutlook.length) return officialOutlook;
+
+  const officialByDate = new Map(officialOutlook.map((forecast) => [forecast.dateKey, forecast]).filter(([dateKey]) => dateKey));
+
+  return modelOutlook.map((modelForecast) => {
+    const officialForecast = officialByDate.get(modelForecast.dateKey);
+    if (!officialForecast) return modelForecast;
+
+    return {
+      ...modelForecast,
+      ...officialForecast,
+      apparentTemperature: modelForecast.apparentTemperature,
+      precipitation: modelForecast.precipitation,
+      precipitationProbability: modelForecast.precipitationProbability,
+      uvIndex: modelForecast.uvIndex,
+      wind: officialForecast.wind?.label ? officialForecast.wind : modelForecast.wind,
+      sourceKind: "official+model",
+      sourceLabel: "NEA + Open-Meteo",
+      sourceNote: "Official NEA summary with model rain, UV, and feels-like details from Open-Meteo.",
+    };
+  });
 }
 
 function normalizeRange(range, fallbackUnit) {
@@ -420,6 +564,28 @@ function normalizeRange(range, fallbackUnit) {
   };
 }
 
+function normalizeNumberRange(lowValue, highValue, unit) {
+  const low = toNumber(lowValue);
+  const high = toNumber(highValue);
+
+  return {
+    low: Number.isFinite(low) ? low : null,
+    high: Number.isFinite(high) ? high : null,
+    unit,
+    label: formatRange(low, high, unit),
+  };
+}
+
+function normalizeScalar(value, unit, precision = 0) {
+  const number = toNumber(value);
+
+  return {
+    value: Number.isFinite(number) ? number : null,
+    unit,
+    label: formatScalar(number, unit, precision),
+  };
+}
+
 function formatRange(low, high, unit) {
   if (Number.isFinite(low) && Number.isFinite(high)) return `${Math.round(low)}-${Math.round(high)}${unit}`;
   if (Number.isFinite(high)) return `up to ${Math.round(high)}${unit}`;
@@ -428,11 +594,91 @@ function formatRange(low, high, unit) {
   return "";
 }
 
+function formatScalar(number, unit, precision = 0) {
+  if (!Number.isFinite(number)) return "";
+
+  const value = precision > 0 ? Number(number.toFixed(precision)).toString() : Math.round(number).toString();
+  return `${value}${unit}`;
+}
+
 function normalizeWeatherUnit(unit) {
   if (/celsius/i.test(unit)) return "C";
   if (/percentage|percent/i.test(unit)) return "%";
 
   return cleanOneMapValue(unit || "");
+}
+
+function getDateKey(value) {
+  const raw = cleanOneMapValue(value);
+  const match = raw.match(/^(\d{4}-\d{2}-\d{2})/);
+  if (match) return match[1];
+
+  const date = new Date(raw);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const parts = new Intl.DateTimeFormat("en-SG", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone: "Asia/Singapore",
+    year: "numeric",
+  }).formatToParts(date);
+  const partMap = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+
+  return `${partMap.year}-${partMap.month}-${partMap.day}`;
+}
+
+function getDayNameFromDateKey(dateKey) {
+  const date = new Date(`${dateKey}T00:00:00+08:00`);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return new Intl.DateTimeFormat("en-SG", {
+    timeZone: "Asia/Singapore",
+    weekday: "long",
+  }).format(date);
+}
+
+function getOpenMeteoWeatherText(code) {
+  const weatherCode = Number(code);
+  const labels = new Map([
+    [0, "Clear"],
+    [1, "Mainly Clear"],
+    [2, "Partly Cloudy"],
+    [3, "Overcast"],
+    [45, "Fog"],
+    [48, "Fog"],
+    [51, "Light Drizzle"],
+    [53, "Drizzle"],
+    [55, "Dense Drizzle"],
+    [56, "Freezing Drizzle"],
+    [57, "Freezing Drizzle"],
+    [61, "Light Rain"],
+    [63, "Rain"],
+    [65, "Heavy Rain"],
+    [66, "Freezing Rain"],
+    [67, "Freezing Rain"],
+    [71, "Light Snow"],
+    [73, "Snow"],
+    [75, "Heavy Snow"],
+    [77, "Snow Grains"],
+    [80, "Light Showers"],
+    [81, "Showers"],
+    [82, "Heavy Showers"],
+    [85, "Snow Showers"],
+    [86, "Snow Showers"],
+    [95, "Thunderstorm"],
+    [96, "Thunderstorm"],
+    [99, "Thunderstorm"],
+  ]);
+
+  return labels.get(weatherCode) || "Forecast";
+}
+
+function formatWindDirection(degrees) {
+  if (!Number.isFinite(degrees)) return "";
+
+  const directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+  const index = Math.round((((degrees % 360) + 360) % 360) / 22.5) % directions.length;
+  return directions[index];
 }
 
 function getWeatherParentCue(day) {

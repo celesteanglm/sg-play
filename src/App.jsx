@@ -169,7 +169,7 @@ function PlaygroundMapPage({ onNavigate }) {
 
     async function loadWeather() {
       try {
-        const response = await fetch("/api/weather");
+        const response = await fetch(`/api/weather?refresh=${Date.now()}`, { cache: "no-store" });
         if (!response.ok) throw new Error(`Weather returned ${response.status}`);
         const payload = await response.json();
         if (!mounted) return;
@@ -753,8 +753,9 @@ function DataInfoPage({ onNavigate }) {
             },
             {
               value: "Today in SG weather",
-              label: "Today in SG weather",
-              definition: "Loaded from NEA/data.gov.sg through the app API for planning outdoor play.",
+              label: "Weather planning",
+              definition:
+                "Today and the official 4-day outlook use NEA/data.gov.sg; days 5-7 are model forecasts from Open-Meteo when available.",
             },
           ]}
         />
@@ -866,6 +867,15 @@ function PlaygroundDetail({ playground, distanceMeters }) {
 }
 
 function WeatherBrief({ error, weather }) {
+  const [selectedForecastIndex, setSelectedForecastIndex] = useState(0);
+  const forecastDays = weather?.weeklyOutlook?.length ? weather.weeklyOutlook : weather?.outlook || [];
+
+  useEffect(() => {
+    if (selectedForecastIndex >= forecastDays.length) {
+      setSelectedForecastIndex(0);
+    }
+  }, [forecastDays.length, selectedForecastIndex]);
+
   if (!weather && !error) {
     return (
       <section className="weather-card loading" aria-label="Singapore weather forecast">
@@ -893,7 +903,7 @@ function WeatherBrief({ error, weather }) {
 
   const day = weather.day || {};
   const period = day.periods?.[0];
-  const outlook = weather.outlook || [];
+  const selectedForecast = forecastDays[selectedForecastIndex] || forecastDays[0] || null;
 
   return (
     <section className="weather-card" aria-label="Singapore weather forecast">
@@ -923,18 +933,89 @@ function WeatherBrief({ error, weather }) {
         </span>
       </div>
 
-      {outlook.length > 0 ? (
-        <div className="weather-outlook" aria-label="Four day outlook">
-          {outlook.slice(0, 3).map((forecast) => (
-            <span key={`${forecast.day}-${forecast.date}`}>
-              <b>{forecast.day}</b>
-              {forecast.forecastText}
-            </span>
-          ))}
-        </div>
+      {forecastDays.length > 0 ? (
+        <>
+          <div className="weather-outlook-header">
+            <span>{weather.outlookLabel || `Next ${forecastDays.length} days`}</span>
+            <small>Tap a day for details</small>
+          </div>
+
+          <div className="weather-outlook" aria-label={weather.outlookLabel || "Weather outlook"}>
+            {forecastDays.map((forecast, index) => (
+              <button
+                className={index === selectedForecastIndex ? "active" : ""}
+                key={`${forecast.day}-${forecast.date}`}
+                type="button"
+                onClick={() => setSelectedForecastIndex(index)}
+                aria-pressed={index === selectedForecastIndex}
+              >
+                <b>{getForecastDayLabel(forecast)}</b>
+                <span>{forecast.forecastText || "Forecast"}</span>
+                <small>{forecast.temperature?.label || "Temp TBC"}</small>
+              </button>
+            ))}
+          </div>
+
+          {selectedForecast ? (
+            <div className="weather-day-detail" aria-live="polite">
+              <div className="weather-day-heading">
+                <span>{formatForecastDate(selectedForecast.date)}</span>
+                <strong>{selectedForecast.summary || selectedForecast.forecastText || "Forecast details"}</strong>
+              </div>
+              <div className="weather-detail-grid">
+                <WeatherDetailMetric label="Temp" value={selectedForecast.temperature?.label} />
+                <WeatherDetailMetric label="Feels like" value={selectedForecast.apparentTemperature?.label} />
+                <WeatherDetailMetric label="Humidity" value={selectedForecast.humidity?.label} />
+                <WeatherDetailMetric label="Rain chance" value={selectedForecast.precipitationProbability?.label} />
+                <WeatherDetailMetric label="Rain" value={selectedForecast.precipitation?.label} />
+                <WeatherDetailMetric label="Wind" value={selectedForecast.wind?.label} />
+                <WeatherDetailMetric label="UV" value={selectedForecast.uvIndex?.label} />
+              </div>
+              <p className="weather-source-note">{selectedForecast.sourceNote || weather.outlookNote}</p>
+            </div>
+          ) : null}
+
+          {weather.outlookNote ? (
+            <p className="weather-source-note weather-outlook-note">{weather.outlookNote}</p>
+          ) : null}
+          {weather.weeklyWarning ? (
+            <p className="weather-source-note weather-outlook-note">{weather.weeklyWarning}</p>
+          ) : null}
+        </>
       ) : null}
     </section>
   );
+}
+
+function WeatherDetailMetric({ label, value }) {
+  if (!value) return null;
+
+  return (
+    <span className="weather-detail-metric">
+      <b>{label}</b>
+      {value}
+    </span>
+  );
+}
+
+function getForecastDayLabel(forecast) {
+  if (forecast.day) return forecast.day.slice(0, 3);
+
+  return formatForecastDate(forecast.date, { weekday: "short" });
+}
+
+function formatForecastDate(value, options = {}) {
+  if (!value) return "Date TBC";
+
+  const date = new Date(String(value).includes("T") ? value : `${value}T00:00:00+08:00`);
+  if (Number.isNaN(date.getTime())) return "Date TBC";
+
+  return new Intl.DateTimeFormat("en-SG", {
+    day: "numeric",
+    month: "short",
+    timeZone: "Asia/Singapore",
+    weekday: options.weekday || "short",
+  }).format(date);
 }
 
 function DefinitionList({ items }) {
