@@ -1,31 +1,31 @@
 # Notices
 
-This repository contains the source code for BoCharge. The MIT license applies to the code in this repository, except where a file says otherwise.
+This repository contains the source code for PlaySG. The MIT license applies to the code in this repository, except where a file says otherwise.
 
 ## Public Data Sources
 
-BoCharge uses LTA DataMall's EV Charging Points Batch API for production charger data. LTA describes the endpoint as returning all Singapore electric vehicle charging points and their availabilities in a single file.
+PlaySG uses official data.gov.sg datasets published by NParks and Health Promotion Board/Parks@SG:
 
-Use of LTA API datasets is governed by the Singapore Open Data Licence and LTA's API Terms of Service. Production operators are responsible for keeping their own `LTA_ACCOUNT_KEY` secure and complying with the current LTA terms.
+- NParks Parks
+- NParks Parks and Nature Reserves
+- Parks@SG
 
-OneMap place search is optional. If enabled, operators are responsible for complying with OneMap API terms and keeping OneMap credentials server-side.
+The generated file at `public/data/playgrounds.json` is a best-effort transformed dataset for this application. Managed-area size fields come from NParks polygon area values where available. They are not exact playground equipment footprints.
+
+Use of Singapore government open datasets is governed by the Singapore Open Data Licence and any source-specific terms shown on data.gov.sg. Confirm the current terms before publishing derived datasets outside this app.
 
 ## Maps
 
 The map view uses OpenStreetMap tiles through Leaflet. Keep the visible OpenStreetMap attribution in the map UI.
 
-## Provider Names, Logos, And App Store IDs
-
-Charging provider names, app names, logos, app-store identifiers, and trademarks remain the property of their respective owners. Their inclusion is for user navigation and attribution inside the EV charger map and does not imply endorsement.
-
-Logo source references, where known, are recorded in `src/data/providerApps.js`.
-
 ## Generated Data
 
-`public/data/sample-chargers.json` is a checked-in sample fallback for local development and no-key demos. Refreshing it requires an LTA DataMall account key:
+Refresh the playground dataset with:
 
 ```bash
-npm run data:refresh
+npm run data:playgrounds
 ```
 
-Before publishing new generated samples, confirm the current source-data terms still permit your intended use.
+The checked-in GitHub Actions workflow runs this refresh hourly and commits only when `public/data/playgrounds.json` changes.
+
+The repository still contains legacy EV charger sample and provider files from the original reference app. They are not used by the PlaySG frontend.

@@ -3,54 +3,29 @@ import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import {
   ArrowLeft,
-  BatteryCharging,
   ChevronsUp,
   CircleDot,
-  Clock,
   ExternalLink,
   Filter,
   Info,
   LocateFixed,
-  Mail,
   MapPin,
   Navigation,
-  PlugZap,
+  Ruler,
   Search,
+  Trees,
   X,
 } from "lucide-react";
-import { normalizeChargerStations } from "./lib/chargers.js";
 import { trackPageView } from "./lib/analytics.js";
-import { PLACE_SEARCH_RADIUS_METERS, buildSearchQuery, rankStationSearchMatches } from "./lib/search.js";
-import { canOpenProviderApp, getProviderAppTarget, getProviderProfile, openProviderApp } from "./data/providerApps.js";
 
 const SINGAPORE_CENTER = [1.3521, 103.8198];
-const AREA_CENTER = { latitude: SINGAPORE_CENTER[0], longitude: SINGAPORE_CENTER[1] };
-const DEFAULT_ZOOM = 11;
-const CLIENT_REFRESH_MS = 5 * 60 * 1000;
-const SG_TIME_ZONE = "Asia/Singapore";
-const FEEDBACK_EMAIL = "celeste@agents.world";
-const SHEET_DRAG_THRESHOLD_PX = 44;
+const DEFAULT_ZOOM = 12;
 const MOBILE_SHEET_QUERY = "(max-width: 860px)";
-const RESULT_PAGE_SIZE = 10;
-const AREA_FILTERS = [
-  { id: "central", label: "Central", color: "#08a7d8", textColor: "#06283a" },
-  { id: "north", label: "North", color: "#17875a", textColor: "#ffffff" },
-  { id: "south", label: "South", color: "#0f4c81", textColor: "#ffffff" },
-  { id: "east", label: "East", color: "#f97316", textColor: "#17201c" },
-  { id: "west", label: "West", color: "#7c3aed", textColor: "#ffffff" },
-];
-const ALL_FILTER = { id: "all", label: "All", Icon: CircleDot, color: "#08283f", textColor: "#ffffff" };
-const QUICK_FILTERS = [
-  {
-    id: "available",
-    stateKey: "availableOnly",
-    label: "Available now",
-    Icon: BatteryCharging,
-    color: "#18bf73",
-    textColor: "#073825",
-  },
-  { id: "fast", stateKey: "fastOnly", label: "Fast", Icon: PlugZap, color: "#08a7d8", textColor: "#06283a" },
-];
+const SHEET_DRAG_THRESHOLD_PX = 44;
+const RESULT_PAGE_SIZE = 16;
+const PLAYGROUND_REFRESH_MS = 60 * 60 * 1000;
+const REGION_FILTERS = ["Central", "North", "South", "East", "West"];
+const SIZE_FILTERS = ["Pocket", "Neighbourhood", "Large", "Destination"];
 
 export default function App() {
   const [path, setPath] = useState(() => window.location.pathname);
@@ -61,7 +36,6 @@ export default function App() {
     }
 
     window.addEventListener("popstate", handlePopState);
-
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
@@ -76,122 +50,62 @@ export default function App() {
     trackPageView(path);
   }, [path]);
 
-  if (path === "/data") {
-    return <DataInfoPage onNavigate={navigate} />;
-  }
+  if (path === "/data") return <DataInfoPage onNavigate={navigate} />;
 
-  return <ChargerMapPage onNavigate={navigate} />;
+  return <PlaygroundMapPage onNavigate={navigate} />;
 }
 
-function ChargerMapPage({ onNavigate }) {
-  const [stations, setStations] = useState([]);
+function PlaygroundMapPage({ onNavigate }) {
+  const [dataset, setDataset] = useState(null);
+  const [loadingError, setLoadingError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
-  const [selectionMode, setSelectionMode] = useState("auto");
   const [query, setQuery] = useState("");
-  const [resolvedPlace, setResolvedPlace] = useState(null);
-  const [placeSearchStatus, setPlaceSearchStatus] = useState("idle");
-  const [placeSearchWarning, setPlaceSearchWarning] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState(createDefaultFilterState);
-  const [feed, setFeed] = useState({
-    loading: true,
-    sourceLabel: "Loading",
-    warning: "",
-    updatedAt: "",
-    cache: null,
-  });
+  const [filters, setFilters] = useState(createDefaultFilters);
   const [userLocation, setUserLocation] = useState(null);
   const [userLocationAccuracy, setUserLocationAccuracy] = useState(null);
   const [isLocating, setIsLocating] = useState(false);
+  const [locationNotice, setLocationNotice] = useState("");
   const [mapCenter, setMapCenter] = useState(SINGAPORE_CENTER);
   const [visibleResultCount, setVisibleResultCount] = useState(RESULT_PAGE_SIZE);
-  const [locationNotice, setLocationNotice] = useState("");
   const [sheetMode, setSheetMode] = useState(getInitialSheetMode);
   const [sheetHasUserInteracted, setSheetHasUserInteracted] = useState(false);
   const mapRef = useRef(null);
   const sheetDragStartY = useRef(null);
   const sheetDidDrag = useRef(false);
-  const locationWatchId = useRef(null);
-  const searchCandidatesRef = useRef([]);
-  const selectedFiltersRef = useRef(selectedFilters);
-  const applyingLocationAreaFilter = useRef(false);
-  const areaFilters = useMemo(() => buildAreaFilterOptions(stations), [stations]);
-  const operatorFilters = useMemo(() => buildOperatorFilterOptions(stations), [stations]);
-  const activeAreaIds = useMemo(() => new Set(selectedFilters.areas), [selectedFilters.areas]);
-  const activeOperatorIds = useMemo(() => new Set(selectedFilters.operators), [selectedFilters.operators]);
-  const allFiltersActive = !hasActiveFilters(selectedFilters);
-  const utilityFilterCounts = useMemo(
-    () => ({
-      all: stations.length,
-      available: stations.filter((station) => station.availableCount > 0).length,
-      fast: stations.filter((station) => station.maxPowerKw >= 43).length,
-    }),
-    [stations],
-  );
 
   useEffect(() => {
     let mounted = true;
-    let inFlight = false;
     let refreshTimer = null;
 
-    async function loadChargers() {
-      if (inFlight) return;
-      inFlight = true;
-
+    async function loadPlaygrounds({ cacheBust = false } = {}) {
       try {
-        const response = await fetch("/api/chargers");
-        if (!response.ok) throw new Error(`API returned ${response.status}`);
+        const url = cacheBust ? `/data/playgrounds.json?refresh=${Date.now()}` : "/data/playgrounds.json";
+        const response = await fetch(url, { cache: cacheBust ? "no-store" : "default" });
+        if (!response.ok) throw new Error(`Playground data returned ${response.status}`);
         const payload = await response.json();
-        const nextStations = getStationPayload(payload);
-
         if (!mounted) return;
 
-        setStations(nextStations);
+        setDataset(payload);
+        setLoadingError("");
         setSelectedId((current) =>
-          current && nextStations.some((station) => station.id === current) ? current : null,
+          current && payload.playgrounds?.some((playground) => playground.id === current)
+            ? current
+            : payload.playgrounds?.[0]?.id || null,
         );
-        setFeed({
-          loading: false,
-          sourceLabel: payload.sourceLabel || "LTA DataMall",
-          warning: payload.warning || "",
-          updatedAt: payload.updatedAt || payload.lastUpdatedTime || "",
-          cache: payload.cache || null,
-        });
       } catch (error) {
-        const response = await fetch("/data/sample-chargers.json");
-        const payload = await response.json();
-        const nextStations = getStationPayload(payload);
-
         if (!mounted) return;
-
-        setStations(nextStations);
-        setSelectedId((current) =>
-          current && nextStations.some((station) => station.id === current) ? current : null,
-        );
-        setFeed({
-          loading: false,
-          sourceLabel: "Sample fallback",
-          warning: error instanceof Error ? error.message : "Unable to load chargers.",
-          updatedAt: payload.updatedAt || payload.lastUpdatedTime || "",
-          cache: null,
-        });
-      } finally {
-        inFlight = false;
+        setLoadingError(error instanceof Error ? error.message : "Unable to load playground data.");
       }
     }
 
-    function scheduleNextRefresh() {
-      refreshTimer = window.setTimeout(async () => {
-        await loadChargers();
-        if (mounted) scheduleNextRefresh();
-      }, getMsUntilNextRefreshBoundary());
-    }
-
-    loadChargers();
-    scheduleNextRefresh();
+    loadPlaygrounds();
+    refreshTimer = window.setInterval(() => {
+      loadPlaygrounds({ cacheBust: true });
+    }, PLAYGROUND_REFRESH_MS);
 
     return () => {
       mounted = false;
-      if (refreshTimer) window.clearTimeout(refreshTimer);
+      if (refreshTimer) window.clearInterval(refreshTimer);
     };
   }, []);
 
@@ -212,211 +126,53 @@ function ChargerMapPage({ onNavigate }) {
     return () => mediaQuery.removeEventListener("change", syncMobileDefaultSheet);
   }, [sheetHasUserInteracted]);
 
-  useEffect(() => () => stopLocationWatch(), []);
-
-  const searchQuery = useMemo(() => buildSearchQuery(query), [query]);
-  const textSearchMatches = useMemo(() => rankStationSearchMatches(stations, searchQuery), [stations, searchQuery]);
-  const textSearchScoreById = useMemo(
-    () => new Map(textSearchMatches.map((match) => [match.station.id, match.score])),
-    [textSearchMatches],
+  const playgrounds = dataset?.playgrounds || [];
+  const searchTokens = useMemo(() => normalizeText(query).split(" ").filter(Boolean), [query]);
+  const filteredPlaygrounds = useMemo(
+    () => playgrounds.filter((playground) => playgroundPassesFilters(playground, filters, searchTokens)),
+    [filters, playgrounds, searchTokens],
   );
-  const searchPlace = searchQuery.knownPlace || resolvedPlace;
-  const searchOrigin = useMemo(
-    () => (searchPlace ? [searchPlace.latitude, searchPlace.longitude] : null),
-    [searchPlace],
+  const rankingOrigin = userLocation || mapCenter;
+  const rankedPlaygrounds = useMemo(
+    () => rankPlaygroundsByDistance(rankingOrigin, filteredPlaygrounds, searchTokens),
+    [filteredPlaygrounds, rankingOrigin, searchTokens],
   );
-  const searchCandidates = useMemo(() => {
-    if (!searchQuery.active) return stations;
-    if (searchOrigin) return getNearbyStationCandidates(stations, searchOrigin);
-    return textSearchMatches.map((match) => match.station);
-  }, [searchOrigin, searchQuery.active, stations, textSearchMatches]);
-  const filteredStations = useMemo(
-    () =>
-      searchCandidates.filter((station) =>
-        stationPassesFilters(station, selectedFilters, activeAreaIds, activeOperatorIds),
-      ),
-    [activeAreaIds, activeOperatorIds, searchCandidates, selectedFilters],
-  );
-
-  useEffect(() => {
-    searchCandidatesRef.current = searchCandidates;
-  }, [searchCandidates]);
-
-  useEffect(() => {
-    selectedFiltersRef.current = selectedFilters;
-  }, [selectedFilters]);
-
-  const hiddenSearchMatchCount = searchQuery.active ? Math.max(0, searchCandidates.length - filteredStations.length) : 0;
-  const rankingOrigin = searchOrigin || userLocation || mapCenter;
-  const rankedStations = useMemo(
-    () =>
-      rankStationsByDistance(
-        rankingOrigin,
-        filteredStations,
-        searchQuery.active && !searchOrigin ? textSearchScoreById : null,
-      ),
-    [filteredStations, rankingOrigin, searchOrigin, searchQuery.active, textSearchScoreById],
-  );
-
-  const visibleRankedStations = rankedStations.slice(0, visibleResultCount);
-  const hasMoreResults = visibleRankedStations.length < rankedStations.length;
-  const distanceSourceLabel = searchPlace ? searchPlace.label : userLocation ? "you" : "";
-  const resultSummary = [
-    `Showing ${formatCompactCount(visibleRankedStations.length)} of ${formatCompactCount(rankedStations.length)}`,
-    searchPlace ? `nearest to ${searchPlace.label}` : userLocation ? "nearest to you" : "tap location for distance",
-    placeSearchStatus === "loading" ? "checking place" : "",
-  ]
-    .filter(Boolean)
-    .join(" · ");
-
-  useEffect(() => {
-    const shouldSearchPlace =
-      searchQuery.active &&
-      !searchQuery.knownPlace &&
-      (searchQuery.hasPlaceIntent || textSearchMatches.length === 0) &&
-      searchQuery.normalized.length >= 2;
-
-    if (!shouldSearchPlace) {
-      setResolvedPlace(null);
-      setPlaceSearchStatus("idle");
-      setPlaceSearchWarning("");
-      return undefined;
-    }
-
-    const controller = new AbortController();
-    const timer = window.setTimeout(async () => {
-      setPlaceSearchStatus("loading");
-      setPlaceSearchWarning("");
-
-      try {
-        const response = await fetch(`/api/search-place?q=${encodeURIComponent(searchQuery.normalized)}`, {
-          signal: controller.signal,
-        });
-        if (!response.ok) throw new Error(`Place search returned ${response.status}`);
-
-        const payload = await response.json();
-        const place = payload.results?.[0] || null;
-
-        if (controller.signal.aborted) return;
-
-        if (place) {
-          setResolvedPlace(place);
-          setPlaceSearchStatus("ready");
-          setPlaceSearchWarning(payload.warning || "");
-          return;
-        }
-
-        setResolvedPlace(null);
-        setPlaceSearchStatus("empty");
-        setPlaceSearchWarning(payload.warning || "No matching Singapore place found.");
-      } catch (error) {
-        if (controller.signal.aborted) return;
-
-        setResolvedPlace(null);
-        setPlaceSearchStatus("error");
-        setPlaceSearchWarning(error instanceof Error ? error.message : "Place search unavailable.");
-      }
-    }, 250);
-
-    return () => {
-      window.clearTimeout(timer);
-      controller.abort();
-    };
-  }, [
-    searchQuery.active,
-    searchQuery.hasPlaceIntent,
-    searchQuery.knownPlace,
-    searchQuery.normalized,
-    textSearchMatches.length,
-  ]);
-
-  useEffect(() => {
-    if (stations.length === 0) return;
-
-    updateSelectedFilters((current) => {
-      const availableAreaIds = new Set(areaFilters.map((item) => item.areaId));
-      const availableOperatorIds = new Set(operatorFilters.map((item) => item.id));
-      const nextAreas = current.areas.filter((areaId) => availableAreaIds.has(areaId));
-      const nextOperators = current.operators.filter((operatorId) => availableOperatorIds.has(operatorId));
-
-      if (nextAreas.length === current.areas.length && nextOperators.length === current.operators.length) return current;
-
-      return {
-        ...current,
-        areas: nextAreas,
-        operators: nextOperators,
-      };
-    });
-  }, [areaFilters, operatorFilters, stations.length]);
-
-  useEffect(() => {
-    if (applyingLocationAreaFilter.current) {
-      applyingLocationAreaFilter.current = false;
-      setSelectionMode("auto");
-      return;
-    }
-
-    setLocationNotice("");
-    setSelectionMode("auto");
-  }, [query, selectedFilters]);
+  const visiblePlaygrounds = rankedPlaygrounds.slice(0, visibleResultCount);
+  const selectedPlayground =
+    filteredPlaygrounds.find((playground) => playground.id === selectedId) || rankedPlaygrounds[0]?.playground || null;
+  const selectedDistance = selectedPlayground
+    ? getDistanceMeters(rankingOrigin, [selectedPlayground.latitude, selectedPlayground.longitude])
+    : null;
+  const stats = useMemo(() => buildStats(filteredPlaygrounds), [filteredPlaygrounds]);
+  const activeFilterCount = getActiveFilterCount(filters);
+  const hasMoreResults = visiblePlaygrounds.length < rankedPlaygrounds.length;
 
   useEffect(() => {
     setVisibleResultCount(RESULT_PAGE_SIZE);
-  }, [rankingOrigin, query, selectedFilters]);
+  }, [filters, query, rankingOrigin]);
 
   useEffect(() => {
-    if (!searchOrigin || filteredStations.length === 0) return;
-
-    const nearestStation = rankStationsByDistance(searchOrigin, filteredStations)[0]?.station;
-    if (!nearestStation) return;
-
-    setSheetHasUserInteracted(true);
-    setSelectionMode("auto");
-    setSelectedId(nearestStation.id);
-    setVisibleResultCount(RESULT_PAGE_SIZE);
-    setSheetMode("expanded");
-    zoomToLocationAndStation(mapRef.current, searchOrigin, nearestStation);
-  }, [filteredStations, searchOrigin]);
-
-  const selectedStation =
-    filteredStations.length > 0
-      ? filteredStations.find((station) => station.id === selectedId) || rankedStations[0]?.station || null
-      : null;
-
-  useEffect(() => {
-    if (filteredStations.length === 0) {
+    if (filteredPlaygrounds.length === 0) {
       setSelectedId(null);
       return;
     }
 
-    const nearestVisibleStationId = rankedStations[0]?.station.id || null;
-    setSelectedId((current) => {
-      if (selectionMode === "manual" && current && filteredStations.some((station) => station.id === current)) {
-        return current;
-      }
-
-      return nearestVisibleStationId;
-    });
-  }, [filteredStations, rankedStations, selectionMode]);
+    setSelectedId((current) =>
+      current && filteredPlaygrounds.some((playground) => playground.id === current)
+        ? current
+        : rankedPlaygrounds[0]?.playground.id || null,
+    );
+  }, [filteredPlaygrounds, rankedPlaygrounds]);
 
   const handleMapCenterChange = useCallback((nextCenter) => {
     setMapCenter((current) => (isSameMapCenter(current, nextCenter) ? current : nextCenter));
   }, []);
 
-  function updateSelectedFilters(updater) {
-    setSelectedFilters((current) => {
-      const nextFilters = typeof updater === "function" ? updater(current) : updater;
-      selectedFiltersRef.current = nextFilters;
-      return nextFilters;
-    });
-  }
-
-  function selectStation(station) {
-    setSelectionMode("manual");
-    setSelectedId(station.id);
+  function selectPlayground(playground) {
+    setSelectedId(playground.id);
     setSheetHasUserInteracted(true);
     setSheetMode("expanded");
-    mapRef.current?.flyTo([station.latitude, station.longitude], Math.max(mapRef.current.getZoom(), 14), {
+    mapRef.current?.flyTo([playground.latitude, playground.longitude], Math.max(mapRef.current.getZoom(), 15), {
       duration: 0.35,
     });
   }
@@ -429,97 +185,54 @@ function ChargerMapPage({ onNavigate }) {
       return;
     }
 
-    stopLocationWatch();
     setIsLocating(true);
-    setLocationNotice("Finding your precise location...");
-    let hasInitialLocation = false;
-
-    locationWatchId.current = navigator.geolocation.watchPosition(
+    setLocationNotice("Finding playgrounds near you...");
+    navigator.geolocation.getCurrentPosition(
       (position) => {
-        handleUserPosition(position, { focusNearest: !hasInitialLocation });
-        hasInitialLocation = true;
+        const nextLocation = [position.coords.latitude, position.coords.longitude];
+        const nearest = rankPlaygroundsByDistance(nextLocation, filteredPlaygrounds)[0]?.playground;
+
+        setUserLocation(nextLocation);
+        setUserLocationAccuracy(position.coords.accuracy);
         setIsLocating(false);
+
+        if (!nearest) {
+          setLocationNotice("No playgrounds match the current filters near your location.");
+          mapRef.current?.flyTo(nextLocation, 15, { duration: 0.45 });
+          return;
+        }
+
+        setSelectedId(nearest.id);
+        setVisibleResultCount(RESULT_PAGE_SIZE);
+        setSheetHasUserInteracted(true);
+        setSheetMode("expanded");
+        setLocationNotice(
+          `Selected the nearest visible playground. Accuracy ${formatAccuracyMeters(position.coords.accuracy)}.`,
+        );
+        zoomToLocationAndPlayground(mapRef.current, nextLocation, nearest);
       },
       (error) => {
-        if (!hasInitialLocation) stopLocationWatch();
-        setLocationNotice(
-          hasInitialLocation
-            ? "Location tracking paused. Showing your last known position."
-            : getLocationErrorMessage(error),
-        );
         setIsLocating(false);
+        setLocationNotice(getLocationErrorMessage(error));
       },
       { enableHighAccuracy: true, maximumAge: 10000, timeout: 15000 },
     );
   }
 
-  function handleUserPosition(position, { focusNearest }) {
-    const nextLocation = [position.coords.latitude, position.coords.longitude];
-    const locationAccuracyLabel = formatAccuracyMeters(position.coords.accuracy);
-    const locationArea = getStationArea({ latitude: nextLocation[0], longitude: nextLocation[1] });
-    const nextFilters = applyAreaFilter(selectedFiltersRef.current, locationArea.id);
-    const areaFilterChanged = nextFilters !== selectedFiltersRef.current;
-    const nextActiveAreaIds = new Set(nextFilters.areas);
-    const nextActiveOperatorIds = new Set(nextFilters.operators);
-    const currentFilteredStations = searchCandidatesRef.current.filter((station) =>
-      stationPassesFilters(station, nextFilters, nextActiveAreaIds, nextActiveOperatorIds),
-    );
-
-    setUserLocation((current) => (current && isSameMapCenter(current, nextLocation) ? current : nextLocation));
-    setUserLocationAccuracy(position.coords.accuracy);
-
-    if (areaFilterChanged) {
-      applyingLocationAreaFilter.current = true;
-      selectedFiltersRef.current = nextFilters;
-      updateSelectedFilters(nextFilters);
-    }
-
-    if (currentFilteredStations.length === 0) {
-      if (focusNearest) {
-        setLocationNotice(
-          [
-            areaFilterChanged ? `Switched area filter to ${locationArea.label}.` : "",
-            "No visible chargers match the current filters.",
-          ]
-            .filter(Boolean)
-            .join(" "),
-        );
-        mapRef.current?.flyTo(nextLocation, 16, { duration: 0.45 });
-      }
-      return;
-    }
-
-    const nearestStation = rankStationsByDistance(nextLocation, currentFilteredStations)[0]?.station;
-
-    if (!nearestStation) {
-      if (focusNearest) setLocationNotice("No visible chargers match the current filters.");
-      return;
-    }
-
-    if (!focusNearest) return;
-
-    setSelectionMode("auto");
-    setSelectedId(nearestStation.id);
-    setVisibleResultCount(RESULT_PAGE_SIZE);
-    setSheetHasUserInteracted(true);
-    setSheetMode("expanded");
-    setLocationNotice(
-      [
-        areaFilterChanged ? `Switched area filter to ${locationArea.label}.` : "",
-        "Tracking your location and selected the closest charger in the current filtered list.",
-        locationAccuracyLabel ? `Accuracy: ${locationAccuracyLabel}.` : "",
-      ]
-        .filter(Boolean)
-        .join(" "),
-    );
-    zoomToLocationAndStation(mapRef.current, nextLocation, nearestStation);
+  function toggleArrayFilter(key, value) {
+    setFilters((current) => ({
+      ...current,
+      [key]: toggleValue(current[key], value),
+    }));
   }
 
-  function stopLocationWatch() {
-    if (locationWatchId.current == null || !navigator.geolocation?.clearWatch) return;
+  function toggleTypeFilter(type) {
+    toggleArrayFilter("types", type);
+  }
 
-    navigator.geolocation.clearWatch(locationWatchId.current);
-    locationWatchId.current = null;
+  function clearFilters() {
+    setFilters(createDefaultFilters());
+    setQuery("");
   }
 
   function handleSheetPointerDown(event) {
@@ -531,9 +244,7 @@ function ChargerMapPage({ onNavigate }) {
     window.addEventListener(
       "pointerup",
       (pointerEvent) => {
-        if (pointerEvent.pointerId === event.pointerId) {
-          finishSheetDrag(pointerEvent.clientY);
-        }
+        if (pointerEvent.pointerId === event.pointerId) finishSheetDrag(pointerEvent.clientY);
       },
       { once: true },
     );
@@ -559,14 +270,7 @@ function ChargerMapPage({ onNavigate }) {
     if (sheetDragStartY.current != null || event.button !== 0) return;
 
     sheetDragStartY.current = event.clientY;
-
-    window.addEventListener(
-      "mouseup",
-      (mouseEvent) => {
-        finishSheetDrag(mouseEvent.clientY);
-      },
-      { once: true },
-    );
+    window.addEventListener("mouseup", (mouseEvent) => finishSheetDrag(mouseEvent.clientY), { once: true });
   }
 
   function finishSheetDrag(endY) {
@@ -601,92 +305,39 @@ function ChargerMapPage({ onNavigate }) {
     setSheetMode((current) => (current === "expanded" ? "collapsed" : "expanded"));
   }
 
-  const openConnectorCount = filteredStations.reduce((sum, station) => sum + station.availableCount, 0);
-  const totalConnectors = filteredStations.reduce((sum, station) => sum + station.totalCount, 0);
-  const feedUpdatedLabel = formatFeedTime(feed.updatedAt);
-  const feedbackHref = getFeedbackMailto({
-    filterLabel: getActiveFilterLabel(selectedFilters, areaFilters, operatorFilters),
-    query,
-    visibleCount: filteredStations.length,
-  });
-  const searchNotice =
-    hiddenSearchMatchCount > 0 && filteredStations.length === 0
-      ? `${formatCompactCount(hiddenSearchMatchCount)} matching chargers are hidden by the current filters.`
-      : placeSearchWarning && searchQuery.active && !searchPlace && textSearchMatches.length === 0
-        ? placeSearchWarning
-        : "";
-  const topNotice = locationNotice || searchNotice;
-  const filterContextNotice = isDefaultCentralAvailabilityFilter(selectedFilters)
-    ? "Central + available filters are on. Add areas or clear filters to see more."
-    : "";
-
-  const [filterNoticeDismissed, setFilterNoticeDismissed] = useState(false);
-  useEffect(() => { setFilterNoticeDismissed(false); }, [filterContextNotice]);
-
-  function clearFilters() {
-    updateSelectedFilters(createAllFilterState());
-  }
-
-  function toggleQuickFilter(stateKey) {
-    updateSelectedFilters((current) => ({
-      ...current,
-      [stateKey]: !current[stateKey],
-    }));
-  }
-
-  function toggleAreaFilter(areaId) {
-    updateSelectedFilters((current) => ({
-      ...current,
-      areas: toggleValue(current.areas, areaId),
-    }));
-  }
-
-  function toggleOperatorFilter(operatorId) {
-    updateSelectedFilters((current) => ({
-      ...current,
-      operators: toggleValue(current.operators, operatorId),
-    }));
-  }
-
   return (
     <main className="app-shell">
-      <section className="map-stage" aria-label="Singapore EV charger map">
+      <section className="map-stage" aria-label="Singapore public playground map">
         <div className="top-panel">
           <div className="brand-row">
             <div className="brand-mark" aria-hidden="true">
-              <img src="/brand/bocharge-logo.png" alt="" />
+              <Trees size={25} />
             </div>
             <div className="brand-copy">
               <div className="brand-titleline">
-                <h1>BoCharge</h1>
-                <span className={feed.loading ? "live-pill loading" : "live-pill"}>
+                <h1>PlaySG</h1>
+                <span className={dataset ? "live-pill" : "live-pill loading"}>
                   <span aria-hidden="true" />
-                  {feed.loading ? "Syncing" : "Live map"}
+                  {dataset ? "Public map" : "Loading"}
                 </span>
               </div>
-              <p className="brand-tagline">Singapore EV chargers, refreshed every 5 min.</p>
+              <p className="brand-tagline">Parks, playgrounds, and tiny adventures.</p>
               <p className="brand-status">
-                {feed.loading
-                  ? "Loading Singapore chargers"
-                  : `${filteredStations.length} visible · ${openConnectorCount} open plugs`}
+                {dataset ? `${filteredPlaygrounds.length} visible · ${stats.destinationCount} destination parks` : "Loading playgrounds"}
               </p>
             </div>
             <div className="brand-actions">
               <button className="icon-button" type="button" onClick={() => onNavigate("/data")} aria-label="Data sources">
                 <Info size={19} />
               </button>
-              <a className="icon-button feedback-button" href={feedbackHref} aria-label="Send feedback">
-                <Mail size={17} />
-                <span className="feedback-label">Feedback</span>
-              </a>
               <button
                 className={isLocating ? "icon-button location-button locating" : "icon-button location-button"}
                 type="button"
                 onClick={handleLocateMe}
                 aria-busy={isLocating}
                 aria-label="Use my location"
-                title="Find chargers near me"
-                disabled={isLocating}
+                title="Find playgrounds near me"
+                disabled={isLocating || filteredPlaygrounds.length === 0}
               >
                 <LocateFixed size={19} />
               </button>
@@ -699,8 +350,8 @@ function ChargerMapPage({ onNavigate }) {
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search place, area, or provider"
-              aria-label="Search charging places, areas, or providers"
+              placeholder="Search playground, park, region"
+              aria-label="Search playgrounds, parks, or regions"
             />
             {query ? (
               <button type="button" onClick={() => setQuery("")} aria-label="Clear search">
@@ -709,59 +360,56 @@ function ChargerMapPage({ onNavigate }) {
             ) : null}
           </label>
 
-          <div className="filter-scroller" aria-label="Charger filters by availability, speed, area, and operator">
+          <div className="filter-scroller" aria-label="Playground filters">
             <span className="filter-rail-label">
               <Filter size={14} aria-hidden="true" />
               Filters
             </span>
-            <UtilityFilterChip
-              active={allFiltersActive}
-              ariaLabel="Show all chargers and clear selected filters."
-              count={utilityFilterCounts.all}
-              item={ALL_FILTER}
-              onSelect={clearFilters}
-            />
-            {QUICK_FILTERS.map((item) => (
-              <UtilityFilterChip
-                active={selectedFilters[item.stateKey]}
-                ariaLabel={`${selectedFilters[item.stateKey] ? "Remove" : "Add"} ${item.label} filter.`}
-                count={utilityFilterCounts[item.id]}
-                item={item}
-                key={item.id}
-                onSelect={() => toggleQuickFilter(item.stateKey)}
+            <button
+              className={activeFilterCount === 0 && !query ? "chip active" : "chip"}
+              type="button"
+              onClick={clearFilters}
+              aria-label="Clear search and filters"
+            >
+              <span className="chip-icon all" aria-hidden="true">
+                <CircleDot size={14} />
+              </span>
+              <span>All</span>
+              <span className="chip-count">{playgrounds.length}</span>
+            </button>
+            <span className="filter-divider" aria-hidden="true" />
+            {["Dedicated playground", "Park with playground"].map((type) => (
+              <FilterChip
+                active={filters.types.includes(type)}
+                count={playgrounds.filter((playground) => playground.type === type).length}
+                key={type}
+                label={type === "Dedicated playground" ? "Playgrounds" : "Parks"}
+                onSelect={() => toggleTypeFilter(type)}
               />
             ))}
             <span className="filter-divider" aria-hidden="true" />
-            {areaFilters.map((item) => (
-              <UtilityFilterChip
-                active={activeAreaIds.has(item.areaId)}
-                ariaLabel={`${activeAreaIds.has(item.areaId) ? "Remove" : "Add"} ${item.label} area filter. ${item.availableCount} open plugs across ${item.stationCount} stations.`}
-                count={item.availableCount}
-                item={item}
-                key={item.id}
-                onSelect={() => toggleAreaFilter(item.areaId)}
+            {SIZE_FILTERS.map((size) => (
+              <FilterChip
+                active={filters.sizes.includes(size)}
+                count={playgrounds.filter((playground) => playground.areaCategory === size).length}
+                key={size}
+                label={size}
+                onSelect={() => toggleArrayFilter("sizes", size)}
               />
             ))}
             <span className="filter-divider" aria-hidden="true" />
-            {operatorFilters.map((item) => (
-              <OperatorFilterChip
-                active={activeOperatorIds.has(item.id)}
-                item={item}
-                key={item.id}
-                onSelect={() => toggleOperatorFilter(item.id)}
+            {REGION_FILTERS.map((region) => (
+              <FilterChip
+                active={filters.regions.includes(region)}
+                count={playgrounds.filter((playground) => playground.region === region).length}
+                key={region}
+                label={region}
+                onSelect={() => toggleArrayFilter("regions", region)}
               />
             ))}
           </div>
 
-          {topNotice ? <div className="location-notice">{topNotice}</div> : null}
-          {filterContextNotice && !filterNoticeDismissed ? (
-            <div className="filter-context-notice">
-              {filterContextNotice}
-              <button type="button" className="notice-dismiss" onClick={() => setFilterNoticeDismissed(true)} aria-label="Dismiss">
-                <X size={14} />
-              </button>
-            </div>
-          ) : null}
+          {locationNotice || loadingError ? <div className="location-notice">{locationNotice || loadingError}</div> : null}
         </div>
 
         <MapContainer
@@ -771,25 +419,26 @@ function ChargerMapPage({ onNavigate }) {
           maxZoom={18}
           zoomControl={false}
           scrollWheelZoom
-          className="charger-map"
+          className="playground-map"
         >
           <MapBridge mapRef={mapRef} onCenterChange={handleMapCenterChange} />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {filteredStations.map((station) => (
+          {filteredPlaygrounds.map((playground) => (
             <Marker
-              key={station.id}
-              position={[station.latitude, station.longitude]}
-              icon={createStationIcon(station, station.id === selectedStation?.id)}
-              eventHandlers={{
-                click: () => selectStation(station),
-              }}
+              key={playground.id}
+              position={[playground.latitude, playground.longitude]}
+              icon={createPlaygroundIcon(playground, playground.id === selectedPlayground?.id)}
+              eventHandlers={{ click: () => selectPlayground(playground) }}
             >
               <Popup>
-                <strong>{station.name}</strong>
-                <span>{station.providerLabel || station.provider}</span>
+                <strong>{playground.name}</strong>
+                <span>{playground.areaLabel}</span>
+                <a href={playground.googleMapsUrl} target="_blank" rel="noreferrer">
+                  Open coordinates
+                </a>
               </Popup>
             </Marker>
           ))}
@@ -801,15 +450,10 @@ function ChargerMapPage({ onNavigate }) {
               </Popup>
             </Marker>
           ) : null}
-          {searchPlace ? (
-            <Marker position={[searchPlace.latitude, searchPlace.longitude]} icon={createSearchPlaceIcon()}>
-              <Popup>{searchPlace.label}</Popup>
-            </Marker>
-          ) : null}
         </MapContainer>
       </section>
 
-      <section className={`bottom-sheet sheet-${sheetMode}`} aria-label="Charger details and results">
+      <section className={`bottom-sheet sheet-${sheetMode}`} aria-label="Playground details and results">
         <button
           className="sheet-handle"
           type="button"
@@ -819,7 +463,7 @@ function ChargerMapPage({ onNavigate }) {
           onPointerCancel={handleSheetPointerCancel}
           onMouseDown={handleSheetMouseDown}
           aria-expanded={sheetMode === "expanded"}
-          aria-label={sheetMode === "expanded" ? "Collapse charger details" : "Expand charger details"}
+          aria-label={sheetMode === "expanded" ? "Collapse playground details" : "Expand playground details"}
         >
           <span className="sheet-handle-bar" aria-hidden="true" />
           {sheetMode === "collapsed" ? <ChevronsUp className="sheet-swipe-cue" size={18} aria-hidden="true" /> : null}
@@ -828,33 +472,25 @@ function ChargerMapPage({ onNavigate }) {
         <div className="sheet-content">
           <div className="panel-kicker">
             <span>
-              <PlugZap size={15} aria-hidden="true" />
-              Charge board
+              <Trees size={15} aria-hidden="true" />
+              Family play map
             </span>
-            <span>{feedUpdatedLabel}</span>
+            <span>{dataset ? `Updated ${formatDate(dataset.generatedAt)}` : "Loading data"}</span>
           </div>
 
           <div className="summary-strip">
-            <StatTile label="Open plugs" value={`${openConnectorCount}/${totalConnectors}`} tone="green" />
-            <StatTile label="Stations" value={filteredStations.length} tone="blue" />
-            <StatTile label="Source" value={feed.sourceLabel.replace(" fallback", "")} tone="dark" />
+            <StatTile label="Playgrounds" value={formatCompactCount(filteredPlaygrounds.length)} tone="green" />
+            <StatTile label="Large areas" value={stats.largeCount} tone="blue" />
+            <StatTile label="Source" value="NParks" tone="dark" />
           </div>
 
-          {feed.warning ? <div className="feed-warning">{feed.warning}</div> : null}
-
-          {selectedStation ? (
-            <StationDetail station={selectedStation} />
+          {selectedPlayground ? (
+            <PlaygroundDetail playground={selectedPlayground} distanceMeters={selectedDistance} />
           ) : (
             <div className="empty-state">
               <CircleDot size={22} />
-              <p>
-                {hiddenSearchMatchCount > 0
-                  ? `${formatCompactCount(hiddenSearchMatchCount)} matching chargers are hidden by the current filters.`
-                  : placeSearchStatus === "loading"
-                    ? "Looking up that place."
-                    : "No matching chargers found."}
-              </p>
-              {hiddenSearchMatchCount > 0 ? (
+              <p>{loadingError || "No playgrounds match the current search and filters."}</p>
+              {activeFilterCount || query ? (
                 <button className="show-more-button empty-action" type="button" onClick={clearFilters}>
                   Clear filters
                 </button>
@@ -863,35 +499,33 @@ function ChargerMapPage({ onNavigate }) {
           )}
 
           <div className="nearby-header">
-            <span>Available chargers</span>
-            <span>{resultSummary}</span>
+            <span>Nearby options</span>
+            <span>
+              Showing {formatCompactCount(visiblePlaygrounds.length)} of {formatCompactCount(rankedPlaygrounds.length)}
+              {userLocation ? " nearest to you" : ""}
+            </span>
           </div>
 
           <div className="station-list">
-            {visibleRankedStations.map(({ station, distanceMeters }) => {
-              const distanceLabel = distanceSourceLabel ? formatDistanceMeters(distanceMeters) : "";
-
-              return (
-                <button
-                  className={station.id === selectedStation?.id ? "station-row active" : "station-row"}
-                  key={station.id}
-                  type="button"
-                  onClick={() => selectStation(station)}
-                >
-                  <StatusDot status={station.status} />
-                  <div>
-                    <strong>{station.name}</strong>
-                    <span>{station.address}</span>
-                  </div>
-                  <div className="row-meta">
-                    <ProviderBadges providers={station.providers?.length ? station.providers : [station.provider]} compact />
-                    {distanceLabel ? <span className="row-distance">{distanceLabel} from {distanceSourceLabel}</span> : null}
-                    <b>{station.availableCount} open</b>
-                  </div>
-                </button>
-              );
-            })}
-
+            {visiblePlaygrounds.map(({ playground, distanceMeters }) => (
+              <button
+                className={playground.id === selectedPlayground?.id ? "station-row active" : "station-row"}
+                key={playground.id}
+                type="button"
+                onClick={() => selectPlayground(playground)}
+              >
+                <StatusDot category={playground.areaCategory} />
+                <div>
+                  <strong>{playground.name}</strong>
+                  <span>{playground.region} · {playground.type}</span>
+                </div>
+                <div className="row-meta">
+                  <span className="size-badge">{playground.areaCategory}</span>
+                  <span className="row-distance">{formatDistanceMeters(distanceMeters)}</span>
+                  <b>{playground.areaLabel}</b>
+                </div>
+              </button>
+            ))}
           </div>
 
           {hasMoreResults ? (
@@ -912,55 +546,25 @@ function ChargerMapPage({ onNavigate }) {
 }
 
 function DataInfoPage({ onNavigate }) {
-  const [sourceInfo, setSourceInfo] = useState({
-    loading: true,
-    sourceLabel: "",
-    warning: "",
-    updatedAt: "",
-    cache: null,
-  });
+  const [dataset, setDataset] = useState(null);
 
   useEffect(() => {
     let mounted = true;
 
-    async function loadSourceInfo() {
-      try {
-        const response = await fetch("/api/chargers");
-        if (!response.ok) throw new Error(`API returned ${response.status}`);
-        const payload = await response.json();
-
-        if (!mounted) return;
-
-        setSourceInfo({
-          loading: false,
-          sourceLabel: payload.sourceLabel || "LTA DataMall",
-          warning: payload.warning || "",
-          updatedAt: payload.updatedAt || payload.lastUpdatedTime || "",
-          cache: payload.cache || null,
-        });
-      } catch (error) {
-        if (!mounted) return;
-
-        setSourceInfo({
-          loading: false,
-          sourceLabel: "Unavailable",
-          warning: error instanceof Error ? error.message : "Unable to load data source status.",
-          updatedAt: "",
-          cache: null,
-        });
-      }
+    async function loadDataset() {
+      const response = await fetch("/data/playgrounds.json");
+      const payload = await response.json();
+      if (mounted) setDataset(payload);
     }
 
-    loadSourceInfo();
+    loadDataset().catch(() => {
+      if (mounted) setDataset(null);
+    });
 
     return () => {
       mounted = false;
     };
   }, []);
-
-  const ltaUpdateTime = formatFeedTimeValue(sourceInfo.updatedAt);
-  const serverRefreshLabel = sourceInfo.cache?.refreshedAt ? formatSourceTimestamp(sourceInfo.cache.refreshedAt) : "Not available";
-  const cacheExpiryLabel = sourceInfo.cache?.expiresAt ? formatSourceTimestamp(sourceInfo.cache.expiresAt) : "At the next 5-minute slot";
 
   return (
     <main className="info-page">
@@ -971,86 +575,172 @@ function DataInfoPage({ onNavigate }) {
         </button>
         <div>
           <p>Data sources</p>
-          <h1>Reliability and freshness</h1>
+          <h1>Official playground data, with caveats</h1>
         </div>
       </header>
 
-      <section className="info-status" aria-label="Current feed status">
+      <section className="info-status" aria-label="Current playground dataset status">
         <div>
-          <span>Current source</span>
-          <strong>{sourceInfo.loading ? "Checking" : sourceInfo.sourceLabel || "Unknown"}</strong>
+          <span>Records</span>
+          <strong>{dataset ? formatCompactCount(dataset.count) : "Loading"}</strong>
         </div>
         <div>
-          <span>LTA DataMall update</span>
-          <strong>{ltaUpdateTime}</strong>
+          <span>Generated</span>
+          <strong>{dataset ? formatDate(dataset.generatedAt) : "Loading"}</strong>
         </div>
         <div>
-          <span>Server refresh</span>
-          <strong>{serverRefreshLabel}</strong>
+          <span>Map links</span>
+          <strong>Google Maps coordinates</strong>
         </div>
       </section>
-
-      {sourceInfo.warning ? <div className="info-warning">{sourceInfo.warning}</div> : null}
 
       <section className="info-section">
         <div className="info-section-heading">
           <Info size={19} />
-          <h2>Primary data source</h2>
+          <h2>What is included</h2>
         </div>
         <p>
-          BoCharge uses LTA DataMall's EV Charging Points Batch feed as the production source for Singapore charger
-          locations, operators, plug types, prices, and connector availability.
+          The map includes NParks-managed records whose names contain PG or PLAYGROUND, plus Parks@SG records that
+          explicitly list Playground as an amenity.
         </p>
+        <p>{dataset?.dataQuality || "Area values and point coordinates are loaded from the bundled dataset."}</p>
+      </section>
+
+      <section className="info-section">
+        <div className="info-section-heading">
+          <Ruler size={19} />
+          <h2>Size field</h2>
+        </div>
         <p>
-          LTA publishes this as a batch file behind a temporary download link. The app requests that batch server-side so
-          the LTA account key is never exposed in browser code.
+          Size is joined from the NParks managed-area polygon dataset. It is useful for judging whether a location is a
+          pocket, neighbourhood, large, or destination-sized outing, but it is not a measured footprint of the actual play
+          equipment.
         </p>
       </section>
 
       <section className="info-section">
         <div className="info-section-heading">
-          <Clock size={19} />
-          <h2>Freshness model</h2>
+          <Info size={19} />
+          <h2>Refresh model</h2>
         </div>
-        <ul>
-          <li>The visible timestamp is the LTA DataMall batch update time, not the time your browser loaded the page.</li>
-          <li>The data is refreshed every 5 min, aligned to LTA's documented update cadence.</li>
-          <li>Browser refreshes are also aligned to the next 5-minute boundary.</li>
-          <li>Current API cache expiry: {cacheExpiryLabel}.</li>
-        </ul>
-      </section>
-
-      <section className="info-section">
-        <div className="info-section-heading">
-          <PlugZap size={19} />
-          <h2>Reliability notes</h2>
-        </div>
-        <ul>
-          <li>Availability can lag real-world charger usage because operators and LTA update the feed asynchronously.</li>
-          <li>Provider apps remain the best confirmation point before driving to a charger.</li>
-          <li>If a live LTA refresh fails, the app can keep showing the last successful cached LTA payload.</li>
-          <li>If no LTA key is configured, the app falls back to a bundled snapshot and labels it as sample data.</li>
-        </ul>
+        <p>
+          The app checks its bundled playground JSON once per hour while a browser tab is open. A scheduled GitHub
+          Actions workflow also rebuilds the dataset hourly from data.gov.sg and commits only when the generated file
+          actually changes.
+        </p>
       </section>
 
       <section className="info-section">
         <div className="info-section-heading">
           <MapPin size={19} />
-          <h2>Derived fields</h2>
+          <h2>Sources</h2>
         </div>
-        <p>
-          Area filters such as North, South, East, West, and Central are derived from charger coordinates. They are
-          lightweight map buckets, not official planning-region boundaries.
-        </p>
+        <ul>
+          {(dataset?.sources || []).map((source) => (
+            <li key={source.datasetId}>
+              <a href={source.url} target="_blank" rel="noreferrer">
+                {source.name}
+              </a>
+              : {source.use}
+            </li>
+          ))}
+        </ul>
       </section>
     </main>
   );
 }
 
-function getInitialSheetMode() {
-  if (typeof window === "undefined") return "expanded";
+function PlaygroundDetail({ playground, distanceMeters }) {
+  const amenities = playground.amenities?.filter((item) => !/^description$/i.test(item)).slice(0, 6) || [];
 
-  return window.matchMedia(MOBILE_SHEET_QUERY).matches ? "collapsed" : "expanded";
+  return (
+    <article className="detail-card">
+      <div className="detail-heading">
+        <div className="provider-line">
+          <span className="type-pill">{playground.type}</span>
+          <span className="status-pill available">{playground.region}</span>
+        </div>
+        <h2>{playground.name}</h2>
+        <p>{playground.address || playground.coordinateLabel}</p>
+      </div>
+
+      <div className="detail-grid">
+        <Metric label="Managed area" value={playground.areaLabel} />
+        <Metric label="Scale" value={playground.areaCategory} />
+        <Metric label="Distance" value={formatDistanceMeters(distanceMeters)} />
+      </div>
+
+      <div className="detail-meta">
+        <a href={playground.googleMapsUrl} target="_blank" rel="noreferrer">
+          <MapPin size={15} />
+          {playground.coordinateLabel}
+        </a>
+        <span>
+          <Info size={15} />
+          {playground.notes?.[1] || "Area details are based on the official source where available."}
+        </span>
+      </div>
+
+      <div className="detail-actions">
+        <a
+          className="primary-action"
+          href={playground.googleMapsUrl}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`Open ${playground.name} in Google Maps`}
+        >
+          <Navigation size={18} />
+          Open in Google Maps
+        </a>
+        <a className="secondary-action" href={playground.sourceUrl} target="_blank" rel="noreferrer">
+          <ExternalLink size={18} />
+          View source dataset
+        </a>
+      </div>
+
+      <div className="connector-strip">
+        <span>{playground.source}</span>
+        {amenities.map((amenity) => (
+          <span key={amenity}>{amenity}</span>
+        ))}
+      </div>
+    </article>
+  );
+}
+
+function FilterChip({ active, count, label, onSelect }) {
+  return (
+    <button className={active ? "chip active" : "chip"} type="button" onClick={onSelect} aria-pressed={active}>
+      <span className="chip-icon" aria-hidden="true">
+        <MapPin size={14} />
+      </span>
+      <span>{label}</span>
+      <span className="chip-count">{formatCompactCount(count)}</span>
+    </button>
+  );
+}
+
+function StatTile({ label, value, tone }) {
+  return (
+    <div className={`stat-tile ${tone}`}>
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
+
+function Metric({ label, value }) {
+  return (
+    <div className="metric">
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
+
+function StatusDot({ category }) {
+  const className = `status-dot ${normalizeText(category).replace(/\s+/g, "-")}`;
+  return <span className={className} aria-hidden="true" />;
 }
 
 function MapBridge({ mapRef, onCenterChange }) {
@@ -1077,239 +767,15 @@ function MapBridge({ mapRef, onCenterChange }) {
   return null;
 }
 
-function StationDetail({ station }) {
-  const providers = station.providers?.length ? station.providers : [station.provider];
-  const appProviderName = providers.find((providerName) => canOpenProviderApp(providerName)) || station.provider;
-  const providerProfile = getProviderProfile(appProviderName);
-  const providerAppTarget = getProviderAppTarget(appProviderName);
-  const bestPlug = station.plugTypes[0];
-
-  return (
-    <article className="detail-card">
-      <div className="detail-heading">
-        <div>
-          <div className="provider-line">
-            <ProviderBadges providers={providers} />
-            <StatusPill status={station.status} />
-          </div>
-          <h2>{station.name}</h2>
-          <p>{station.address}</p>
-        </div>
-      </div>
-
-      <div className="detail-grid">
-        <Metric label="Open plugs" value={`${station.availableCount}/${station.totalCount}`} />
-        <Metric label="Max speed" value={station.maxPowerKw ? `${station.maxPowerKw} kW` : "TBC"} />
-        <Metric label="Plug" value={bestPlug?.plugType || "TBC"} />
-      </div>
-
-      <div className="detail-meta">
-        <span>
-          <MapPin size={15} />
-          {station.position || station.operationHours || "Open status follows provider feed"}
-        </span>
-        {bestPlug?.price ? (
-          <span>
-            <BatteryCharging size={15} />
-            {bestPlug.priceType ? `$${bestPlug.price}/${bestPlug.priceType}` : `$${bestPlug.price}`}
-          </span>
-        ) : null}
-      </div>
-
-      <div className="detail-actions">
-        <a
-          className="primary-action"
-          href={getGoogleMapsUrl(station)}
-          target="_blank"
-          rel="noreferrer"
-          aria-label={`Open ${station.name} in Google Maps`}
-        >
-          <Navigation size={18} />
-          Open in Google Maps
-        </a>
-
-        {providerAppTarget.available ? (
-          <button className="secondary-action" type="button" onClick={() => openProviderApp(appProviderName)}>
-            <ExternalLink size={18} />
-            Open {providerProfile.appName}
-          </button>
-        ) : (
-          <div className="provider-unavailable">
-            <button className="secondary-action unavailable" type="button" disabled>
-              <Info size={18} />
-              App link unavailable
-            </button>
-            <p>{providerAppTarget.unavailableMessage}</p>
-          </div>
-        )}
-      </div>
-
-      <div className="connector-strip">
-        {station.plugTypes.slice(0, 4).map((plug, index) => (
-          <span key={`${plug.plugType}-${plug.powerRating}-${index}`}>
-            {plug.plugType || "Plug"} {plug.chargingSpeed ? `${plug.chargingSpeed} kW` : plug.powerRating || ""}
-          </span>
-        ))}
-      </div>
-    </article>
+function createPlaygroundIcon(playground, selected) {
+  const color = getPlaygroundColor(playground);
+  const className = ["pin", selected ? "selected" : "", playground.type === "Park with playground" ? "park-pin" : ""].join(
+    " ",
   );
-}
-
-function ProviderBadge({ providerName, compact = false }) {
-  const providerProfile = getProviderProfile(providerName);
-  const label = providerProfile.key === "unknown" ? getOperatorInitials(providerName) : providerProfile.shortName;
-
-  return (
-    <span
-      className={compact ? "provider-badge compact" : "provider-badge"}
-      style={{
-        "--provider-color": providerProfile.brandColor,
-        "--provider-text": providerProfile.brandTextColor,
-      }}
-      title={providerName}
-    >
-      {providerProfile.logoSrc ? (
-        <img
-          className={`provider-badge-logo provider-badge-logo-${providerProfile.key}`}
-          src={providerProfile.logoSrc}
-          alt=""
-          aria-hidden="true"
-        />
-      ) : null}
-      <span>{label}</span>
-    </span>
-  );
-}
-
-function UtilityFilterChip({ item, active, count, onSelect, ariaLabel }) {
-  const Icon = item.Icon || MapPin;
-
-  return (
-    <button
-      className={active ? "chip active" : "chip"}
-      style={{
-        "--chip-color": item.color,
-        "--chip-text": item.textColor,
-      }}
-      type="button"
-      onClick={onSelect}
-      aria-label={ariaLabel}
-      aria-pressed={active}
-    >
-      <span className="chip-icon" aria-hidden="true">
-        <Icon size={14} />
-      </span>
-      <span>{item.label}</span>
-      <span className="chip-count">{formatCompactCount(count)}</span>
-    </button>
-  );
-}
-
-function OperatorFilterChip({ item, active, onSelect }) {
-  const { profile } = item;
-  const iconLabel = profile.key === "unknown" ? getOperatorInitials(item.operatorName) : profile.markerLabel;
-
-  return (
-    <button
-      className={active ? "operator-chip active" : "operator-chip"}
-      style={{
-        "--provider-color": profile.brandColor,
-        "--provider-text": profile.brandTextColor,
-      }}
-      type="button"
-      onClick={onSelect}
-      aria-label={`${active ? "Remove" : "Add"} operator ${item.operatorName} filter. ${item.availableCount} open plugs across ${item.stationCount} stations.`}
-      aria-pressed={active}
-      title={item.operatorName}
-    >
-      <span className="operator-chip-icon" aria-hidden="true">
-        {profile.logoSrc ? (
-          <img className={`operator-chip-logo operator-chip-logo-${profile.key}`} src={profile.logoSrc} alt="" />
-        ) : (
-          <span>{iconLabel}</span>
-        )}
-      </span>
-      <span className="operator-chip-copy">
-        <span className="operator-chip-name">{item.label}</span>
-        <span className="operator-chip-count">{formatCompactCount(item.availableCount)} open plugs</span>
-      </span>
-    </button>
-  );
-}
-
-function ProviderBadges({ providers, compact = false }) {
-  const providerNames = uniqueProviderNames(providers).slice(0, 4);
-
-  return (
-    <span className={compact ? "provider-stack compact" : "provider-stack"} title={uniqueProviderNames(providers).join(" + ")}>
-      {providerNames.map((providerName) => (
-        <ProviderBadge compact={compact} key={providerName} providerName={providerName} />
-      ))}
-      {uniqueProviderNames(providers).length > providerNames.length ? (
-        <span className={compact ? "provider-more compact" : "provider-more"}>
-          +{uniqueProviderNames(providers).length - providerNames.length}
-        </span>
-      ) : null}
-    </span>
-  );
-}
-
-function StatTile({ label, value, tone }) {
-  return (
-    <div className={`stat-tile ${tone}`}>
-      <span>{label}</span>
-      <strong>{value}</strong>
-    </div>
-  );
-}
-
-function Metric({ label, value }) {
-  return (
-    <div className="metric">
-      <span>{label}</span>
-      <strong>{value}</strong>
-    </div>
-  );
-}
-
-function StatusDot({ status }) {
-  return <span className={`status-dot ${status}`} aria-hidden="true" />;
-}
-
-function StatusPill({ status }) {
-  const labels = {
-    available: "Open",
-    occupied: "In use",
-    offline: "Offline",
-    unknown: "Unknown",
-  };
-
-  return <span className={`status-pill ${status}`}>{labels[status] || "Unknown"}</span>;
-}
-
-function createStationIcon(station, selected) {
-  const providerProfile = getProviderProfile(station.provider);
-  const className = [
-    "pin",
-    `pin-provider-${providerProfile.key}`,
-    `pin-${station.status}`,
-    selected ? "selected" : "",
-  ].join(" ");
-  const label =
-    providerProfile.key === "unknown"
-      ? station.providerInitials || getOperatorInitials(station.provider)
-      : providerProfile.markerLabel || station.providerInitials || station.provider.slice(0, 2).toUpperCase();
-  const markerContent = providerProfile.logoSrc
-    ? `<img class="pin-logo pin-logo-${providerProfile.key}" src="${escapeAttribute(providerProfile.logoSrc)}" alt="" aria-hidden="true" />`
-    : `<span class="pin-label">${escapeHtml(label)}</span>`;
-  const inlineStyle = [
-    `--provider-color: ${providerProfile.brandColor}`,
-    `--provider-text: ${providerProfile.brandTextColor}`,
-  ].join("; ");
 
   return L.divIcon({
-    className: "station-marker",
-    html: `<span class="${className}" style="${inlineStyle}" title="${escapeAttribute(station.providerLabel || providerProfile.shortName)}">${markerContent}<span class="pin-status pin-status-${station.status}"></span></span>`,
+    className: "playground-marker",
+    html: `<span class="${className}" style="--pin-color: ${color}" title="${escapeAttribute(playground.name)}"><span class="pin-label">${escapeHtml(getPinLabel(playground))}</span></span>`,
     iconSize: selected ? [36, 36] : [28, 28],
     iconAnchor: selected ? [18, 18] : [14, 14],
   });
@@ -1324,415 +790,108 @@ function createUserIcon() {
   });
 }
 
-function createSearchPlaceIcon() {
-  return L.divIcon({
-    className: "search-place-marker",
-    html: '<span class="search-place-pin"><span></span></span>',
-    iconSize: [26, 26],
-    iconAnchor: [13, 13],
-  });
+function getPinLabel(playground) {
+  if (playground.type === "Park with playground") return "PK";
+  if (playground.areaCategory === "Destination") return "D";
+  if (playground.areaCategory === "Large") return "L";
+  return "PG";
 }
 
-function getGoogleMapsUrl(station) {
-  const destination = encodeURIComponent(`${station.latitude},${station.longitude}`);
-  const destinationName = encodeURIComponent(station.name || station.address || "EV charger");
-  return `https://www.google.com/maps/dir/?api=1&destination=${destination}&travelmode=driving&dir_action=navigate&destination_name=${destinationName}`;
+function getPlaygroundColor(playground) {
+  if (playground.type === "Park with playground") return "#0f8b5f";
+  if (playground.areaCategory === "Destination") return "#0f4c81";
+  if (playground.areaCategory === "Large") return "#08a7d8";
+  if (playground.areaCategory === "Pocket") return "#f97316";
+  return "#18bf73";
 }
 
-function getFeedbackMailto({ filterLabel, query, visibleCount }) {
-  const subject = encodeURIComponent("BoCharge feedback");
-  const body = encodeURIComponent(
+function createDefaultFilters() {
+  return {
+    types: [],
+    sizes: [],
+    regions: [],
+  };
+}
+
+function playgroundPassesFilters(playground, filters, searchTokens) {
+  const matchesType = filters.types.length === 0 || filters.types.includes(playground.type);
+  const matchesSize = filters.sizes.length === 0 || filters.sizes.includes(playground.areaCategory);
+  const matchesRegion = filters.regions.length === 0 || filters.regions.includes(playground.region);
+  const haystack = normalizeText(
     [
-      "Hi, I have feedback about BoCharge:",
-      "",
-      `Current filters: ${filterLabel || "All"}`,
-      `Current search: ${query || "None"}`,
-      `Visible results: ${visibleCount}`,
-      "",
-    ].join("\n"),
+      playground.name,
+      playground.rawName,
+      playground.type,
+      playground.region,
+      playground.areaCategory,
+      playground.address,
+      playground.amenities?.join(" "),
+    ].join(" "),
   );
+  const matchesSearch = searchTokens.length === 0 || searchTokens.every((token) => haystack.includes(token));
 
-  return `mailto:${FEEDBACK_EMAIL}?subject=${subject}&body=${body}`;
+  return matchesType && matchesSize && matchesRegion && matchesSearch;
 }
 
-function getActiveFilterLabel(filters, areaFilters, operatorFilters) {
-  const labels = [];
+function rankPlaygroundsByDistance(origin, playgrounds, searchTokens = []) {
+  return playgrounds
+    .map((playground) => ({
+      playground,
+      distanceMeters: getDistanceMeters(origin, [playground.latitude, playground.longitude]),
+      searchScore: getSearchScore(playground, searchTokens),
+    }))
+    .sort((a, b) => {
+      if (a.searchScore !== b.searchScore) return b.searchScore - a.searchScore;
+      if (a.distanceMeters !== b.distanceMeters) return a.distanceMeters - b.distanceMeters;
+      return a.playground.name.localeCompare(b.playground.name);
+    });
+}
 
-  if (filters.availableOnly) labels.push("Available now");
-  if (filters.fastOnly) labels.push("Fast");
+function getSearchScore(playground, searchTokens) {
+  if (searchTokens.length === 0) return 0;
 
-  filters.areas.forEach((areaId) => {
-    const areaFilter = areaFilters.find((item) => item.areaId === areaId);
-    if (areaFilter) labels.push(areaFilter.label);
+  const name = normalizeText(playground.name);
+  const region = normalizeText(playground.region);
+  let score = 0;
+
+  searchTokens.forEach((token) => {
+    if (name.startsWith(token)) score += 8;
+    if (name.includes(token)) score += 4;
+    if (region === token) score += 2;
   });
 
-  filters.operators.forEach((operatorId) => {
-    const operatorFilter = operatorFilters.find((item) => item.id === operatorId);
-    if (operatorFilter) labels.push(operatorFilter.label);
-  });
-
-  return labels.length > 0 ? labels.join(" + ") : "All";
+  return score;
 }
 
-function createDefaultFilterState() {
+function buildStats(playgrounds) {
   return {
-    availableOnly: true,
-    fastOnly: false,
-    areas: ["central"],
-    operators: [],
+    largeCount: playgrounds.filter((playground) => ["Large", "Destination"].includes(playground.areaCategory)).length,
+    destinationCount: playgrounds.filter((playground) => playground.areaCategory === "Destination").length,
   };
 }
 
-function createAllFilterState() {
-  return {
-    availableOnly: false,
-    fastOnly: false,
-    areas: [],
-    operators: [],
-  };
-}
-
-function applyAreaFilter(filters, areaId) {
-  if (filters.areas.length === 1 && filters.areas[0] === areaId) return filters;
-
-  return {
-    ...filters,
-    areas: [areaId],
-  };
-}
-
-function hasActiveFilters(filters) {
-  return Boolean(filters.availableOnly || filters.fastOnly || filters.areas.length > 0 || filters.operators.length > 0);
-}
-
-function isDefaultCentralAvailabilityFilter(filters) {
-  return (
-    filters.availableOnly &&
-    !filters.fastOnly &&
-    filters.areas.length === 1 &&
-    filters.areas[0] === "central" &&
-    filters.operators.length === 0
-  );
-}
-
-function stationPassesFilters(station, selectedFilters, activeAreaIds, activeOperatorIds) {
-  const matchesAvailability = !selectedFilters.availableOnly || station.availableCount > 0;
-  const matchesSpeed = !selectedFilters.fastOnly || station.maxPowerKw >= 43;
-  const matchesArea = activeAreaIds.size === 0 || activeAreaIds.has(getStationArea(station).id);
-  const matchesOperator = activeOperatorIds.size === 0 || hasProviderFilterId(station, activeOperatorIds);
-
-  return matchesAvailability && matchesSpeed && matchesArea && matchesOperator;
+function getActiveFilterCount(filters) {
+  return filters.types.length + filters.sizes.length + filters.regions.length;
 }
 
 function toggleValue(values, value) {
   return values.includes(value) ? values.filter((item) => item !== value) : [...values, value];
 }
 
-function formatFeedTime(value) {
-  return `LTA DataMall updated at: ${formatFeedTimeValue(value)}`;
+function getInitialSheetMode() {
+  if (typeof window === "undefined") return "expanded";
+
+  return window.matchMedia(MOBILE_SHEET_QUERY).matches ? "collapsed" : "expanded";
 }
 
-function formatFeedTimeValue(value) {
-  if (!value) return "TBC";
-
-  const date = parseFeedTime(value);
-  if (Number.isNaN(date.getTime())) return "recently";
-
-  const parts = new Intl.DateTimeFormat("en-SG", {
-    timeZone: SG_TIME_ZONE,
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  }).formatToParts(date);
-  const hour = parts.find((part) => part.type === "hour")?.value || "0";
-  const minute = parts.find((part) => part.type === "minute")?.value || "00";
-  const dayPeriod = (parts.find((part) => part.type === "dayPeriod")?.value || "").toLowerCase().replaceAll(".", "");
-
-  return `${hour}.${minute}${dayPeriod} SGT`;
-}
-
-function parseFeedTime(value) {
-  if (typeof value === "string") {
-    const match = value
-      .trim()
-      .match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/);
-
-    if (match) {
-      const [, year, month, day, hour, minute, second = "00"] = match;
-      return new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}+08:00`);
-    }
-  }
-
-  return new Date(value);
-}
-
-function formatSourceTimestamp(value) {
-  const date = parseFeedTime(value);
-  if (Number.isNaN(date.getTime())) return "Not available";
-
-  const parts = new Intl.DateTimeFormat("en-SG", {
-    timeZone: SG_TIME_ZONE,
-    day: "numeric",
-    month: "short",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  }).formatToParts(date);
-  const day = parts.find((part) => part.type === "day")?.value || "";
-  const month = parts.find((part) => part.type === "month")?.value || "";
-  const hour = parts.find((part) => part.type === "hour")?.value || "0";
-  const minute = parts.find((part) => part.type === "minute")?.value || "00";
-  const dayPeriod = (parts.find((part) => part.type === "dayPeriod")?.value || "").toLowerCase().replaceAll(".", "");
-
-  return `${day} ${month}, ${hour}.${minute}${dayPeriod} SGT`;
-}
-
-function getMsUntilNextRefreshBoundary(nowMs = Date.now(), intervalMs = CLIENT_REFRESH_MS) {
-  const remainder = nowMs % intervalMs;
-
-  return remainder === 0 ? intervalMs : intervalMs - remainder;
-}
-
-function getStationPayload(payload) {
-  const records = payload.stations || payload;
-
-  if (Array.isArray(records) && records.every(isNormalizedStation)) {
-    return records;
-  }
-
-  return normalizeChargerStations(records);
-}
-
-function uniqueProviderNames(providers) {
-  const seen = new Set();
-
-  return toArray(providers).filter((providerName) => {
-    const normalized = String(providerName || "").trim().toLowerCase();
-    if (!normalized || seen.has(normalized)) return false;
-    seen.add(normalized);
-    return true;
-  });
-}
-
-function buildAreaFilterOptions(stations) {
-  const areaStats = new Map(
-    AREA_FILTERS.map((area) => [
-      area.id,
-      {
-        id: `area:${area.id}`,
-        areaId: area.id,
-        label: area.label,
-        color: area.color,
-        textColor: area.textColor,
-        stationCount: 0,
-        availableCount: 0,
-        totalCount: 0,
-      },
-    ]),
-  );
-
-  stations.forEach((station) => {
-    const area = getStationArea(station);
-    const existing = areaStats.get(area.id);
-    if (!existing) return;
-
-    existing.stationCount += 1;
-    existing.availableCount += station.availableCount;
-    existing.totalCount += station.totalCount;
-  });
-
-  return AREA_FILTERS.map((area) => areaStats.get(area.id)).filter((area) => area.stationCount > 0);
-}
-
-function buildOperatorFilterOptions(stations) {
-  const operators = new Map();
-
-  stations.forEach((station) => {
-    const providerNames = uniqueProviderNames(station.providers?.length ? station.providers : [station.provider]);
-
-    providerNames.forEach((operatorName) => {
-      const normalizedOperatorName = normalizeOperatorFilterValue(operatorName);
-      if (!normalizedOperatorName) return;
-
-      const id = `operator:${normalizedOperatorName}`;
-      const existing = operators.get(id);
-
-      if (existing) {
-        existing.stationCount += 1;
-        existing.availableCount += station.availableCount;
-        existing.totalCount += station.totalCount;
-        return;
-      }
-
-      operators.set(id, {
-        id,
-        operatorName,
-        label: formatOperatorFilterLabel(operatorName),
-        profile: getProviderProfile(operatorName),
-        stationCount: 1,
-        availableCount: station.availableCount,
-        totalCount: station.totalCount,
-      });
-    });
-  });
-
-  return [...operators.values()].sort((a, b) => {
-    if (b.availableCount !== a.availableCount) return b.availableCount - a.availableCount;
-    if (b.totalCount !== a.totalCount) return b.totalCount - a.totalCount;
-    if (b.stationCount !== a.stationCount) return b.stationCount - a.stationCount;
-    return a.label.localeCompare(b.label);
-  });
-}
-
-function getStationArea(station) {
-  const latDelta = station.latitude - AREA_CENTER.latitude;
-  const lngDelta = station.longitude - AREA_CENTER.longitude;
-  const centralLatSpan = 0.035;
-  const centralLngSpan = 0.045;
-  const inDowntownCore =
-    station.latitude >= 1.265 &&
-    station.latitude <= 1.305 &&
-    station.longitude >= 103.84 &&
-    station.longitude <= 103.875;
-
-  if (inDowntownCore || (Math.abs(latDelta) <= centralLatSpan && Math.abs(lngDelta) <= centralLngSpan)) {
-    return { id: "central", label: "Central" };
-  }
-
-  const latitudeWeight = Math.abs(latDelta) / 0.09;
-  const longitudeWeight = Math.abs(lngDelta) / 0.13;
-
-  if (latitudeWeight >= longitudeWeight) {
-    return latDelta >= 0 ? { id: "north", label: "North" } : { id: "south", label: "South" };
-  }
-
-  return lngDelta >= 0 ? { id: "east", label: "East" } : { id: "west", label: "West" };
-}
-
-function hasProviderFilterId(station, operatorIds) {
-  const providerNames = uniqueProviderNames(station.providers?.length ? station.providers : [station.provider]);
-
-  return providerNames.some((name) => operatorIds.has(`operator:${normalizeOperatorFilterValue(name)}`));
-}
-
-function normalizeOperatorFilterValue(value) {
-  return String(value || "")
-    .trim()
-    .replace(/\s+/g, " ")
-    .toLowerCase();
-}
-
-function formatOperatorFilterLabel(operatorName) {
-  const strippedName = String(operatorName || "")
-    .replace(/\b(private\s+limited|pte\.?\s*ltd\.?|ltd\.?|limited)\b\.?/gi, "")
-    .replace(/\s+/g, " ")
-    .trim();
-  const label = strippedName || String(operatorName || "").trim() || "Unknown";
-
-  return label
-    .split(/\s+/)
-    .map(formatOperatorWord)
-    .join(" ")
-    .replace(/\bComfortdelgro\b/g, "ComfortDelGro")
-    .replace(/\bEneready\b/g, "ENEReady")
-    .replace(/\bEvone\b/g, "EVOne")
-    .replace(/\bFastparkncharge\b/g, "FastParkNCharge")
-    .replace(/\bIwow\b/g, "IWOW");
-}
-
-function formatOperatorWord(word) {
-  if (!word) return "";
-
-  const trimmed = word.trim();
-  const upper = trimmed.toUpperCase();
-  const compact = upper.replace(/[^A-Z0-9+]/g, "");
-  const exact = {
-    SP: "SP",
-    YTL: "YTL",
-    MNL: "MNL",
-    EV: "EV",
-    KED: "KED",
-    ST: "ST",
-    UP: "UP",
-    CTN: "CTN",
-    GO: "GO",
-    NSP: "NSP",
-  };
-
-  if (exact[compact]) return exact[compact];
-  if (compact === "CHARGE+") return "Charge+";
-  if (trimmed.includes("-")) return trimmed.split("-").map(formatOperatorWord).join("-");
-
-  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
-}
-
-function getOperatorInitials(operatorName) {
-  const label = formatOperatorFilterLabel(operatorName);
-  const compact = label.replace(/[^a-z0-9+ ]/gi, "").trim();
-  if (!compact) return "EV";
-  if (/charge\+/i.test(compact)) return "C+";
-
-  const words = compact.split(/\s+/);
-  if (words.length === 1) return words[0].slice(0, 4).toUpperCase();
-
-  return words
-    .slice(0, 2)
-    .map((word) => word[0])
-    .join("")
-    .toUpperCase();
-}
-
-function formatCompactCount(value) {
-  return Number(value || 0).toLocaleString();
-}
-
-function toArray(value) {
-  return Array.isArray(value) ? value : [];
-}
-
-function isNormalizedStation(station) {
-  return (
-    station &&
-    typeof station === "object" &&
-    "providerKey" in station &&
-    "availableCount" in station &&
-    "totalCount" in station &&
-    Array.isArray(station.plugTypes)
-  );
-}
-
-function getNearbyStationCandidates(stations, origin) {
-  const ranked = rankStationsByDistance(origin, stations);
-  const nearby = ranked.filter((item) => item.distanceMeters <= PLACE_SEARCH_RADIUS_METERS);
-
-  return (nearby.length >= RESULT_PAGE_SIZE ? nearby : ranked.slice(0, RESULT_PAGE_SIZE * 3)).map((item) => item.station);
-}
-
-function rankStationsByDistance(origin, stations, searchScoreById = null) {
-  return stations
-    .map((station) => ({
-      station,
-      distanceMeters: getDistanceMeters(origin, [station.latitude, station.longitude]),
-      searchScore: searchScoreById?.get(station.id) || 0,
-    }))
-    .sort((a, b) => {
-      if (a.searchScore !== b.searchScore) return b.searchScore - a.searchScore;
-      if (a.distanceMeters !== b.distanceMeters) return a.distanceMeters - b.distanceMeters;
-      if (a.station.availableCount !== b.station.availableCount) {
-        return b.station.availableCount - a.station.availableCount;
-      }
-      return a.station.name.localeCompare(b.station.name);
-    });
-}
-
-function zoomToLocationAndStation(map, location, station) {
+function zoomToLocationAndPlayground(map, location, playground) {
   if (!map) return;
 
-  const stationLocation = [station.latitude, station.longitude];
-  const bounds = L.latLngBounds([location, stationLocation]);
+  const playgroundLocation = [playground.latitude, playground.longitude];
+  const bounds = L.latLngBounds([location, playgroundLocation]);
 
   if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
-    map.flyTo(stationLocation, 17, { duration: 0.45 });
+    map.flyTo(playgroundLocation, 17, { duration: 0.45 });
     return;
   }
 
@@ -1757,7 +916,7 @@ function getDistanceMeters(start, end) {
 }
 
 function formatDistanceMeters(distanceMeters) {
-  if (!Number.isFinite(distanceMeters)) return "";
+  if (!Number.isFinite(distanceMeters)) return "TBC";
   if (distanceMeters < 50) return "< 50 m";
   if (distanceMeters < 1000) return `${Math.round(distanceMeters / 10) * 10} m`;
   if (distanceMeters < 10000) return `${(distanceMeters / 1000).toFixed(1)} km`;
@@ -1766,17 +925,41 @@ function formatDistanceMeters(distanceMeters) {
 }
 
 function formatAccuracyMeters(accuracyMeters) {
-  if (!Number.isFinite(accuracyMeters) || accuracyMeters <= 0) return "";
+  if (!Number.isFinite(accuracyMeters) || accuracyMeters <= 0) return "unknown";
   if (accuracyMeters < 1000) return `+/- ${Math.round(accuracyMeters)} m`;
 
   return `+/- ${(accuracyMeters / 1000).toFixed(1)} km`;
 }
 
 function getLocationErrorMessage(error) {
-  if (error?.code === 1) return "Location permission is blocked. Enable browser location to find the nearest charger.";
+  if (error?.code === 1) return "Location permission is blocked. Enable browser location to find nearby playgrounds.";
   if (error?.code === 3) return "Location timed out. Try again or check that precise location is enabled.";
 
-  return "Location unavailable. Enable browser location to find the nearest charger.";
+  return "Location unavailable. Enable browser location to find nearby playgrounds.";
+}
+
+function formatDate(value) {
+  if (!value) return "TBC";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "TBC";
+
+  return new Intl.DateTimeFormat("en-SG", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
+
+function formatCompactCount(value) {
+  return Number(value || 0).toLocaleString("en-SG");
+}
+
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
 }
 
 function isSameMapCenter(current, next) {
