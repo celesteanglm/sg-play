@@ -25,7 +25,46 @@ const SHEET_DRAG_THRESHOLD_PX = 44;
 const RESULT_PAGE_SIZE = 16;
 const PLAYGROUND_REFRESH_MS = 60 * 60 * 1000;
 const REGION_FILTERS = ["Central", "North", "South", "East", "West"];
-const SIZE_FILTERS = ["Pocket", "Neighbourhood", "Large", "Destination"];
+const TYPE_FILTERS = [
+  {
+    value: "Dedicated playground",
+    label: "Dedicated playground",
+    definition: "A specific NParks playground record whose name contains PG or PLAYGROUND.",
+  },
+  {
+    value: "Park with playground",
+    label: "Park with playground",
+    definition: "A Parks@SG park record that lists Playground as one of its amenities.",
+  },
+];
+const AREA_CATEGORY_DEFINITIONS = [
+  {
+    value: "Pocket",
+    label: "Pocket",
+    definition: "Managed-area size under 2,000 sqm.",
+  },
+  {
+    value: "Neighbourhood",
+    label: "Neighbourhood",
+    definition: "Managed-area size from 2,000 sqm to under 10,000 sqm.",
+  },
+  {
+    value: "Large",
+    label: "Large",
+    definition: "Managed-area size from 10,000 sqm to under 50,000 sqm.",
+  },
+  {
+    value: "Destination",
+    label: "Destination",
+    definition: "Managed-area size of 50,000 sqm or more.",
+  },
+  {
+    value: "Area unavailable",
+    label: "Area unavailable",
+    definition: "No official managed-area polygon size was available for the record.",
+  },
+];
+const SIZE_FILTERS = AREA_CATEGORY_DEFINITIONS.filter((category) => category.value !== "Area unavailable");
 
 export default function App() {
   const [path, setPath] = useState(() => window.location.pathname);
@@ -378,26 +417,31 @@ function PlaygroundMapPage({ onNavigate }) {
               <span className="chip-count">{playgrounds.length}</span>
             </button>
             <span className="filter-divider" aria-hidden="true" />
-            {["Dedicated playground", "Park with playground"].map((type) => (
+            <FilterGroupLabel label="Category" description="What the record is" />
+            {TYPE_FILTERS.map((type) => (
               <FilterChip
-                active={filters.types.includes(type)}
-                count={playgrounds.filter((playground) => playground.type === type).length}
-                key={type}
-                label={type === "Dedicated playground" ? "Playgrounds" : "Parks"}
-                onSelect={() => toggleTypeFilter(type)}
+                active={filters.types.includes(type.value)}
+                count={playgrounds.filter((playground) => playground.type === type.value).length}
+                description={type.definition}
+                key={type.value}
+                label={type.label}
+                onSelect={() => toggleTypeFilter(type.value)}
               />
             ))}
             <span className="filter-divider" aria-hidden="true" />
+            <FilterGroupLabel label="Size option" description="Managed-area scale" />
             {SIZE_FILTERS.map((size) => (
               <FilterChip
-                active={filters.sizes.includes(size)}
-                count={playgrounds.filter((playground) => playground.areaCategory === size).length}
-                key={size}
-                label={size}
-                onSelect={() => toggleArrayFilter("sizes", size)}
+                active={filters.sizes.includes(size.value)}
+                count={playgrounds.filter((playground) => playground.areaCategory === size.value).length}
+                description={size.definition}
+                key={size.value}
+                label={size.label}
+                onSelect={() => toggleArrayFilter("sizes", size.value)}
               />
             ))}
             <span className="filter-divider" aria-hidden="true" />
+            <FilterGroupLabel label="Region" description="Singapore area" />
             {REGION_FILTERS.map((region) => (
               <FilterChip
                 active={filters.regions.includes(region)}
@@ -479,9 +523,9 @@ function PlaygroundMapPage({ onNavigate }) {
           </div>
 
           <div className="summary-strip">
-            <StatTile label="Playgrounds" value={formatCompactCount(filteredPlaygrounds.length)} tone="green" />
-            <StatTile label="Large areas" value={stats.largeCount} tone="blue" />
-            <StatTile label="Source" value="NParks" tone="dark" />
+            <StatTile label="Dedicated" value={formatCompactCount(stats.dedicatedCount)} tone="green" />
+            <StatTile label="Parks with play" value={formatCompactCount(stats.parkWithPlaygroundCount)} tone="blue" />
+            <StatTile label="Pocket size" value={formatCompactCount(stats.pocketCount)} tone="dark" />
           </div>
 
           {selectedPlayground ? (
@@ -597,12 +641,13 @@ function DataInfoPage({ onNavigate }) {
       <section className="info-section">
         <div className="info-section-heading">
           <Info size={19} />
-          <h2>What is included</h2>
+          <h2>Category field</h2>
         </div>
         <p>
-          The map includes NParks-managed records whose names contain PG or PLAYGROUND, plus Parks@SG records that
-          explicitly list Playground as an amenity.
+          Category describes what kind of record the place is. It is separate from size, so a dedicated playground can
+          also be Pocket, Neighbourhood, Large, or Destination-sized.
         </p>
+        <DefinitionList items={TYPE_FILTERS} />
         <p>{dataset?.dataQuality || "Area values and point coordinates are loaded from the bundled dataset."}</p>
       </section>
 
@@ -616,6 +661,7 @@ function DataInfoPage({ onNavigate }) {
           pocket, neighbourhood, large, or destination-sized outing, but it is not a measured footprint of the actual play
           equipment.
         </p>
+        <DefinitionList items={AREA_CATEGORY_DEFINITIONS} />
       </section>
 
       <section className="info-section">
@@ -666,8 +712,17 @@ function PlaygroundDetail({ playground, distanceMeters }) {
 
       <div className="detail-grid">
         <Metric label="Managed area" value={playground.areaLabel} />
-        <Metric label="Scale" value={playground.areaCategory} />
+        <Metric label="Size option" value={playground.areaCategory} />
         <Metric label="Distance" value={formatDistanceMeters(distanceMeters)} />
+      </div>
+
+      <div className="classification-notes" aria-label="Category and size definitions">
+        <DefinitionRow label="Category" value={playground.type} definition={getTypeDefinition(playground.type)} />
+        <DefinitionRow
+          label="Size option"
+          value={playground.areaCategory}
+          definition={getAreaDefinition(playground.areaCategory)}
+        />
       </div>
 
       <div className="detail-meta">
@@ -708,9 +763,45 @@ function PlaygroundDetail({ playground, distanceMeters }) {
   );
 }
 
-function FilterChip({ active, count, label, onSelect }) {
+function DefinitionList({ items }) {
   return (
-    <button className={active ? "chip active" : "chip"} type="button" onClick={onSelect} aria-pressed={active}>
+    <div className="definition-list">
+      {items.map((item) => (
+        <DefinitionRow definition={item.definition} key={item.value} value={item.label} />
+      ))}
+    </div>
+  );
+}
+
+function DefinitionRow({ definition, label, value }) {
+  return (
+    <div className="definition-row">
+      {label ? <span>{label}</span> : null}
+      <strong>{value}</strong>
+      <p>{definition}</p>
+    </div>
+  );
+}
+
+function FilterGroupLabel({ description, label }) {
+  return (
+    <span className="filter-group-label">
+      <b>{label}</b>
+      <small>{description}</small>
+    </span>
+  );
+}
+
+function FilterChip({ active, count, description, label, onSelect }) {
+  return (
+    <button
+      className={active ? "chip active" : "chip"}
+      type="button"
+      onClick={onSelect}
+      aria-label={description ? `${label}. ${description}. ${formatCompactCount(count)} records.` : undefined}
+      aria-pressed={active}
+      title={description}
+    >
       <span className="chip-icon" aria-hidden="true">
         <MapPin size={14} />
       </span>
@@ -865,9 +956,23 @@ function getSearchScore(playground, searchTokens) {
 
 function buildStats(playgrounds) {
   return {
+    dedicatedCount: playgrounds.filter((playground) => playground.type === "Dedicated playground").length,
+    parkWithPlaygroundCount: playgrounds.filter((playground) => playground.type === "Park with playground").length,
+    pocketCount: playgrounds.filter((playground) => playground.areaCategory === "Pocket").length,
     largeCount: playgrounds.filter((playground) => ["Large", "Destination"].includes(playground.areaCategory)).length,
     destinationCount: playgrounds.filter((playground) => playground.areaCategory === "Destination").length,
   };
+}
+
+function getTypeDefinition(type) {
+  return TYPE_FILTERS.find((item) => item.value === type)?.definition || "Category is loaded from the source dataset.";
+}
+
+function getAreaDefinition(category) {
+  return (
+    AREA_CATEGORY_DEFINITIONS.find((item) => item.value === category)?.definition ||
+    "Size option is derived from the official managed-area size where available."
+  );
 }
 
 function getActiveFilterCount(filters) {
