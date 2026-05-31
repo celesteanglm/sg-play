@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const outputPath = path.join(rootDir, "public", "data", "playgrounds.json");
+const curatedPath = path.join(rootDir, "config", "curated-playgrounds.json");
+const curatedSourceUrl = "https://github.com/celesteanglm/sg-play/blob/main/config/curated-playgrounds.json";
 
 const DATASETS = {
   parks: {
@@ -27,6 +29,7 @@ const DATASETS = {
 const PLAYGROUND_NAME_PATTERN = /\bPG\b|PLAYGROUND/i;
 
 async function main() {
+  const curatedConfig = await readCuratedPlaygroundConfig();
   const parksGeojson = await fetchDataset(DATASETS.parks.id);
   await sleep(1_500);
   const boundaryGeojson = await fetchDataset(DATASETS.boundaries.id);
@@ -123,6 +126,12 @@ async function main() {
     });
   }
 
+  applyCuratedPlaygrounds(playgrounds, curatedConfig.playgrounds || [], {
+    amenityByName,
+    boundaryByName,
+    pointByName,
+  });
+
   const records = [...playgrounds.values()]
     .map((record) => ({
       ...record,
@@ -136,7 +145,7 @@ async function main() {
     generatedAt: new Date().toISOString(),
     count: records.length,
     dataQuality:
-      "Best-effort public playground map from official data.gov.sg datasets. NParks point coordinates are indicative. Area values describe the managed-area or park polygon where available, not the exact play-equipment footprint.",
+      "Best-effort public playground map from official data.gov.sg datasets plus small curated overrides for known public playgrounds missing from official playground-specific fields. NParks point coordinates are indicative. Area values describe the managed-area or park polygon where available, not the exact play-equipment footprint.",
     sources: [
       {
         name: DATASETS.parks.label,
@@ -156,6 +165,12 @@ async function main() {
         datasetId: DATASETS.parksSg.id,
         use: "Parks that explicitly list Playground as an amenity.",
       },
+      {
+        name: "Curated playground overrides",
+        url: curatedSourceUrl,
+        datasetId: "curated-playground-overrides",
+        use: "Known public playgrounds missing from official playground-specific fields, tracked in config/curated-playgrounds.json.",
+      },
     ],
     playgrounds: records,
   };
@@ -168,6 +183,26 @@ async function main() {
   await fs.writeFile(outputPath, `${JSON.stringify(payload, null, 2)}\n`);
 
   console.log(`Wrote ${records.length} playground records to ${path.relative(rootDir, outputPath)}`);
+}
+
+async function readCuratedPlaygroundConfig() {
+  try {
+    const raw = await fs.readFile(curatedPath, "utf8");
+    const config = JSON.parse(raw);
+
+    if (!config || typeof config !== "object" || Array.isArray(config)) {
+      throw new Error("config must be a JSON object");
+    }
+
+    if (!Array.isArray(config.playgrounds)) {
+      throw new Error("config.playgrounds must be an array");
+    }
+
+    return config;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unable to read curated playground config.";
+    throw new Error(`Curated playground config is invalid: ${message}`);
+  }
 }
 
 async function readExistingPayload() {
@@ -285,6 +320,64 @@ function buildParksSgAmenityIndex(features) {
   return index;
 }
 
+function applyCuratedPlaygrounds(playgrounds, curatedPlaygrounds, indexes) {
+  for (const entry of curatedPlaygrounds) {
+    const id = cleanValue(entry.id);
+    const name = cleanValue(entry.name);
+    const type = cleanValue(entry.type);
+    const latitude = Number(entry.latitude);
+    const longitude = Number(entry.longitude);
+    const key = normalizeName(entry.matchName || name);
+
+    if (!id) throw new Error("Each curated playground needs an id.");
+    if (!name) throw new Error(`Curated playground ${id} needs a name.`);
+    if (!["Dedicated playground", "Park with playground"].includes(type)) {
+      throw new Error(`Curated playground ${id} has unsupported type: ${type}`);
+    }
+    if (!isSingaporeCoordinate(latitude, longitude)) {
+      throw new Error(`Curated playground ${id} has coordinates outside Singapore.`);
+    }
+    if (!key) throw new Error(`Curated playground ${id} needs a matchable name.`);
+    if (playgrounds.has(key)) throw new Error(`Curated playground ${id} duplicates generated record key: ${key}`);
+
+    const officialName = entry.officialParkName || entry.parksSgName || name;
+    const amenity = indexes.amenityByName.get(normalizeName(entry.parksSgName || officialName)) || null;
+    const boundary = indexes.boundaryByName.get(normalizeName(entry.areaSourceName || officialName)) || null;
+    const point = indexes.pointByName.get(normalizeName(entry.pointSourceName || officialName)) || null;
+    const areaSqm = toPositiveNumber(entry.areaSqm ?? boundary?.areaSqm);
+    const configuredAmenities = normalizeStringArray(entry.amenities);
+    const referenceUrls = normalizeStringArray(entry.referenceUrls).filter(isHttpUrl);
+    const notes = normalizeStringArray(entry.notes);
+
+    playgrounds.set(key, {
+      id,
+      name,
+      rawName: cleanValue(entry.rawName) || name,
+      type,
+      latitude,
+      longitude,
+      areaSqm,
+      areaLabel: formatArea(areaSqm),
+      areaCategory: getAreaCategory(areaSqm),
+      address: cleanValue(entry.address) || amenity?.address || "",
+      amenities: configuredAmenities.length > 0 ? configuredAmenities : amenity?.amenities || [],
+      source: cleanValue(entry.source) || "Curated playground override",
+      sourceUrl: cleanValue(entry.sourceUrl) || DATASETS.parksSg.url,
+      googleMapsUrl: cleanValue(entry.googleMapsUrl) || buildGoogleMapsUrl(latitude, longitude),
+      updatedAt: parseDataGovTimestamp(point?.updatedAt || boundary?.updatedAt || amenity?.updatedAt || ""),
+      curated: true,
+      curationReason: cleanValue(entry.reason),
+      referenceUrls,
+      notes: [
+        ...notes,
+        areaSqm
+          ? "Area is joined from the official park or managed-area polygon, not a measured playground footprint."
+          : "No official area value was published for this curated record.",
+      ],
+    });
+  }
+}
+
 function parseHtmlAttributeTable(html) {
   const attrs = {};
   const pattern = /<th[^>]*>\s*([^<]+?)\s*<\/th>\s*<td[^>]*>\s*([\s\S]*?)\s*<\/td>/gi;
@@ -382,6 +475,20 @@ function getRegion(record) {
 function buildGoogleMapsUrl(latitude, longitude) {
   const query = encodeURIComponent(`${latitude},${longitude}`);
   return `https://www.google.com/maps/search/?api=1&query=${query}`;
+}
+
+function normalizeStringArray(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map(cleanValue).filter(Boolean);
+}
+
+function isHttpUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
 }
 
 function parseDataGovTimestamp(value) {

@@ -2,7 +2,7 @@
 
 Mobile-first Singapore public playground map.
 
-PlaySG maps NParks-managed playgrounds and parks that explicitly list playgrounds as an amenity. It uses React, Vite, Leaflet, OpenStreetMap tiles, and a checked-in static dataset generated from official data.gov.sg GeoJSON downloads.
+PlaySG maps NParks-managed playgrounds, parks that explicitly list playgrounds as an amenity, and a small curated override list for known public playgrounds that official source fields miss. It uses React, Vite, Leaflet, OpenStreetMap tiles, and a checked-in static dataset generated from official data.gov.sg GeoJSON downloads plus the curated config.
 
 ## Data Sources
 
@@ -24,6 +24,14 @@ The generator is:
 scripts/build-playground-data.mjs
 ```
 
+Known public playgrounds that are missing from the official playground-specific fields are tracked in:
+
+```text
+config/curated-playgrounds.json
+```
+
+Keep this file small and auditable. Each entry should explain why it was added and should prefer official park names for joining area and amenity context.
+
 ### Official Park Inputs
 
 | Source | Dataset ID | Used for |
@@ -31,6 +39,12 @@ scripts/build-playground-data.mjs
 | NParks Parks | `d_0542d48f0991541706b58059381a6eca` | Dedicated playground point records. The app classifies records whose names contain `PG` or `PLAYGROUND` as `Dedicated playground`. |
 | Parks@SG | `d_99b71f5d34cf57a3a592fbfdef1f42b6` | Parks that explicitly list `Playground` as an amenity. These become `Park with playground` records and provide amenity text when available. |
 | NParks Parks and Nature Reserves | `d_77d7ec97be83d44f61b85454f844382f` | Managed-area or park polygon sizes joined by name to support `Pocket`, `Neighbourhood`, `Large`, and `Destination` size filters. |
+
+### Curated Overrides
+
+`config/curated-playgrounds.json` is a small manual override list for known public playgrounds that official source fields miss. These records are marked with `curated: true` in the generated dataset and keep their reason/reference URLs in the config.
+
+The first curated record is Admiralty Park Playground. It is treated as a `Park with playground` because the official park record exists, but Parks@SG does not currently expose the playground as a playground amenity.
 
 ### Derived Fields and Caveats
 

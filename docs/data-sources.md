@@ -28,6 +28,12 @@ The generator is:
 scripts/build-playground-data.mjs
 ```
 
+Manual overrides are tracked in:
+
+```text
+config/curated-playgrounds.json
+```
+
 ## Official Park Inputs
 
 | Source | Dataset ID | Used for |
@@ -35,6 +41,18 @@ scripts/build-playground-data.mjs
 | NParks Parks | `d_0542d48f0991541706b58059381a6eca` | Dedicated playground point records whose names contain `PG` or `PLAYGROUND`. |
 | NParks Parks and Nature Reserves | `d_77d7ec97be83d44f61b85454f844382f` | Managed-area and park polygon sizes joined by name. |
 | Parks@SG | `d_99b71f5d34cf57a3a592fbfdef1f42b6` | Parks that explicitly list `Playground` as an amenity, plus amenity details such as sand when published. |
+
+## Curated Overrides
+
+Some public playgrounds are visible in practice but missing from the official playground-specific fields. Add these to `config/curated-playgrounds.json` instead of hard-coding them inside the generator.
+
+Each curated record should include:
+
+- Stable `id`, `name`, `type`, `latitude`, and `longitude`.
+- `officialParkName` or `parksSgName` when an official park record can provide area, updated date, address, or amenity context.
+- `reason`, `referenceUrls`, and `notes` so the override can be reviewed later.
+
+Generated curated records include `curated: true`, `curationReason`, and `referenceUrls`.
 
 ## Derived Fields
 
@@ -90,4 +108,4 @@ If a top-level `data/` folder is added later, large or reproducible raw files sh
 
 - Surface details are sparse because official amenity data is inconsistent.
 - Size categories describe managed area or park area, not playground equipment footprint.
-- There is no crowd-submitted enrichment layer yet.
+- Curated overrides are intentionally small and should be reviewed when official source data improves.

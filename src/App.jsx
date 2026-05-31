@@ -3,6 +3,8 @@ import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import {
   ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
   ChevronsUp,
   CircleDot,
   CloudSun,
@@ -120,7 +122,7 @@ function PlaygroundMapPage() {
   const [isLocating, setIsLocating] = useState(false);
   const [locationNotice, setLocationNotice] = useState("");
   const [mapCenter, setMapCenter] = useState(SINGAPORE_CENTER);
-  const [visibleResultCount, setVisibleResultCount] = useState(RESULT_PAGE_SIZE);
+  const [resultPage, setResultPage] = useState(1);
   const [sheetMode, setSheetMode] = useState(getInitialSheetMode);
   const [sheetHasUserInteracted, setSheetHasUserInteracted] = useState(false);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
@@ -224,9 +226,18 @@ function PlaygroundMapPage() {
     () => rankPlaygroundsByDistance(rankingOrigin, filteredPlaygrounds, searchTokens),
     [filteredPlaygrounds, rankingOrigin, searchTokens],
   );
-  const visiblePlaygrounds = rankedPlaygrounds.slice(0, visibleResultCount);
+  const pageCount = Math.max(1, Math.ceil(rankedPlaygrounds.length / RESULT_PAGE_SIZE));
+  const clampedResultPage = Math.min(Math.max(resultPage, 1), pageCount);
+  const pageStart = rankedPlaygrounds.length > 0 ? (clampedResultPage - 1) * RESULT_PAGE_SIZE : 0;
+  const pageEnd = rankedPlaygrounds.length > 0 ? Math.min(pageStart + RESULT_PAGE_SIZE, rankedPlaygrounds.length) : 0;
+  const visiblePlaygrounds = rankedPlaygrounds.slice(pageStart, pageEnd);
+  const firstVisiblePlayground = visiblePlaygrounds[0]?.playground || null;
+  const firstVisiblePlaygroundId = firstVisiblePlayground?.id || null;
+  const visiblePlaygroundIdList = visiblePlaygrounds.map(({ playground }) => playground.id);
+  const visiblePlaygroundIds = new Set(visiblePlaygroundIdList);
+  const visiblePlaygroundIdKey = visiblePlaygroundIdList.join("|");
   const selectedPlayground =
-    filteredPlaygrounds.find((playground) => playground.id === selectedId) || rankedPlaygrounds[0]?.playground || null;
+    visiblePlaygrounds.find(({ playground }) => playground.id === selectedId)?.playground || firstVisiblePlayground;
   const selectedDistance = selectedPlayground
     ? getDistanceMeters(rankingOrigin, [selectedPlayground.latitude, selectedPlayground.longitude])
     : null;
@@ -234,11 +245,19 @@ function PlaygroundMapPage() {
   const activeFilterCount = getActiveFilterCount(filters);
   const extendedFilterCount = filters.sizes.length + filters.features.length + filters.regions.length;
   const filterPanelId = "playground-filter-panel";
-  const hasMoreResults = visiblePlaygrounds.length < rankedPlaygrounds.length;
+  const hasMultipleResultPages = pageCount > 1;
+  const resultRangeLabel =
+    rankedPlaygrounds.length > 0
+      ? `${formatCompactCount(pageStart + 1)}-${formatCompactCount(pageEnd)}`
+      : "0";
 
   useEffect(() => {
-    setVisibleResultCount(RESULT_PAGE_SIZE);
+    setResultPage(1);
   }, [filters, query, rankingOrigin]);
+
+  useEffect(() => {
+    setResultPage((currentPage) => Math.min(Math.max(currentPage, 1), pageCount));
+  }, [pageCount]);
 
   useEffect(() => {
     if (!isFilterPanelOpen) return;
@@ -267,17 +286,25 @@ function PlaygroundMapPage() {
     }
 
     setSelectedId((current) =>
-      current && filteredPlaygrounds.some((playground) => playground.id === current)
+      current && visiblePlaygroundIds.has(current)
         ? current
-        : rankedPlaygrounds[0]?.playground.id || null,
+        : firstVisiblePlaygroundId,
     );
-  }, [filteredPlaygrounds, rankedPlaygrounds]);
+  }, [filteredPlaygrounds, firstVisiblePlaygroundId, visiblePlaygroundIdKey]);
 
   const handleMapCenterChange = useCallback((nextCenter) => {
     setMapCenter((current) => (isSameMapCenter(current, nextCenter) ? current : nextCenter));
   }, []);
 
   function selectPlayground(playground) {
+    const rankedIndex = rankedPlaygrounds.findIndex(
+      ({ playground: rankedPlayground }) => rankedPlayground.id === playground.id,
+    );
+
+    if (rankedIndex >= 0) {
+      setResultPage(Math.floor(rankedIndex / RESULT_PAGE_SIZE) + 1);
+    }
+
     setSelectedId(playground.id);
     setSheetHasUserInteracted(true);
     setSheetMode("expanded");
@@ -285,6 +312,17 @@ function PlaygroundMapPage() {
       duration: 0.35,
     });
   }
+
+  const handleResultPageChange = useCallback((nextPage) => {
+    const nextClampedPage = Math.min(Math.max(nextPage, 1), pageCount);
+    const firstPlaygroundOnPage = rankedPlaygrounds[(nextClampedPage - 1) * RESULT_PAGE_SIZE]?.playground;
+
+    setResultPage(nextClampedPage);
+
+    if (firstPlaygroundOnPage) {
+      setSelectedId(firstPlaygroundOnPage.id);
+    }
+  }, [pageCount, rankedPlaygrounds]);
 
   function handleLocateMe() {
     if (isLocating) return;
@@ -312,7 +350,7 @@ function PlaygroundMapPage() {
         }
 
         setSelectedId(nearest.id);
-        setVisibleResultCount(RESULT_PAGE_SIZE);
+        setResultPage(1);
         setSheetHasUserInteracted(true);
         setSheetMode("expanded");
         setLocationNotice(
@@ -661,7 +699,7 @@ function PlaygroundMapPage() {
           <div className="nearby-header">
             <span>Nearby options</span>
             <span>
-              Showing {formatCompactCount(visiblePlaygrounds.length)} of {formatCompactCount(rankedPlaygrounds.length)}
+              Showing {resultRangeLabel} of {formatCompactCount(rankedPlaygrounds.length)}
               {userLocation ? " nearest to you" : ""}
             </span>
           </div>
@@ -689,14 +727,28 @@ function PlaygroundMapPage() {
             ))}
           </div>
 
-          {hasMoreResults ? (
-            <div className="station-list-footer">
+          {hasMultipleResultPages ? (
+            <div className="pagination-footer" aria-label="Playground result pages">
               <button
                 type="button"
-                className="show-more-button"
-                onClick={() => setVisibleResultCount((count) => count + RESULT_PAGE_SIZE)}
+                className="pagination-button"
+                onClick={() => handleResultPageChange(clampedResultPage - 1)}
+                disabled={clampedResultPage <= 1}
+                aria-label="Previous playground results page"
               >
-                Show more
+                <ChevronLeft size={17} aria-hidden="true" />
+              </button>
+              <span className="pagination-status">
+                Page {clampedResultPage} of {pageCount}
+              </span>
+              <button
+                type="button"
+                className="pagination-button"
+                onClick={() => handleResultPageChange(clampedResultPage + 1)}
+                disabled={clampedResultPage >= pageCount}
+                aria-label="Next playground results page"
+              >
+                <ChevronRight size={17} aria-hidden="true" />
               </button>
             </div>
           ) : null}
