@@ -860,7 +860,7 @@ function PlaygroundDetail({ playground, distanceMeters }) {
   return (
     <article className="detail-card">
       <div className="detail-heading">
-        <div className="provider-line">
+        <div className="category-line">
           <span className="type-pill">{playground.type}</span>
           <span className="status-pill available">{playground.region}</span>
           <span className={`sand-pill ${sandStatus.kind}`}>

@@ -27,6 +27,9 @@ jobs:
       - name: Regenerate playground data
         run: npm run data:playgrounds
 
+      - name: Verify playground data
+        run: npm run data:check
+
       - name: Verify build
         run: npm run build
 
