@@ -7,7 +7,6 @@ import {
   CircleDot,
   CloudSun,
   Droplets,
-  ExternalLink,
   Filter,
   Info,
   LocateFixed,
@@ -105,10 +104,10 @@ export default function App() {
 
   if (path === "/data") return <DataInfoPage onNavigate={navigate} />;
 
-  return <PlaygroundMapPage onNavigate={navigate} />;
+  return <PlaygroundMapPage />;
 }
 
-function PlaygroundMapPage({ onNavigate }) {
+function PlaygroundMapPage() {
   const [dataset, setDataset] = useState(null);
   const [loadingError, setLoadingError] = useState("");
   const [weather, setWeather] = useState(null);
@@ -450,9 +449,6 @@ function PlaygroundMapPage({ onNavigate }) {
               </p>
             </div>
             <div className="brand-actions">
-              <button className="icon-button" type="button" onClick={() => onNavigate("/data")} aria-label="Data sources">
-                <Info size={19} />
-              </button>
               <button
                 className={isLocating ? "icon-button location-button locating" : "icon-button location-button"}
                 type="button"
@@ -910,18 +906,15 @@ function PlaygroundDetail({ playground, distanceMeters }) {
           <Navigation size={18} />
           Open in Google Maps
         </a>
-        <a className="secondary-action" href={playground.sourceUrl} target="_blank" rel="noreferrer">
-          <ExternalLink size={18} />
-          View source dataset
-        </a>
       </div>
 
-      <div className="connector-strip">
-        <span>{playground.source}</span>
-        {amenities.map((amenity) => (
-          <span key={amenity}>{amenity}</span>
-        ))}
-      </div>
+      {amenities.length > 0 ? (
+        <div className="connector-strip">
+          {amenities.map((amenity) => (
+            <span key={amenity}>{amenity}</span>
+          ))}
+        </div>
+      ) : null}
     </article>
   );
 }
