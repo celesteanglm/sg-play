@@ -23,17 +23,30 @@ const oneMapApiToken = process.env.ONEMAP_API_TOKEN || "";
 const oneMapEmail = process.env.ONEMAP_EMAIL || "";
 const oneMapPassword = process.env.ONEMAP_PASSWORD || "";
 const gaMeasurementId = normalizePublicEnvValue(process.env.GA_MEASUREMENT_ID || process.env.VITE_GA_MEASUREMENT_ID);
+const weatherBaseUrl = process.env.NEA_WEATHER_BASE_URL || "https://api-open.data.gov.sg/v2/real-time/api";
 const configuredOneMapCacheTtlMs = Number(process.env.ONEMAP_CACHE_TTL_MS || 30 * 24 * 60 * 60 * 1000);
 const oneMapSearchCacheTtlMs =
   Number.isFinite(configuredOneMapCacheTtlMs) && configuredOneMapCacheTtlMs > 0
     ? configuredOneMapCacheTtlMs
     : 30 * 24 * 60 * 60 * 1000;
+const configuredWeatherCacheTtlMs = Number(process.env.WEATHER_CACHE_TTL_MS || 30 * 60 * 1000);
+const weatherCacheTtlMs =
+  Number.isFinite(configuredWeatherCacheTtlMs) && configuredWeatherCacheTtlMs > 0
+    ? configuredWeatherCacheTtlMs
+    : 30 * 60 * 1000;
+const configuredWeatherFetchTimeoutMs = Number(process.env.WEATHER_FETCH_TIMEOUT_MS || 10000);
+const weatherFetchTimeoutMs =
+  Number.isFinite(configuredWeatherFetchTimeoutMs) && configuredWeatherFetchTimeoutMs > 0
+    ? configuredWeatherFetchTimeoutMs
+    : 10000;
 
 let liveCache = null;
 let liveRefreshPromise = null;
 let sampleCache = null;
 let alignedRefreshTimer = null;
 let oneMapTokenCache = null;
+let weatherCache = null;
+let weatherRefreshPromise = null;
 const oneMapSearchCache = new Map();
 
 const app = express();
@@ -106,6 +119,25 @@ app.get("/api/search-place", async (req, res) => {
     const warning = error instanceof Error ? error.message : "Place search unavailable.";
 
     res.status(200).json({ results: [], warning });
+  }
+});
+
+app.get("/api/weather", async (_req, res) => {
+  try {
+    const payload = await getWeatherPayload();
+
+    res.set("Cache-Control", `public, max-age=${Math.round(weatherCacheTtlMs / 1000)}, stale-while-revalidate=300`);
+    res.json(payload);
+  } catch (error) {
+    const warning = error instanceof Error ? error.message : "Weather forecast unavailable.";
+
+    res.status(200).json({
+      ok: false,
+      warning,
+      sourceLabel: "NEA weather forecast",
+      updatedAt: "",
+      generatedAt: new Date().toISOString(),
+    });
   }
 });
 
@@ -242,6 +274,181 @@ async function searchOneMapPlace(query) {
   });
 
   return payload;
+}
+
+async function getWeatherPayload() {
+  if (weatherCache && weatherCache.expiresAtMs > Date.now()) {
+    return weatherCache.payload;
+  }
+
+  if (!weatherRefreshPromise) {
+    weatherRefreshPromise = refreshWeatherPayload().finally(() => {
+      weatherRefreshPromise = null;
+    });
+  }
+
+  return weatherRefreshPromise;
+}
+
+async function refreshWeatherPayload() {
+  const [dayForecast, fourDayOutlook] = await Promise.all([
+    fetchWeatherJson("twenty-four-hr-forecast"),
+    fetchWeatherJson("four-day-outlook"),
+  ]);
+  const payload = normalizeWeatherPayload(dayForecast, fourDayOutlook);
+
+  weatherCache = {
+    expiresAtMs: Date.now() + weatherCacheTtlMs,
+    payload,
+  };
+
+  return payload;
+}
+
+async function fetchWeatherJson(pathname) {
+  const response = await fetch(new URL(`${weatherBaseUrl.replace(/\/$/, "")}/${pathname}`), {
+    headers: { accept: "application/json" },
+    signal: AbortSignal.timeout(weatherFetchTimeoutMs),
+  });
+
+  if (!response.ok) {
+    throw new Error(`NEA weather ${pathname} returned ${response.status}`);
+  }
+
+  const payload = await response.json();
+
+  if (payload?.code !== 0) {
+    throw new Error(payload?.errorMsg || `NEA weather ${pathname} returned an error.`);
+  }
+
+  return payload;
+}
+
+function normalizeWeatherPayload(dayForecastPayload, fourDayPayload) {
+  const dayRecord = toArray(dayForecastPayload?.data?.records)[0] || {};
+  const general = dayRecord.general || {};
+  const outlookRecord = toArray(fourDayPayload?.data?.records)[0] || {};
+  const day = normalizeDayForecast(general, dayRecord.periods || []);
+  const outlook = toArray(outlookRecord.forecasts).map(normalizeOutlookForecast).filter(Boolean).slice(0, 4);
+  const updatedAt = dayRecord.updatedTimestamp || dayRecord.timestamp || outlookRecord.updatedTimestamp || outlookRecord.timestamp || "";
+
+  return {
+    ok: true,
+    sourceLabel: "NEA weather forecast",
+    sourceUrl: "https://data.gov.sg/datasets?formats=API&page=1&resultId=d_ce2eb1e307bda31993c533285834ef2b",
+    updatedAt,
+    generatedAt: new Date().toISOString(),
+    day,
+    outlook,
+    parentCue: getWeatherParentCue(day),
+  };
+}
+
+function normalizeDayForecast(general, periods) {
+  const temperature = normalizeRange(general.temperature, "C");
+  const humidity = normalizeRange(general.relativeHumidity, "%");
+  const wind = general.wind || {};
+  const validPeriod = general.validPeriod || {};
+
+  return {
+    forecastText: cleanOneMapValue(general.forecast?.text || ""),
+    forecastCode: cleanOneMapValue(general.forecast?.code || ""),
+    validText: cleanOneMapValue(validPeriod.text || ""),
+    validStart: cleanOneMapValue(validPeriod.start || ""),
+    validEnd: cleanOneMapValue(validPeriod.end || ""),
+    temperature,
+    humidity,
+    wind: {
+      direction: cleanOneMapValue(wind.direction || ""),
+      speed: normalizeRange(wind.speed, "km/h"),
+      label: [cleanOneMapValue(wind.direction || ""), normalizeRange(wind.speed, "km/h").label].filter(Boolean).join(", "),
+    },
+    periods: normalizeWeatherPeriods(periods, validPeriod),
+  };
+}
+
+function normalizeWeatherPeriods(periods, validPeriod) {
+  const validStartMs = Date.parse(validPeriod?.start || "");
+  const validEndMs = Date.parse(validPeriod?.end || "");
+  const hasValidWindow = Number.isFinite(validStartMs) && Number.isFinite(validEndMs);
+
+  return toArray(periods)
+    .filter((period) => {
+      if (!hasValidWindow) return true;
+
+      const startMs = Date.parse(period?.timePeriod?.start || "");
+      return Number.isFinite(startMs) && startMs >= validStartMs && startMs <= validEndMs;
+    })
+    .map((period) => ({
+      label: cleanOneMapValue(period?.timePeriod?.text || ""),
+      start: cleanOneMapValue(period?.timePeriod?.start || ""),
+      end: cleanOneMapValue(period?.timePeriod?.end || ""),
+      regions: Object.entries(period?.regions || {}).map(([region, forecast]) => ({
+        region: formatRegion(region),
+        forecastText: cleanOneMapValue(forecast?.text || ""),
+        forecastCode: cleanOneMapValue(forecast?.code || ""),
+      })),
+    }))
+    .filter((period) => period.regions.length > 0)
+    .slice(0, 3);
+}
+
+function normalizeOutlookForecast(forecast) {
+  if (!forecast) return null;
+
+  return {
+    day: cleanOneMapValue(forecast.day || ""),
+    date: cleanOneMapValue(forecast.timestamp || ""),
+    forecastText: cleanOneMapValue(forecast.forecast?.text || forecast.forecast?.summary || ""),
+    summary: cleanOneMapValue(forecast.forecast?.summary || forecast.forecast?.text || ""),
+    forecastCode: cleanOneMapValue(forecast.forecast?.code || ""),
+    temperature: normalizeRange(forecast.temperature, "C"),
+    humidity: normalizeRange(forecast.relativeHumidity, "%"),
+  };
+}
+
+function normalizeRange(range, fallbackUnit) {
+  const low = toNumber(range?.low);
+  const high = toNumber(range?.high);
+  const unit = normalizeWeatherUnit(range?.unit || fallbackUnit);
+
+  return {
+    low: Number.isFinite(low) ? low : null,
+    high: Number.isFinite(high) ? high : null,
+    unit,
+    label: formatRange(low, high, unit),
+  };
+}
+
+function formatRange(low, high, unit) {
+  if (Number.isFinite(low) && Number.isFinite(high)) return `${Math.round(low)}-${Math.round(high)}${unit}`;
+  if (Number.isFinite(high)) return `up to ${Math.round(high)}${unit}`;
+  if (Number.isFinite(low)) return `from ${Math.round(low)}${unit}`;
+
+  return "";
+}
+
+function normalizeWeatherUnit(unit) {
+  if (/celsius/i.test(unit)) return "C";
+  if (/percentage|percent/i.test(unit)) return "%";
+
+  return cleanOneMapValue(unit || "");
+}
+
+function getWeatherParentCue(day) {
+  const forecast = normalizeSearchText(day.forecastText);
+  const high = day.temperature?.high;
+
+  if (/thundery|shower|rain/.test(forecast)) return "Pack a wet-weather backup and check the sky before heading out.";
+  if (Number.isFinite(high) && high >= 34) return "Good for shorter outdoor play. Bring water and plan shade breaks.";
+  if (/fair|partly cloudy|cloudy/.test(forecast)) return "Good for outdoor play, with water and shade breaks.";
+
+  return "Check the forecast again before leaving home.";
+}
+
+function formatRegion(value) {
+  const region = cleanOneMapValue(value);
+  return region ? region.charAt(0).toUpperCase() + region.slice(1).toLowerCase() : "";
 }
 
 async function fetchOneMapPlaces(query) {

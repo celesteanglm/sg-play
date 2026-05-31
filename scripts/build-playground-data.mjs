@@ -64,7 +64,7 @@ async function main() {
       amenities: amenity?.amenities || [],
       source: "NParks managed-area point",
       sourceUrl: DATASETS.parks.url,
-      googleMapsUrl: buildGoogleMapsUrl(latitude, longitude, rawName),
+      googleMapsUrl: buildGoogleMapsUrl(latitude, longitude),
       updatedAt: parseDataGovTimestamp(feature.properties?.FMEL_UPD_D || boundary?.updatedAt || ""),
       notes: [
         "Coordinates are the indicative NParks managed-area point.",
@@ -112,7 +112,7 @@ async function main() {
       amenities: amenity.amenities,
       source: "Parks@SG playground amenity",
       sourceUrl: DATASETS.parksSg.url,
-      googleMapsUrl: buildGoogleMapsUrl(latitude, longitude, amenity.name),
+      googleMapsUrl: buildGoogleMapsUrl(latitude, longitude),
       updatedAt: parseDataGovTimestamp(point?.updatedAt || boundary?.updatedAt || amenity.updatedAt || ""),
       notes: [
         "This park lists Playground as an amenity in Parks@SG.",
@@ -379,10 +379,9 @@ function getRegion(record) {
   return lngDelta >= 0 ? "East" : "West";
 }
 
-function buildGoogleMapsUrl(latitude, longitude, name) {
+function buildGoogleMapsUrl(latitude, longitude) {
   const query = encodeURIComponent(`${latitude},${longitude}`);
-  const label = encodeURIComponent(name || "Singapore playground");
-  return `https://www.google.com/maps/search/?api=1&query=${query}(${label})`;
+  return `https://www.google.com/maps/search/?api=1&query=${query}`;
 }
 
 function parseDataGovTimestamp(value) {

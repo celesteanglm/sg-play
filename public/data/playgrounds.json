@@ -37,7 +37,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3732124444606688%2C103.77198060528261(ALMOND%20CRESCENT%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3732124444606688%2C103.77198060528261",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -60,7 +60,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3551968667413747%2C103.88595627294951(AROOZOO%20AVE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3551968667413747%2C103.88595627294951",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -83,7 +83,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3872785047325376%2C103.83885324901108(BANYAN%20VILLAS%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3872785047325376%2C103.83885324901108",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -106,7 +106,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3273348850995668%2C103.95308171715823(BEDOK%20RIA%20CRESCENT%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3273348850995668%2C103.95308171715823",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -129,7 +129,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3255436023346039%2C103.9475056192436(BEDOK%20TERRACE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3255436023346039%2C103.9475056192436",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -152,7 +152,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3878196998361432%2C103.8632895690186(BEGONIA%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3878196998361432%2C103.8632895690186",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -175,7 +175,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3238060154412516%2C103.86583529773172(BENG%20WAN%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3238060154412516%2C103.86583529773172",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -198,7 +198,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3486736465480897%2C103.84354841240868(BINCHANG%20RISE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3486736465480897%2C103.84354841240868",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -223,7 +223,7 @@
       ],
       "source": "Parks@SG playground amenity",
       "sourceUrl": "https://data.gov.sg/datasets/d_99b71f5d34cf57a3a592fbfdef1f42b6/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.36438131796883%2C103.838067659861(Bishan%20-%20Ang%20Mo%20Kio%20Park)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.36438131796883%2C103.838067659861",
       "updatedAt": "2014-04-17T01:02:24.000Z",
       "notes": [
         "This park lists Playground as an amenity in Parks@SG.",
@@ -248,7 +248,7 @@
       ],
       "source": "Parks@SG playground amenity",
       "sourceUrl": "https://data.gov.sg/datasets/d_99b71f5d34cf57a3a592fbfdef1f42b6/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3500086942922516%2C103.76462219368499(Bukit%20Batok%20Nature%20Park)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3500086942922516%2C103.76462219368499",
       "updatedAt": "2026-01-14T16:03:56.000Z",
       "notes": [
         "This park lists Playground as an amenity in Parks@SG.",
@@ -271,7 +271,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.33982701990837%2C103.76090503358263(BURGUNDY%20CRESCENT%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.33982701990837%2C103.76090503358263",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -294,7 +294,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3344335664820988%2C103.87733653681293(BUTTERFLY%20AVE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3344335664820988%2C103.87733653681293",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -317,7 +317,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3901090514352157%2C103.8522364751832(CACTUS%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3901090514352157%2C103.8522364751832",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -340,7 +340,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3426814392412174%2C103.86300718141767(CARMICHAEL%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3426814392412174%2C103.86300718141767",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -363,7 +363,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3722448535894964%2C103.76949467203684(CASHEW%20CRESCENT%20FC%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3722448535894964%2C103.76949467203684",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -386,7 +386,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3713588873704436%2C103.76892501358684(CASHEW%20LINK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3713588873704436%2C103.76892501358684",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -409,7 +409,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3705998190999023%2C103.76466780670854(CASHEW%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3705998190999023%2C103.76466780670854",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -434,7 +434,7 @@
       ],
       "source": "Parks@SG playground amenity",
       "sourceUrl": "https://data.gov.sg/datasets/d_99b71f5d34cf57a3a592fbfdef1f42b6/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3831593733996592%2C104.00175372183348(Changi%20Beach%20Park)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3831593733996592%2C104.00175372183348",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "This park lists Playground as an amenity in Parks@SG.",
@@ -457,7 +457,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.362843647763477%2C103.97220437477233(CHANGI%20HEIGHTS%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.362843647763477%2C103.97220437477233",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -480,7 +480,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3318740875837207%2C103.87561556672539(CHEMPAKA%20AVE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3318740875837207%2C103.87561556672539",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -503,7 +503,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3358863606365197%2C103.77168301094926(CHENG%20SOON%20GARDEN%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3358863606365197%2C103.77168301094926",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -526,7 +526,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3676337346859269%2C103.76882971645354(CHESTNUT%20DR%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3676337346859269%2C103.76882971645354",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -549,7 +549,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.358697170052417%2C103.75897633995594(CHU%20YEN%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.358697170052417%2C103.75897633995594",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -572,7 +572,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3604796821885214%2C103.86600839566016(CHUAN%20GREEN%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3604796821885214%2C103.86600839566016",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -595,7 +595,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3572217609341652%2C103.86755286023558(CHUAN%20WALK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3572217609341652%2C103.86755286023558",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -618,7 +618,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.2795728370768822%2C103.78895401879323(CHWEE%20CHIAN%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.2795728370768822%2C103.78895401879323",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -641,7 +641,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.323522495815528%2C103.77329951691915(CLEMENTI%20CRESCENT%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.323522495815528%2C103.77329951691915",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -666,7 +666,7 @@
       ],
       "source": "Parks@SG playground amenity",
       "sourceUrl": "https://data.gov.sg/datasets/d_99b71f5d34cf57a3a592fbfdef1f42b6/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.298933535008352%2C103.76761685713186(Clementi%20Woods%20Park)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.298933535008352%2C103.76761685713186",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "This park lists Playground as an amenity in Parks@SG.",
@@ -689,7 +689,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3510481502538154%2C103.84457614791425(CLOVER%20CRESCENT%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3510481502538154%2C103.84457614791425",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -712,7 +712,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3501771180757984%2C103.84602143139854(CLOVER%20WAY%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3501771180757984%2C103.84602143139854",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -735,7 +735,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.390187591950426%2C103.8384079546499(COUNTRYSIDE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.390187591950426%2C103.8384079546499",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -758,7 +758,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3877975742273796%2C103.86841336325828(DEDAP%20PLACE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3877975742273796%2C103.86841336325828",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -781,7 +781,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3231595654533852%2C103.95754876648327(EASTWOOD%20PK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3231595654533852%2C103.95754876648327",
       "updatedAt": "2026-05-25T16:01:47.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -804,7 +804,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.372228429977703%2C103.94108425200557(ELIAS%20TERRACE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.372228429977703%2C103.94108425200557",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -827,7 +827,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3720023089670559%2C103.83453036042759(ELLINGTON%20SQUARE%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3720023089670559%2C103.83453036042759",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -850,7 +850,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3369237422726794%2C103.76916336188069(ENG%20KONG%20GARDEN%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3369237422726794%2C103.76916336188069",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -873,7 +873,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.2874712507209751%2C103.66438830802964(FABER%20HILLS%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.2874712507209751%2C103.66438830802964",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -896,7 +896,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3869730932273063%2C103.83507298158987(FLORISSA%20PK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3869730932273063%2C103.83507298158987",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -919,7 +919,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3898351218922766%2C103.83723438334813(FUDU%20WALK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3898351218922766%2C103.83723438334813",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -942,7 +942,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3621074576915269%2C103.83352102521286(FULTON%20AVE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3621074576915269%2C103.83352102521286",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -965,7 +965,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3604248823123817%2C103.8656694375827(GARDEN%20VIEW%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3604248823123817%2C103.8656694375827",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -988,7 +988,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3203688056662144%2C103.84070309190496(GENTLE%20DR%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3203688056662144%2C103.84070309190496",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1011,7 +1011,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.336323647928206%2C103.76486852005382(GOLDEN%20RISE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.336323647928206%2C103.76486852005382",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1034,7 +1034,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.321133417174904%2C103.83317379982168(GOLDHILL%20AVE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.321133417174904%2C103.83317379982168",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1057,7 +1057,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.427299606870686%2C103.82539258443619(GOODLINK%20PK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.427299606870686%2C103.82539258443619",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1080,7 +1080,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3130354768413108%2C103.91765634990739(GREENFIELD%20DR%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3130354768413108%2C103.91765634990739",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1103,7 +1103,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.322310623381794%2C103.78808737366721(GREENLEAF%20VIEW%20PK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.322310623381794%2C103.78808737366721",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1126,7 +1126,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3342797127435926%2C103.76576322902989(GREENRIDGE%20CRESCENT%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3342797127435926%2C103.76576322902989",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1149,7 +1149,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.335506236358292%2C103.80548695379504(GREENWOOD%20CRESCENT%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.335506236358292%2C103.80548695379504",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1172,7 +1172,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3137632887404946%2C103.7842062105903(GROVE%20LANE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3137632887404946%2C103.7842062105903",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1195,7 +1195,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.340659028077663%2C103.95519192385743(HARVEY%20CRESCENT%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.340659028077663%2C103.95519192385743",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1218,7 +1218,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3404171846143642%2C103.76592436149278(HIGHGATE%20WALK%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3404171846143642%2C103.76592436149278",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1241,7 +1241,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3552623460010258%2C103.76116232991829(HILLVIEW%20CRESCENT%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3552623460010258%2C103.76116232991829",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1264,7 +1264,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.326810900460203%2C103.78257759536767(HOLLAND%20GREEN%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.326810900460203%2C103.78257759536767",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1287,7 +1287,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3129296671514599%2C103.78122162363572(HOLLAND%20GROVE%20VIEW%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3129296671514599%2C103.78122162363572",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1310,7 +1310,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.312398915066335%2C103.84320423199813(HOOPER%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.312398915066335%2C103.84320423199813",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1333,7 +1333,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3438755104066722%2C103.77302025529791(HOOVER%20PARK%20(LOR%20PISANG%20HIJAU%20PLAYGROUND))",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3438755104066722%2C103.77302025529791",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1358,7 +1358,7 @@
       ],
       "source": "Parks@SG playground amenity",
       "sourceUrl": "https://data.gov.sg/datasets/d_99b71f5d34cf57a3a592fbfdef1f42b6/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.27883934383816%2C103.799778900848(Hort%20Park%20-%20The%20Gardening%20Hub)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.27883934383816%2C103.799778900848",
       "updatedAt": "2014-04-17T01:02:24.000Z",
       "notes": [
         "This park lists Playground as an amenity in Parks@SG.",
@@ -1381,7 +1381,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.337010538643933%2C103.78505953980331(HUA%20GUAN%20CRESCENT%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.337010538643933%2C103.78505953980331",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1404,7 +1404,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.4619435384991928%2C103.84006882882946(IRAU%20DRIVE%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.4619435384991928%2C103.84006882882946",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1427,7 +1427,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3619988729061994%2C103.82843911048238(ISLAND%20GDNS%20WALK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3619988729061994%2C103.82843911048238",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1450,7 +1450,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3371839888175043%2C103.95622497877842(JLN%20ANGIN%20LAUT%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3371839888175043%2C103.95622497877842",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1473,7 +1473,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.308482597499101%2C103.91938448183176(JLN%20BULOH%20PERINDU%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.308482597499101%2C103.91938448183176",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1496,7 +1496,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3297574948720685%2C103.95016432778706(JLN%20CHEMPAKA%20KUNING%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3297574948720685%2C103.95016432778706",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1519,7 +1519,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.36063894564964%2C103.75860584483674(JALAN%20DERMAWAN%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.36063894564964%2C103.75860584483674",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1542,7 +1542,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.314114910896791%2C103.78024635822102(JLN%20KEBAYA%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.314114910896791%2C103.78024635822102",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1565,7 +1565,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3467820571612348%2C103.88182461306774(JLN%20KELICHAP%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3467820571612348%2C103.88182461306774",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1588,7 +1588,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3239737658864272%2C103.94638906084543(JLN%20LIMAU%20KASTURI%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3239737658864272%2C103.94638906084543",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1611,7 +1611,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3247340027655252%2C103.949044991383(JLN%20LIMAU%20MANIS%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3247340027655252%2C103.949044991383",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1634,7 +1634,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3078516086255079%2C103.76352509593491(JALAN%20MAS%20KUNING%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3078516086255079%2C103.76352509593491",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1657,7 +1657,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.308986343575265%2C103.76200681668604(JALAN%20MAS%20PUTEH%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.308986343575265%2C103.76200681668604",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1680,7 +1680,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3695631217362239%2C103.89282189627428(JLN%20NAUNG%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3695631217362239%2C103.89282189627428",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1703,7 +1703,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3338302667615354%2C103.94696150148619(JLN%20PARI%20BURONG%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3338302667615354%2C103.94696150148619",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1726,7 +1726,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3330205537381883%2C103.9438804788435(JLN%20PARI%20DEDAP%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3330205537381883%2C103.9438804788435",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1749,7 +1749,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.346144327776515%2C103.9603400330171(JLN%20PELATOK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.346144327776515%2C103.9603400330171",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1772,7 +1772,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3539456703859893%2C103.83997321893165(JLN%20PINTAU%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3539456703859893%2C103.83997321893165",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1795,7 +1795,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3471426063181149%2C103.86739535755741(JLN%20RIANG%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3471426063181149%2C103.86739535755741",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1818,7 +1818,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3856016503502333%2C103.87338201184058(JLN%20SELASEH%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3856016503502333%2C103.87338201184058",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1841,7 +1841,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3290153443370158%2C103.91556908211406(JLN%20SENANG%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3290153443370158%2C103.91556908211406",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1864,7 +1864,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.346137895579081%2C103.76677601808633(JALAN%20TEKUKOR%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.346137895579081%2C103.76677601808633",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1887,7 +1887,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3582711680799056%2C103.82513677087559(JUPITER%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3582711680799056%2C103.82513677087559",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1912,7 +1912,7 @@
       ],
       "source": "Parks@SG playground amenity",
       "sourceUrl": "https://data.gov.sg/datasets/d_99b71f5d34cf57a3a592fbfdef1f42b6/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3379796517924705%2C103.70787455591312(Jurong%20Central%20Park)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3379796517924705%2C103.70787455591312",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "This park lists Playground as an amenity in Parks@SG.",
@@ -1935,7 +1935,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.321626538764096%2C103.94845050181046(KEW%20AVE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.321626538764096%2C103.94845050181046",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1958,7 +1958,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3191875527595336%2C103.94858574719049(KEW%20CRESCENT%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3191875527595336%2C103.94858574719049",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -1981,7 +1981,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3207095314096722%2C103.95175430405384(KEW%20DR%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3207095314096722%2C103.95175430405384",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2004,7 +2004,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3190866751121297%2C103.80606154202395(KING'S%20DR%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3190866751121297%2C103.80606154202395",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2027,7 +2027,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3400730144091693%2C103.71859444158254(LAKESIDE%20GROVE%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3400730144091693%2C103.71859444158254",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2050,7 +2050,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3852857282720463%2C103.83705647129632(LENTOR%20GREEN%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3852857282720463%2C103.83705647129632",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2073,7 +2073,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3863846910694682%2C103.8383707239062(LENTOR%20GROVE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3863846910694682%2C103.8383707239062",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2096,7 +2096,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3882919034890058%2C103.8375722009472(LENTOR%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3882919034890058%2C103.8375722009472",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2119,7 +2119,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3900981863837716%2C103.83427652569794(LENTOR%20STREET%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3900981863837716%2C103.83427652569794",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2142,7 +2142,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3880542360181982%2C103.8361460821369(LENTOR%20VALE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3880542360181982%2C103.8361460821369",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2165,7 +2165,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3886309570462554%2C103.83838324763813(LENTOR%20WALK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3886309570462554%2C103.83838324763813",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2188,7 +2188,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3811511580879283%2C103.86114379728288(LILAC%20DR%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3811511580879283%2C103.86114379728288",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2211,7 +2211,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.322482124974314%2C103.95069132925602(LIMAU%20GARDEN%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.322482124974314%2C103.95069132925602",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2234,7 +2234,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.323872450925688%2C103.95051409597892(LIMAU%20VILLAS%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.323872450925688%2C103.95051409597892",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2257,7 +2257,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3136330007924444%2C103.88936940225831(LORONG%2040%20GEYLANG%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3136330007924444%2C103.88936940225831",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2280,7 +2280,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3603930473433286%2C103.76093338574456(LORONG%20KEMUNCHUP%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3603930473433286%2C103.76093338574456",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2303,7 +2303,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3630395003065414%2C103.96563729241967(LOYANG%20VIEW%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3630395003065414%2C103.96563729241967",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2326,7 +2326,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.319287071537822%2C103.9413761221936(LUCKY%20GARDENS%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.319287071537822%2C103.9413761221936",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2349,7 +2349,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3595473597294903%2C103.96854744331675(MARIAM%20WALK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3595473597294903%2C103.96854744331675",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2372,7 +2372,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3619451550129091%2C103.96623348811329(MARIAM%20WAY%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3619451550129091%2C103.96623348811329",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2395,7 +2395,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3727323067422557%2C103.83952885224149(MAYFLOWER%20CRESCENT%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3727323067422557%2C103.83952885224149",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2418,7 +2418,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3527669553308672%2C103.86174325855922(MEI%20HWAN%20CRESCENT%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3527669553308672%2C103.86174325855922",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2441,7 +2441,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.353350094653241%2C103.86347279914047(MEI%20HWAN%20DR%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.353350094653241%2C103.86347279914047",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2464,7 +2464,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3474044390211926%2C103.96350603982197(MERA%20TERRACE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3474044390211926%2C103.96350603982197",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2487,7 +2487,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3443834054672406%2C103.96028263727831(MERAGI%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3443834054672406%2C103.96028263727831",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2510,7 +2510,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.2985685166065415%2C103.89419707868943(MEYER%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.2985685166065415%2C103.89419707868943",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2533,7 +2533,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3841919506037657%2C103.86304382230897(MIMOSA%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3841919506037657%2C103.86304382230897",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2556,7 +2556,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3840503584655648%2C103.86044968587458(MIMOSA%20TERRACE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3840503584655648%2C103.86044968587458",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2579,7 +2579,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3831048213252275%2C103.8614600654721(MIMOSA%20WALK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3831048213252275%2C103.8614600654721",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2602,7 +2602,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3157210175750274%2C103.78109728549765(MOUNT%20SINAI%20PLAIN%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3157210175750274%2C103.78109728549765",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2625,7 +2625,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3854458918400234%2C103.87790631585169(MUGLISTON%20PK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3854458918400234%2C103.87790631585169",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2648,7 +2648,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3855886003482265%2C103.86574410141814(NERAM%20CRESCENT%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3855886003482265%2C103.86574410141814",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2671,7 +2671,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3357040219418301%2C103.80171316653193(ORCHID%20VILLAGE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3357040219418301%2C103.80171316653193",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2694,7 +2694,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3689928277510748%2C103.87996361274367(PK%20VILLAS%20TERRACE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3689928277510748%2C103.87996361274367",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2717,7 +2717,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3660287545608498%2C103.87750439954596(PARRY%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3660287545608498%2C103.87750439954596",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2740,7 +2740,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3722856733513273%2C103.7519772914944(PAVILION%20PARK%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3722856733513273%2C103.7519772914944",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2763,7 +2763,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.368340422072448%2C103.75343447476291(PAVILION%20PLAYGROUND%20II)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.368340422072448%2C103.75343447476291",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2786,7 +2786,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3533699374507553%2C103.8427195604123(PEMIMPIN%20PLACE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3533699374507553%2C103.8427195604123",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2809,7 +2809,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3244296378828164%2C103.9539785936791(PESARI%20WALK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3244296378828164%2C103.9539785936791",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2832,7 +2832,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.4275453457323766%2C103.82611872435531(PLATINA%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.4275453457323766%2C103.82611872435531",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2855,7 +2855,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3669371159297643%2C103.88161112353755(POH%20HUAT%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3669371159297643%2C103.88161112353755",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2878,7 +2878,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3866687658524723%2C103.8586374762825(SARACA%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3866687658524723%2C103.8586374762825",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2901,7 +2901,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3334144862901973%2C103.7699266723165(SAVOY%20PK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3334144862901973%2C103.7699266723165",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2924,7 +2924,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.381482754028829%2C103.868774404846(SELETAR%20TERRACE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.381482754028829%2C103.868774404846",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2947,7 +2947,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3169670574429417%2C103.93628016907121(SENNETT%20AVE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3169670574429417%2C103.93628016907121",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2970,7 +2970,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3799210099649377%2C103.83455966687733(SERENADE%20WALK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3799210099649377%2C103.83455966687733",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -2993,7 +2993,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3710206044792923%2C103.8323920022382(SHANGRI-LA%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3710206044792923%2C103.8323920022382",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3016,7 +3016,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3283701220240436%2C103.81043241139625(SHELFORD%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3283701220240436%2C103.81043241139625",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3039,7 +3039,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.32243593615978%2C103.79128056190346(SIXTH%20AVE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.32243593615978%2C103.79128056190346",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3062,7 +3062,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3114841047147199%2C103.85815199975507(SOMME%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3114841047147199%2C103.85815199975507",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3085,7 +3085,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3536471358300504%2C103.83202835279195(SOO%20CHOW%20WALK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3536471358300504%2C103.83202835279195",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3108,7 +3108,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.4009038349812015%2C103.82259766879525(SPRINGLEAF%20AVE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.4009038349812015%2C103.82259766879525",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3131,7 +3131,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3980395816401683%2C103.8223229784298(SPRINGLEAF%20GARDEN%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3980395816401683%2C103.8223229784298",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3154,7 +3154,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3791951949591588%2C103.86692143203751(STRATTON%20WALK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3791951949591588%2C103.86692143203751",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3177,7 +3177,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.39164006767556%2C103.9037361498062(ST%20ANNE'S%20WOOD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.39164006767556%2C103.9037361498062",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3200,7 +3200,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3262280958131525%2C103.86488766637642(ST%20MICHAEL'S%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3262280958131525%2C103.86488766637642",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3223,7 +3223,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3716264409438255%2C103.83278502528952(ST.%20NICHOLAS%20VIEW%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3716264409438255%2C103.83278502528952",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3246,7 +3246,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3390909036283438%2C103.95824012802515(SUNBIRD%20CIRCLE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3390909036283438%2C103.95824012802515",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3269,7 +3269,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3870117216118698%2C103.85750994585806(SUNRISE%20CLOSE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3870117216118698%2C103.85750994585806",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3292,7 +3292,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.388305338068579%2C103.85737062021855(SUNRISE%20DR%20PG%20I)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.388305338068579%2C103.85737062021855",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3315,7 +3315,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3903014178123845%2C103.85525165964455(SUNRISE%20DR%20PG%20II)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3903014178123845%2C103.85525165964455",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3338,7 +3338,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3869426039110087%2C103.85660014074124(SUNRISE%20PLACE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3869426039110087%2C103.85660014074124",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3361,7 +3361,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3876742987725457%2C103.8566800843983(SUNRISE%20WAY%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3876742987725457%2C103.8566800843983",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3384,7 +3384,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3267878202217431%2C103.76640642909675(SUNSET%20WAY%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3267878202217431%2C103.76640642909675",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3407,7 +3407,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3564455112390452%2C103.8603394027534(TAI%20HWAN%20TERRACE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3564455112390452%2C103.8603394027534",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3430,7 +3430,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.346170531692557%2C103.88505458283811(TAI%20KENG%20GARDENS%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.346170531692557%2C103.88505458283811",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3453,7 +3453,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.345041324620132%2C103.88484078064656(TAI%20KENG%20PLACE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.345041324620132%2C103.88484078064656",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3476,7 +3476,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.325003305654955%2C103.91440219019879(TAMAN%20KEMBANGAN%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.325003305654955%2C103.91440219019879",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3499,7 +3499,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.308703286122327%2C103.76472555154503(TAMAN%20MAS%20MERAH%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.308703286122327%2C103.76472555154503",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3522,7 +3522,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3896991865139798%2C103.86020178045604(TAMARIND%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3896991865139798%2C103.86020178045604",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3545,7 +3545,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3290293360899%2C103.94687554887881(TANAH%20MERAH%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3290293360899%2C103.94687554887881",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3568,7 +3568,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3001741105264821%2C103.89732193154623(TANJONG%20KATONG%20RD%20SOUTH%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3001741105264821%2C103.89732193154623",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3591,7 +3591,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3819922656659185%2C103.82919950234891(TEACHER%60S%20ESTATE%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3819922656659185%2C103.82919950234891",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3614,7 +3614,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3610744597438502%2C103.8300516835762(THE%20INGLEWOOD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3610744597438502%2C103.8300516835762",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3637,7 +3637,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3786921826899698%2C103.83262325345856(THOMSON%20GREEN%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3786921826899698%2C103.83262325345856",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3660,7 +3660,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3162599551384195%2C103.84370946452388(THOMSON%20RD%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3162599551384195%2C103.84370946452388",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3683,7 +3683,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3760005695093736%2C103.83248564324286(THOMSON%20WALK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3760005695093736%2C103.83248564324286",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3706,7 +3706,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.4000547089160098%2C103.81838893422373(THONG%20SOON%20GREEN%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.4000547089160098%2C103.81838893422373",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3729,7 +3729,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.321902799396018%2C103.80180993643792(VICTORIA%20PARK%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.321902799396018%2C103.80180993643792",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3752,7 +3752,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3230230142973407%2C103.91917852870084(WARINGIN%20PK%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3230230142973407%2C103.91917852870084",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3775,7 +3775,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3315101656981838%2C103.80818355774429(WATTEN%20HEIGHTS%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3315101656981838%2C103.80818355774429",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3798,7 +3798,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3155603512090228%2C103.75636016964519(WEST%20COAST%20GREEN%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3155603512090228%2C103.75636016964519",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3823,7 +3823,7 @@
       ],
       "source": "Parks@SG playground amenity",
       "sourceUrl": "https://data.gov.sg/datasets/d_99b71f5d34cf57a3a592fbfdef1f42b6/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.2974744660721955%2C103.76283333952928(West%20Coast%20Park)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.2974744660721955%2C103.76283333952928",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "This park lists Playground as an amenity in Parks@SG.",
@@ -3846,7 +3846,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3142539349178524%2C103.7584501679103(WEST%20COAST%20PLACE%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3142539349178524%2C103.7584501679103",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3869,7 +3869,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3536022354009014%2C103.69953571293019(WESTVILLE%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3536022354009014%2C103.69953571293019",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3892,7 +3892,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3518026478484713%2C103.70105312473154(WESTWOOD%20PARK%20PLAYGROUND)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3518026478484713%2C103.70105312473154",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3917,7 +3917,7 @@
       ],
       "source": "Parks@SG playground amenity",
       "sourceUrl": "https://data.gov.sg/datasets/d_99b71f5d34cf57a3a592fbfdef1f42b6/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.43780991829926%2C103.770189953625(Woodlands%20Town%20Garden)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.43780991829926%2C103.770189953625",
       "updatedAt": "2014-04-17T01:02:24.000Z",
       "notes": [
         "This park lists Playground as an amenity in Parks@SG.",
@@ -3942,7 +3942,7 @@
       ],
       "source": "Parks@SG playground amenity",
       "sourceUrl": "https://data.gov.sg/datasets/d_99b71f5d34cf57a3a592fbfdef1f42b6/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.4533560651459223%2C103.78131812725178(Woodlands%20Waterfront%20Park)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.4533560651459223%2C103.78131812725178",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "This park lists Playground as an amenity in Parks@SG.",
@@ -3965,7 +3965,7 @@
       "amenities": [],
       "source": "NParks managed-area point",
       "sourceUrl": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3806814928245077%2C103.83748706008444(YIO%20CHU%20KANG%20GARDENS%20PG)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.3806814928245077%2C103.83748706008444",
       "updatedAt": "2026-04-21T16:01:38.000Z",
       "notes": [
         "Coordinates are the indicative NParks managed-area point.",
@@ -3990,7 +3990,7 @@
       ],
       "source": "Parks@SG playground amenity",
       "sourceUrl": "https://data.gov.sg/datasets/d_99b71f5d34cf57a3a592fbfdef1f42b6/view",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.36796166979209%2C103.778288626402(Zhenghua%20Park)",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1.36796166979209%2C103.778288626402",
       "updatedAt": "2014-04-17T01:02:24.000Z",
       "notes": [
         "This park lists Playground as an amenity in Parks@SG.",

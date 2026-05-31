@@ -5,6 +5,8 @@ import {
   ArrowLeft,
   ChevronsUp,
   CircleDot,
+  CloudSun,
+  Droplets,
   ExternalLink,
   Filter,
   Info,
@@ -13,7 +15,10 @@ import {
   Navigation,
   Ruler,
   Search,
+  Shovel,
+  ThermometerSun,
   Trees,
+  Umbrella,
   X,
 } from "lucide-react";
 import { trackPageView } from "./lib/analytics.js";
@@ -24,6 +29,7 @@ const MOBILE_SHEET_QUERY = "(max-width: 860px)";
 const SHEET_DRAG_THRESHOLD_PX = 44;
 const RESULT_PAGE_SIZE = 16;
 const PLAYGROUND_REFRESH_MS = 60 * 60 * 1000;
+const WEATHER_REFRESH_MS = 30 * 60 * 1000;
 const REGION_FILTERS = ["Central", "North", "South", "East", "West"];
 const TYPE_FILTERS = [
   {
@@ -65,6 +71,13 @@ const AREA_CATEGORY_DEFINITIONS = [
   },
 ];
 const SIZE_FILTERS = AREA_CATEGORY_DEFINITIONS.filter((category) => category.value !== "Area unavailable");
+const FEATURE_FILTERS = [
+  {
+    value: "sand",
+    label: "Sand listed",
+    definition: "Parks@SG lists a sand play area for this location.",
+  },
+];
 
 export default function App() {
   const [path, setPath] = useState(() => window.location.pathname);
@@ -97,6 +110,8 @@ export default function App() {
 function PlaygroundMapPage({ onNavigate }) {
   const [dataset, setDataset] = useState(null);
   const [loadingError, setLoadingError] = useState("");
+  const [weather, setWeather] = useState(null);
+  const [weatherError, setWeatherError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState(createDefaultFilters);
@@ -141,6 +156,37 @@ function PlaygroundMapPage({ onNavigate }) {
     refreshTimer = window.setInterval(() => {
       loadPlaygrounds({ cacheBust: true });
     }, PLAYGROUND_REFRESH_MS);
+
+    return () => {
+      mounted = false;
+      if (refreshTimer) window.clearInterval(refreshTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    let refreshTimer = null;
+
+    async function loadWeather() {
+      try {
+        const response = await fetch("/api/weather");
+        if (!response.ok) throw new Error(`Weather returned ${response.status}`);
+        const payload = await response.json();
+        if (!mounted) return;
+
+        if (!payload.ok) throw new Error(payload.warning || "Weather forecast unavailable.");
+        setWeather(payload);
+        setWeatherError("");
+      } catch (error) {
+        if (!mounted) return;
+
+        setWeather(null);
+        setWeatherError(error instanceof Error ? error.message : "Weather forecast unavailable.");
+      }
+    }
+
+    loadWeather();
+    refreshTimer = window.setInterval(loadWeather, WEATHER_REFRESH_MS);
 
     return () => {
       mounted = false;
@@ -399,6 +445,8 @@ function PlaygroundMapPage({ onNavigate }) {
             ) : null}
           </label>
 
+          <WeatherBrief weather={weather} error={weatherError} />
+
           <div className="filter-scroller" aria-label="Playground filters">
             <span className="filter-rail-label">
               <Filter size={14} aria-hidden="true" />
@@ -441,6 +489,18 @@ function PlaygroundMapPage({ onNavigate }) {
               />
             ))}
             <span className="filter-divider" aria-hidden="true" />
+            <FilterGroupLabel label="Play feature" description="Listed amenities" />
+            {FEATURE_FILTERS.map((feature) => (
+              <FilterChip
+                active={filters.features.includes(feature.value)}
+                count={playgrounds.filter((playground) => playgroundMatchesFeature(playground, feature.value)).length}
+                description={feature.definition}
+                key={feature.value}
+                label={feature.label}
+                onSelect={() => toggleArrayFilter("features", feature.value)}
+              />
+            ))}
+            <span className="filter-divider" aria-hidden="true" />
             <FilterGroupLabel label="Region" description="Singapore area" />
             {REGION_FILTERS.map((region) => (
               <FilterChip
@@ -480,8 +540,8 @@ function PlaygroundMapPage({ onNavigate }) {
               <Popup>
                 <strong>{playground.name}</strong>
                 <span>{playground.areaLabel}</span>
-                <a href={playground.googleMapsUrl} target="_blank" rel="noreferrer">
-                  Open coordinates
+                <a href={getGoogleMapsUrl(playground)} target="_blank" rel="noreferrer">
+                  Open in Google Maps
                 </a>
               </Popup>
             </Marker>
@@ -525,7 +585,7 @@ function PlaygroundMapPage({ onNavigate }) {
           <div className="summary-strip">
             <StatTile label="Dedicated" value={formatCompactCount(stats.dedicatedCount)} tone="green" />
             <StatTile label="Parks with play" value={formatCompactCount(stats.parkWithPlaygroundCount)} tone="blue" />
-            <StatTile label="Pocket size" value={formatCompactCount(stats.pocketCount)} tone="dark" />
+            <StatTile label="Sand listed" value={formatCompactCount(stats.sandListedCount)} tone="dark" />
           </div>
 
           {selectedPlayground ? (
@@ -564,6 +624,7 @@ function PlaygroundMapPage({ onNavigate }) {
                   <span>{playground.region} · {playground.type}</span>
                 </div>
                 <div className="row-meta">
+                  {getSandStatus(playground).kind === "listed" ? <span className="sand-badge row-sand">Sand</span> : null}
                   <span className="size-badge">{playground.areaCategory}</span>
                   <span className="row-distance">{formatDistanceMeters(distanceMeters)}</span>
                   <b>{playground.areaLabel}</b>
@@ -634,7 +695,7 @@ function DataInfoPage({ onNavigate }) {
         </div>
         <div>
           <span>Map links</span>
-          <strong>Google Maps coordinates</strong>
+          <strong>Direct Google Maps</strong>
         </div>
       </section>
 
@@ -662,6 +723,41 @@ function DataInfoPage({ onNavigate }) {
           equipment.
         </p>
         <DefinitionList items={AREA_CATEGORY_DEFINITIONS} />
+      </section>
+
+      <section className="info-section">
+        <div className="info-section-heading">
+          <Shovel size={19} />
+          <h2>Parent planning fields</h2>
+        </div>
+        <p>
+          Sand status is derived from Parks@SG amenities. If a record does not publish amenity details, the app marks
+          sand information as unavailable instead of assuming the surface.
+        </p>
+        <DefinitionList
+          items={[
+            {
+              value: "Sand play listed",
+              label: "Sand play listed",
+              definition: "Parks@SG explicitly lists Sand play area for this location.",
+            },
+            {
+              value: "No sand listed",
+              label: "No sand listed",
+              definition: "Amenities are published, but Sand play area is not listed.",
+            },
+            {
+              value: "Sand info unavailable",
+              label: "Sand info unavailable",
+              definition: "No official amenity data was available for this playground record.",
+            },
+            {
+              value: "Today in SG weather",
+              label: "Today in SG weather",
+              definition: "Loaded from NEA/data.gov.sg through the app API for planning outdoor play.",
+            },
+          ]}
+        />
       </section>
 
       <section className="info-section">
@@ -698,6 +794,7 @@ function DataInfoPage({ onNavigate }) {
 
 function PlaygroundDetail({ playground, distanceMeters }) {
   const amenities = playground.amenities?.filter((item) => !/^description$/i.test(item)).slice(0, 6) || [];
+  const sandStatus = getSandStatus(playground);
 
   return (
     <article className="detail-card">
@@ -705,6 +802,10 @@ function PlaygroundDetail({ playground, distanceMeters }) {
         <div className="provider-line">
           <span className="type-pill">{playground.type}</span>
           <span className="status-pill available">{playground.region}</span>
+          <span className={`sand-pill ${sandStatus.kind}`}>
+            <Shovel size={13} aria-hidden="true" />
+            {sandStatus.label}
+          </span>
         </div>
         <h2>{playground.name}</h2>
         <p>{playground.address || playground.coordinateLabel}</p>
@@ -723,10 +824,11 @@ function PlaygroundDetail({ playground, distanceMeters }) {
           value={playground.areaCategory}
           definition={getAreaDefinition(playground.areaCategory)}
         />
+        <DefinitionRow label="Sand" value={sandStatus.label} definition={sandStatus.definition} />
       </div>
 
       <div className="detail-meta">
-        <a href={playground.googleMapsUrl} target="_blank" rel="noreferrer">
+        <a href={getGoogleMapsUrl(playground)} target="_blank" rel="noreferrer">
           <MapPin size={15} />
           {playground.coordinateLabel}
         </a>
@@ -739,7 +841,7 @@ function PlaygroundDetail({ playground, distanceMeters }) {
       <div className="detail-actions">
         <a
           className="primary-action"
-          href={playground.googleMapsUrl}
+          href={getGoogleMapsUrl(playground)}
           target="_blank"
           rel="noreferrer"
           aria-label={`Open ${playground.name} in Google Maps`}
@@ -760,6 +862,78 @@ function PlaygroundDetail({ playground, distanceMeters }) {
         ))}
       </div>
     </article>
+  );
+}
+
+function WeatherBrief({ error, weather }) {
+  if (!weather && !error) {
+    return (
+      <section className="weather-card loading" aria-label="Singapore weather forecast">
+        <CloudSun size={20} aria-hidden="true" />
+        <div>
+          <span>Today in SG</span>
+          <strong>Loading weather</strong>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="weather-card warning" aria-label="Singapore weather forecast">
+        <Umbrella size={20} aria-hidden="true" />
+        <div>
+          <span>Today in SG</span>
+          <strong>Weather unavailable</strong>
+          <p>{error}</p>
+        </div>
+      </section>
+    );
+  }
+
+  const day = weather.day || {};
+  const period = day.periods?.[0];
+  const outlook = weather.outlook || [];
+
+  return (
+    <section className="weather-card" aria-label="Singapore weather forecast">
+      <div className="weather-main">
+        <span className="weather-icon" aria-hidden="true">
+          <CloudSun size={21} />
+        </span>
+        <div className="weather-copy">
+          <span>Today in SG</span>
+          <strong>{day.forecastText || "Forecast updating"}</strong>
+          <p>{weather.parentCue || "Check the forecast before heading out."}</p>
+        </div>
+      </div>
+
+      <div className="weather-metrics" aria-label="Weather details">
+        <span>
+          <ThermometerSun size={14} aria-hidden="true" />
+          {day.temperature?.label || "Temp TBC"}
+        </span>
+        <span>
+          <Droplets size={14} aria-hidden="true" />
+          {day.humidity?.label || "Humidity TBC"}
+        </span>
+        <span>
+          <Umbrella size={14} aria-hidden="true" />
+          {period ? formatRegionalForecast(period) : day.validText || "24-hour forecast"}
+        </span>
+      </div>
+
+      {outlook.length > 0 ? (
+        <div className="weather-outlook" aria-label="Four day outlook">
+          {outlook.slice(0, 3).map((forecast) => (
+            <span key={`${forecast.day}-${forecast.date}`}>
+              <b>{forecast.day}</b>
+              {forecast.forecastText}
+            </span>
+          ))}
+        </div>
+      ) : null}
+    </section>
   );
 }
 
@@ -898,6 +1072,7 @@ function getPlaygroundColor(playground) {
 
 function createDefaultFilters() {
   return {
+    features: [],
     types: [],
     sizes: [],
     regions: [],
@@ -908,6 +1083,9 @@ function playgroundPassesFilters(playground, filters, searchTokens) {
   const matchesType = filters.types.length === 0 || filters.types.includes(playground.type);
   const matchesSize = filters.sizes.length === 0 || filters.sizes.includes(playground.areaCategory);
   const matchesRegion = filters.regions.length === 0 || filters.regions.includes(playground.region);
+  const matchesFeature =
+    filters.features.length === 0 || filters.features.every((feature) => playgroundMatchesFeature(playground, feature));
+  const sandStatus = getSandStatus(playground);
   const haystack = normalizeText(
     [
       playground.name,
@@ -915,13 +1093,15 @@ function playgroundPassesFilters(playground, filters, searchTokens) {
       playground.type,
       playground.region,
       playground.areaCategory,
+      sandStatus.label,
+      sandStatus.definition,
       playground.address,
       playground.amenities?.join(" "),
     ].join(" "),
   );
   const matchesSearch = searchTokens.length === 0 || searchTokens.every((token) => haystack.includes(token));
 
-  return matchesType && matchesSize && matchesRegion && matchesSearch;
+  return matchesType && matchesSize && matchesRegion && matchesFeature && matchesSearch;
 }
 
 function rankPlaygroundsByDistance(origin, playgrounds, searchTokens = []) {
@@ -959,6 +1139,7 @@ function buildStats(playgrounds) {
     dedicatedCount: playgrounds.filter((playground) => playground.type === "Dedicated playground").length,
     parkWithPlaygroundCount: playgrounds.filter((playground) => playground.type === "Park with playground").length,
     pocketCount: playgrounds.filter((playground) => playground.areaCategory === "Pocket").length,
+    sandListedCount: playgrounds.filter((playground) => getSandStatus(playground).kind === "listed").length,
     largeCount: playgrounds.filter((playground) => ["Large", "Destination"].includes(playground.areaCategory)).length,
     destinationCount: playgrounds.filter((playground) => playground.areaCategory === "Destination").length,
   };
@@ -976,7 +1157,63 @@ function getAreaDefinition(category) {
 }
 
 function getActiveFilterCount(filters) {
-  return filters.types.length + filters.sizes.length + filters.regions.length;
+  return filters.types.length + filters.sizes.length + filters.regions.length + filters.features.length;
+}
+
+function playgroundMatchesFeature(playground, feature) {
+  if (feature === "sand") return getSandStatus(playground).kind === "listed";
+
+  return false;
+}
+
+function getSandStatus(playground) {
+  const amenityText = (playground.amenities || []).join(" ");
+
+  if (/\bsand\s+play\b|\bsand\s+play\s+area\b/i.test(amenityText)) {
+    return {
+      kind: "listed",
+      label: "Sand play listed",
+      definition: "Parks@SG explicitly lists a sand play area for this location.",
+    };
+  }
+
+  if ((playground.amenities || []).length > 0 || /Parks@SG/i.test(playground.source || "")) {
+    return {
+      kind: "not-listed",
+      label: "No sand listed",
+      definition: "Published amenities do not list a sand play area.",
+    };
+  }
+
+  return {
+    kind: "unknown",
+    label: "Sand info unavailable",
+    definition: "No official amenity or surface details were published for this record.",
+  };
+}
+
+function getGoogleMapsUrl(playground) {
+  const latitude = Number(playground.latitude);
+  const longitude = Number(playground.longitude);
+
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+    return playground.googleMapsUrl || "#";
+  }
+
+  const url = new URL("https://www.google.com/maps/search/");
+  url.searchParams.set("api", "1");
+  url.searchParams.set("query", `${latitude},${longitude}`);
+  return url.toString();
+}
+
+function formatRegionalForecast(period) {
+  const regions = period.regions || [];
+  const uniqueForecasts = [...new Set(regions.map((region) => region.forecastText).filter(Boolean))];
+
+  if (uniqueForecasts.length === 1) return uniqueForecasts[0];
+  if (uniqueForecasts.length > 1) return "Mixed by region";
+
+  return period.label || "24-hour forecast";
 }
 
 function toggleValue(values, value) {
