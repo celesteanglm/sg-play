@@ -14,7 +14,7 @@ Product and data-quality ideas for the playground map.
 - Add a review report for records with missing area, missing amenities, or suspicious coordinates.
 - Track potential duplicates between NParks point records and Parks@SG amenity records.
 - Keep category and size separate in copy, filters, docs, and analytics.
-- Consider a curated enrichment layer only after deciding how manual edits will be reviewed and refreshed.
+- Add a lightweight review cadence for `config/curated-playgrounds.json` so manual records can be removed when official source data catches up.
 
 ## Technical Cleanup
 

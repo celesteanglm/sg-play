@@ -1,0 +1,23 @@
+{
+  "description": "Manual playground records for known public playgrounds that are missing from the official playground-specific source fields. Keep entries small, source them conservatively, and prefer official park records for area and amenity context.",
+  "playgrounds": [
+    {
+      "id": "curated-admiralty-park-playground",
+      "name": "Admiralty Park Playground",
+      "type": "Park with playground",
+      "latitude": 1.4436354,
+      "longitude": 103.783157,
+      "officialParkName": "ADMIRALTY PK",
+      "parksSgName": "Admiralty Park",
+      "address": "Riverside Road",
+      "reason": "Parks@SG publishes Admiralty Park, but its amenity text does not list Playground even though the playground is visible as a public map place.",
+      "referenceUrls": [
+        "https://maps.app.goo.gl/9UZ1WJimrBSSE84n8"
+      ],
+      "notes": [
+        "Curated because official source fields publish the park but do not expose this playground as a playground amenity.",
+        "Coordinates point to the playground area rather than the park centroid."
+      ]
+    }
+  ]
+}
