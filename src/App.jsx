@@ -16,6 +16,7 @@ import {
   Ruler,
   Search,
   Shovel,
+  SlidersHorizontal,
   ThermometerSun,
   Trees,
   Umbrella,
@@ -123,6 +124,8 @@ function PlaygroundMapPage({ onNavigate }) {
   const [visibleResultCount, setVisibleResultCount] = useState(RESULT_PAGE_SIZE);
   const [sheetMode, setSheetMode] = useState(getInitialSheetMode);
   const [sheetHasUserInteracted, setSheetHasUserInteracted] = useState(false);
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const filterShellRef = useRef(null);
   const mapRef = useRef(null);
   const sheetDragStartY = useRef(null);
   const sheetDidDrag = useRef(false);
@@ -230,11 +233,33 @@ function PlaygroundMapPage({ onNavigate }) {
     : null;
   const stats = useMemo(() => buildStats(filteredPlaygrounds), [filteredPlaygrounds]);
   const activeFilterCount = getActiveFilterCount(filters);
+  const extendedFilterCount = filters.sizes.length + filters.features.length + filters.regions.length;
+  const filterPanelId = "playground-filter-panel";
   const hasMoreResults = visiblePlaygrounds.length < rankedPlaygrounds.length;
 
   useEffect(() => {
     setVisibleResultCount(RESULT_PAGE_SIZE);
   }, [filters, query, rankingOrigin]);
+
+  useEffect(() => {
+    if (!isFilterPanelOpen) return;
+
+    function handlePointerDown(event) {
+      if (filterShellRef.current?.contains(event.target)) return;
+      setIsFilterPanelOpen(false);
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") setIsFilterPanelOpen(false);
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isFilterPanelOpen]);
 
   useEffect(() => {
     if (filteredPlaygrounds.length === 0) {
@@ -318,6 +343,19 @@ function PlaygroundMapPage({ onNavigate }) {
   function clearFilters() {
     setFilters(createDefaultFilters());
     setQuery("");
+  }
+
+  function renderTypeFilterChips() {
+    return TYPE_FILTERS.map((type) => (
+      <FilterChip
+        active={filters.types.includes(type.value)}
+        count={playgrounds.filter((playground) => playground.type === type.value).length}
+        description={type.definition}
+        key={type.value}
+        label={type.label}
+        onSelect={() => toggleTypeFilter(type.value)}
+      />
+    ));
   }
 
   function handleSheetPointerDown(event) {
@@ -447,70 +485,92 @@ function PlaygroundMapPage({ onNavigate }) {
 
           <WeatherBrief weather={weather} error={weatherError} />
 
-          <div className="filter-scroller" aria-label="Playground filters">
-            <span className="filter-rail-label">
-              <Filter size={14} aria-hidden="true" />
-              Filters
-            </span>
-            <button
-              className={activeFilterCount === 0 && !query ? "chip active" : "chip"}
-              type="button"
-              onClick={clearFilters}
-              aria-label="Clear search and filters"
-            >
-              <span className="chip-icon all" aria-hidden="true">
-                <CircleDot size={14} />
-              </span>
-              <span>All</span>
-              <span className="chip-count">{playgrounds.length}</span>
-            </button>
-            <span className="filter-divider" aria-hidden="true" />
-            <FilterGroupLabel label="Category" description="What the record is" />
-            {TYPE_FILTERS.map((type) => (
-              <FilterChip
-                active={filters.types.includes(type.value)}
-                count={playgrounds.filter((playground) => playground.type === type.value).length}
-                description={type.definition}
-                key={type.value}
-                label={type.label}
-                onSelect={() => toggleTypeFilter(type.value)}
-              />
-            ))}
-            <span className="filter-divider" aria-hidden="true" />
-            <FilterGroupLabel label="Size option" description="Managed-area scale" />
-            {SIZE_FILTERS.map((size) => (
-              <FilterChip
-                active={filters.sizes.includes(size.value)}
-                count={playgrounds.filter((playground) => playground.areaCategory === size.value).length}
-                description={size.definition}
-                key={size.value}
-                label={size.label}
-                onSelect={() => toggleArrayFilter("sizes", size.value)}
-              />
-            ))}
-            <span className="filter-divider" aria-hidden="true" />
-            <FilterGroupLabel label="Play feature" description="Listed amenities" />
-            {FEATURE_FILTERS.map((feature) => (
-              <FilterChip
-                active={filters.features.includes(feature.value)}
-                count={playgrounds.filter((playground) => playgroundMatchesFeature(playground, feature.value)).length}
-                description={feature.definition}
-                key={feature.value}
-                label={feature.label}
-                onSelect={() => toggleArrayFilter("features", feature.value)}
-              />
-            ))}
-            <span className="filter-divider" aria-hidden="true" />
-            <FilterGroupLabel label="Region" description="Singapore area" />
-            {REGION_FILTERS.map((region) => (
-              <FilterChip
-                active={filters.regions.includes(region)}
-                count={playgrounds.filter((playground) => playground.region === region).length}
-                key={region}
-                label={region}
-                onSelect={() => toggleArrayFilter("regions", region)}
-              />
-            ))}
+          <div className="filter-shell" ref={filterShellRef}>
+            <div className="filter-bar" aria-label="Playground filters">
+              <div className="filter-quick-chips">
+                <span className="filter-rail-label">
+                  <Filter size={14} aria-hidden="true" />
+                  Filters
+                </span>
+                <button
+                  className={activeFilterCount === 0 && !query ? "chip active" : "chip"}
+                  type="button"
+                  onClick={clearFilters}
+                  aria-label="Clear search and filters"
+                >
+                  <span className="chip-icon all" aria-hidden="true">
+                    <CircleDot size={14} />
+                  </span>
+                  <span>All</span>
+                  <span className="chip-count">{playgrounds.length}</span>
+                </button>
+                {renderTypeFilterChips()}
+              </div>
+              <button
+                className={[
+                  "filter-panel-toggle",
+                  isFilterPanelOpen ? "open" : "",
+                  extendedFilterCount > 0 ? "has-filters" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                type="button"
+                onClick={() => setIsFilterPanelOpen((current) => !current)}
+                aria-controls={filterPanelId}
+                aria-expanded={isFilterPanelOpen}
+                aria-label="Open size, sand, region, and category filters"
+              >
+                <SlidersHorizontal size={14} aria-hidden="true" />
+                <span>More</span>
+                {extendedFilterCount > 0 ? <span className="filter-badge">{extendedFilterCount}</span> : null}
+              </button>
+            </div>
+
+            {isFilterPanelOpen ? (
+              <div className="filter-panel" id={filterPanelId} aria-label="More playground filters">
+                <FilterSection title="Category" description="Dedicated playgrounds and parks with playground amenities.">
+                  {renderTypeFilterChips()}
+                </FilterSection>
+                <FilterSection
+                  title="Size option"
+                  description="Pocket is a managed-area size filter, separate from the playground category."
+                >
+                  {SIZE_FILTERS.map((size) => (
+                    <FilterChip
+                      active={filters.sizes.includes(size.value)}
+                      count={playgrounds.filter((playground) => playground.areaCategory === size.value).length}
+                      description={size.definition}
+                      key={size.value}
+                      label={size.label}
+                      onSelect={() => toggleArrayFilter("sizes", size.value)}
+                    />
+                  ))}
+                </FilterSection>
+                <FilterSection title="Play feature" description="Amenities that can change the outing plan.">
+                  {FEATURE_FILTERS.map((feature) => (
+                    <FilterChip
+                      active={filters.features.includes(feature.value)}
+                      count={playgrounds.filter((playground) => playgroundMatchesFeature(playground, feature.value)).length}
+                      description={feature.definition}
+                      key={feature.value}
+                      label={feature.label}
+                      onSelect={() => toggleArrayFilter("features", feature.value)}
+                    />
+                  ))}
+                </FilterSection>
+                <FilterSection title="Region" description="Narrow the map to an area of Singapore.">
+                  {REGION_FILTERS.map((region) => (
+                    <FilterChip
+                      active={filters.regions.includes(region)}
+                      count={playgrounds.filter((playground) => playground.region === region).length}
+                      key={region}
+                      label={region}
+                      onSelect={() => toggleArrayFilter("regions", region)}
+                    />
+                  ))}
+                </FilterSection>
+              </div>
+            ) : null}
           </div>
 
           {locationNotice || loadingError ? <div className="location-notice">{locationNotice || loadingError}</div> : null}
@@ -1063,12 +1123,15 @@ function DefinitionRow({ definition, label, value }) {
   );
 }
 
-function FilterGroupLabel({ description, label }) {
+function FilterSection({ children, description, title }) {
   return (
-    <span className="filter-group-label">
-      <b>{label}</b>
-      <small>{description}</small>
-    </span>
+    <section className="filter-section">
+      <div className="filter-section-heading">
+        <strong>{title}</strong>
+        <span>{description}</span>
+      </div>
+      <div className="filter-chip-grid">{children}</div>
+    </section>
   );
 }
 
