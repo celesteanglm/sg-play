@@ -1703,13 +1703,6 @@ button {
   font-size: 10px;
 }
 
-.station-list-footer {
-  display: flex;
-  flex: 0 0 auto;
-  justify-content: center;
-  padding: 10px 0 2px;
-}
-
 .show-more-button {
   min-height: 40px;
   padding: 0 16px;
@@ -1726,6 +1719,54 @@ button {
 .show-more-button:hover {
   border-color: rgba(72, 184, 239, 0.34);
   box-shadow: 0 10px 22px rgba(39, 83, 68, 0.11);
+}
+
+.pagination-footer {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 0 2px;
+}
+
+.pagination-button {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--ink);
+  background: #ffffff;
+  border: 1px solid #cfe3db;
+  border-radius: 8px;
+  box-shadow: 0 8px 18px rgba(39, 83, 68, 0.08);
+  cursor: pointer;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    opacity 140ms ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+  border-color: rgba(72, 184, 239, 0.34);
+  box-shadow: 0 10px 22px rgba(39, 83, 68, 0.11);
+}
+
+.pagination-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+  box-shadow: none;
+}
+
+.pagination-status {
+  min-width: 92px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .empty-state {
@@ -2235,7 +2276,7 @@ button {
   .bottom-sheet.sheet-collapsed .detail-card,
   .bottom-sheet.sheet-collapsed .nearby-header,
   .bottom-sheet.sheet-collapsed .station-list,
-  .bottom-sheet.sheet-collapsed .station-list-footer {
+  .bottom-sheet.sheet-collapsed .pagination-footer {
     display: none;
   }
 
