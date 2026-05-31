@@ -1505,8 +1505,7 @@ button {
   gap: 8px;
 }
 
-.primary-action,
-.secondary-action {
+.primary-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1533,24 +1532,9 @@ button {
     0 8px 16px rgba(255, 209, 102, 0.24);
 }
 
-.secondary-action {
-  color: var(--ink);
-  background: #fffdf7;
-  border: 1px solid var(--border);
-}
-
-.primary-action:hover,
-.secondary-action:hover {
+.primary-action:hover {
   transform: translateY(-1px);
   box-shadow: 0 10px 18px rgba(39, 83, 68, 0.12);
-}
-
-.secondary-action.unavailable,
-.secondary-action:disabled {
-  color: #6f7d77;
-  background: #edf2f0;
-  border-color: #dbe7e2;
-  cursor: not-allowed;
 }
 
 .nearby-header {

@@ -70,8 +70,7 @@ The repository also includes an hourly GitHub Actions workflow at `.github/workf
 - Filter by dedicated playgrounds, parks with playgrounds, managed-area size, sand status, and region
 - Use current location to rank nearby playgrounds
 - Check compact weather details before heading out
-- Tap markers or list rows to view coordinates, managed-area size, sand notes, source notes, and Google Maps links
-- Open the `/data` page for source and caveat details
+- Tap markers or list rows to view coordinates, managed-area size, sand notes, planning notes, and Google Maps links
 
 ## Run Locally
 
