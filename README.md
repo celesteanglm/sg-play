@@ -62,7 +62,7 @@ For the longer source model and field reference, see [`docs/data-sources.md`](do
 
 The frontend refetches `/data/playgrounds.json` once per hour while a browser tab is open.
 
-The repository also includes an hourly GitHub Actions workflow at `.github/workflows/refresh-playgrounds.yml`. It runs `npm run data:playgrounds`, verifies the build, and commits `public/data/playgrounds.json` only when source-derived data changes. The generator preserves `generatedAt` when records are unchanged so the schedule does not create hourly churn.
+The repository also includes an hourly GitHub Actions workflow at `.github/workflows/refresh-playgrounds.yml`. It runs `npm run data:playgrounds`, verifies the generated data and build, and commits `public/data/playgrounds.json` only when source-derived data changes. The generator preserves `generatedAt` when records are unchanged so the schedule does not create hourly churn.
 
 ## User Features
 
@@ -96,6 +96,7 @@ Useful checks:
 
 ```bash
 npm run build
+npm run data:check
 npm run data:playgrounds
 ```
 
@@ -112,7 +113,7 @@ PlaySG does not require private API keys for the playground map or weather plann
 
 ## Notes
 
-The Express server still contains optional legacy EV charger endpoints from the original reference app. The PlaySG playground experience itself does not call OneMap or LTA DataMall and does not need OneMap credentials or an LTA API key.
+The Express server only exposes PlaySG app configuration, health, static assets, and weather planning endpoints. The playground map itself does not call OneMap or LTA DataMall and does not need OneMap credentials or an LTA API key.
 
 Keep the visible OpenStreetMap attribution in the map UI.
 

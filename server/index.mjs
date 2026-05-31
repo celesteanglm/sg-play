@@ -1,35 +1,16 @@
 import "dotenv/config";
 import express from "express";
-import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { extractLtaBatchLink, normalizeChargerStations } from "../src/lib/chargers.js";
-import { normalizeSearchText } from "../src/lib/search.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
-const samplePath = path.join(rootDir, "public", "data", "sample-chargers.json");
 const port = Number(process.env.PORT || 8787);
 const host = process.env.HOST || "0.0.0.0";
-const ltaAccountKey = process.env.LTA_ACCOUNT_KEY;
-const configuredCacheTtlMs = Number(process.env.CACHE_TTL_MS || 5 * 60 * 1000);
-const cacheTtlMs = Number.isFinite(configuredCacheTtlMs) && configuredCacheTtlMs > 0 ? configuredCacheTtlMs : 5 * 60 * 1000;
-const configuredLtaFetchTimeoutMs = Number(process.env.LTA_FETCH_TIMEOUT_MS || 15000);
-const ltaFetchTimeoutMs =
-  Number.isFinite(configuredLtaFetchTimeoutMs) && configuredLtaFetchTimeoutMs > 0 ? configuredLtaFetchTimeoutMs : 15000;
-const oneMapBaseUrl = process.env.ONEMAP_BASE_URL || "https://www.onemap.gov.sg";
-const oneMapApiToken = process.env.ONEMAP_API_TOKEN || "";
-const oneMapEmail = process.env.ONEMAP_EMAIL || "";
-const oneMapPassword = process.env.ONEMAP_PASSWORD || "";
 const gaMeasurementId = normalizePublicEnvValue(process.env.GA_MEASUREMENT_ID);
 const weatherBaseUrl = process.env.NEA_WEATHER_BASE_URL || "https://api-open.data.gov.sg/v2/real-time/api";
 const openMeteoForecastUrl = process.env.OPEN_METEO_FORECAST_URL || "https://api.open-meteo.com/v1/forecast";
-const configuredOneMapCacheTtlMs = Number(process.env.ONEMAP_CACHE_TTL_MS || 30 * 24 * 60 * 60 * 1000);
-const oneMapSearchCacheTtlMs =
-  Number.isFinite(configuredOneMapCacheTtlMs) && configuredOneMapCacheTtlMs > 0
-    ? configuredOneMapCacheTtlMs
-    : 30 * 24 * 60 * 60 * 1000;
 const configuredWeatherCacheTtlMs = Number(process.env.WEATHER_CACHE_TTL_MS || 30 * 60 * 1000);
 const weatherCacheTtlMs =
   Number.isFinite(configuredWeatherCacheTtlMs) && configuredWeatherCacheTtlMs > 0
@@ -57,14 +38,8 @@ const OPEN_METEO_DAILY_FIELDS = [
   "wind_direction_10m_dominant",
 ];
 
-let liveCache = null;
-let liveRefreshPromise = null;
-let sampleCache = null;
-let alignedRefreshTimer = null;
-let oneMapTokenCache = null;
 let weatherCache = null;
 let weatherRefreshPromise = null;
-const oneMapSearchCache = new Map();
 
 const app = express();
 
@@ -96,8 +71,7 @@ app.use((_req, res, next) => {
 app.get("/api/health", (_req, res) => {
   res.json({
     ok: true,
-    ltaConfigured: Boolean(ltaAccountKey),
-    cache: liveCache ? buildCacheMeta(liveCache.fetchedAtMs) : null,
+    weatherCache: getWeatherCacheMeta(),
   });
 });
 
@@ -108,35 +82,6 @@ app.get("/api/config", (_req, res) => {
       gaMeasurementId,
     },
   });
-});
-
-app.get("/api/chargers", async (_req, res) => {
-  const payload = await getChargersPayload();
-  const maxAgeSeconds = getSecondsUntilNextRefreshBoundary();
-
-  res.set("Cache-Control", `public, max-age=${maxAgeSeconds}, stale-while-revalidate=60`);
-  res.json(payload);
-});
-
-app.get("/api/search-place", async (req, res) => {
-  const query = normalizeSearchText(req.query.q);
-
-  if (query.length < 2) {
-    res.json({ results: [] });
-    return;
-  }
-
-  try {
-    const payload = await searchOneMapPlace(query);
-    const maxAgeSeconds = Math.max(60, Math.round(oneMapSearchCacheTtlMs / 1000));
-
-    res.set("Cache-Control", `public, max-age=${maxAgeSeconds}, stale-while-revalidate=86400`);
-    res.json(payload);
-  } catch (error) {
-    const warning = error instanceof Error ? error.message : "Place search unavailable.";
-
-    res.status(200).json({ results: [], warning });
-  }
 });
 
 app.get("/api/weather", async (_req, res) => {
@@ -180,118 +125,7 @@ app.get(/.*/, (_req, res) => {
 
 app.listen(port, host, () => {
   console.log(`PlaySG API listening on http://${host}:${port}`);
-  if (ltaAccountKey) scheduleAlignedLiveRefresh();
 });
-
-async function readSampleData() {
-  if (sampleCache) return sampleCache;
-
-  const raw = await fs.readFile(samplePath, "utf8");
-  sampleCache = JSON.parse(raw);
-
-  return sampleCache;
-}
-
-async function getChargersPayload() {
-  if (!ltaAccountKey) {
-    return buildSamplePayload("Add LTA_ACCOUNT_KEY to use the live DataMall EV Charging Points Batch feed.", false);
-  }
-
-  if (liveCache && liveCache.refreshSlotMs === getCurrentRefreshSlotMs()) {
-    return buildLivePayload(liveCache, "fresh");
-  }
-
-  try {
-    const refreshedCache = await ensureLiveCacheForCurrentSlot();
-    return buildLivePayload(refreshedCache, "refreshed");
-  } catch (error) {
-    const warning = error instanceof Error ? error.message : "Unable to load LTA charger feed.";
-    console.warn(`LTA live refresh failed: ${warning}`);
-
-    if (liveCache) {
-      return buildLivePayload(liveCache, "stale");
-    }
-
-    return buildSamplePayload(warning, true);
-  }
-}
-
-async function refreshLiveCache() {
-  const metaResponse = await fetch("https://datamall2.mytransport.sg/ltaodataservice/EVCBatch", {
-    headers: {
-      AccountKey: ltaAccountKey,
-      accept: "application/json",
-    },
-    signal: AbortSignal.timeout(ltaFetchTimeoutMs),
-  });
-
-  if (!metaResponse.ok) {
-    throw new Error(`DataMall EVCBatch returned ${metaResponse.status}`);
-  }
-
-  const metaPayload = await metaResponse.json();
-  const downloadLink = extractLtaBatchLink(metaPayload);
-
-  if (!downloadLink) {
-    throw new Error("DataMall EVCBatch response did not include a download link.");
-  }
-
-  const batchResponse = await fetch(downloadLink, {
-    headers: { accept: "application/json" },
-    signal: AbortSignal.timeout(ltaFetchTimeoutMs),
-  });
-
-  if (!batchResponse.ok) {
-    throw new Error(`DataMall batch file returned ${batchResponse.status}`);
-  }
-
-  const batchPayload = await batchResponse.json();
-  const stations = normalizeChargerStations(batchPayload);
-  const ltaLastUpdatedTime = batchPayload.LastUpdatedTime || batchPayload.lastUpdatedTime || "";
-  const fetchedAtMs = Date.now();
-
-  liveCache = {
-    fetchedAtMs,
-    ltaLastUpdatedTime,
-    ltaUpdatedAt: normalizeLtaTimestamp(ltaLastUpdatedTime),
-    refreshSlotMs: getCurrentRefreshSlotMs(fetchedAtMs),
-    stations,
-  };
-
-  return liveCache;
-}
-
-async function ensureLiveCacheForCurrentSlot() {
-  if (liveCache && liveCache.refreshSlotMs === getCurrentRefreshSlotMs()) {
-    return liveCache;
-  }
-
-  if (!liveRefreshPromise) {
-    liveRefreshPromise = refreshLiveCache().finally(() => {
-      liveRefreshPromise = null;
-    });
-  }
-
-  return liveRefreshPromise;
-}
-
-async function searchOneMapPlace(query) {
-  const cacheKey = normalizeSearchText(query);
-  const cached = oneMapSearchCache.get(cacheKey);
-
-  if (cached && cached.expiresAtMs > Date.now()) {
-    return cached.payload;
-  }
-
-  const payload = await fetchOneMapPlaces(cacheKey);
-
-  oneMapSearchCache.set(cacheKey, {
-    expiresAtMs: Date.now() + oneMapSearchCacheTtlMs,
-    payload,
-  });
-
-  return payload;
-}
 
 async function getWeatherPayload() {
   if (weatherCache && weatherCache.expiresAtMs > Date.now()) {
@@ -386,7 +220,8 @@ function normalizeWeatherPayload(dayForecastPayload, fourDayPayload, weeklyForec
   const outlook = toArray(outlookRecord.forecasts).map(normalizeOutlookForecast).filter(Boolean).slice(0, 4);
   const modelOutlook = normalizeOpenMeteoDailyForecasts(weeklyForecastPayload).slice(1, 8);
   const weeklyOutlook = buildWeeklyOutlook(outlook, modelOutlook).slice(0, 7);
-  const updatedAt = dayRecord.updatedTimestamp || dayRecord.timestamp || outlookRecord.updatedTimestamp || outlookRecord.timestamp || "";
+  const updatedAt =
+    dayRecord.updatedTimestamp || dayRecord.timestamp || outlookRecord.updatedTimestamp || outlookRecord.timestamp || "";
   const hasSevenDayForecast = weeklyOutlook.length >= 7;
 
   return {
@@ -415,17 +250,17 @@ function normalizeDayForecast(general, periods) {
   const validPeriod = general.validPeriod || {};
 
   return {
-    forecastText: cleanOneMapValue(general.forecast?.text || ""),
-    forecastCode: cleanOneMapValue(general.forecast?.code || ""),
-    validText: cleanOneMapValue(validPeriod.text || ""),
-    validStart: cleanOneMapValue(validPeriod.start || ""),
-    validEnd: cleanOneMapValue(validPeriod.end || ""),
+    forecastText: cleanValue(general.forecast?.text || ""),
+    forecastCode: cleanValue(general.forecast?.code || ""),
+    validText: cleanValue(validPeriod.text || ""),
+    validStart: cleanValue(validPeriod.start || ""),
+    validEnd: cleanValue(validPeriod.end || ""),
     temperature,
     humidity,
     wind: {
-      direction: cleanOneMapValue(wind.direction || ""),
+      direction: cleanValue(wind.direction || ""),
       speed: normalizeRange(wind.speed, "km/h"),
-      label: [cleanOneMapValue(wind.direction || ""), normalizeRange(wind.speed, "km/h").label].filter(Boolean).join(", "),
+      label: [cleanValue(wind.direction || ""), normalizeRange(wind.speed, "km/h").label].filter(Boolean).join(", "),
     },
     periods: normalizeWeatherPeriods(periods, validPeriod),
   };
@@ -444,13 +279,13 @@ function normalizeWeatherPeriods(periods, validPeriod) {
       return Number.isFinite(startMs) && startMs >= validStartMs && startMs <= validEndMs;
     })
     .map((period) => ({
-      label: cleanOneMapValue(period?.timePeriod?.text || ""),
-      start: cleanOneMapValue(period?.timePeriod?.start || ""),
-      end: cleanOneMapValue(period?.timePeriod?.end || ""),
+      label: cleanValue(period?.timePeriod?.text || ""),
+      start: cleanValue(period?.timePeriod?.start || ""),
+      end: cleanValue(period?.timePeriod?.end || ""),
       regions: Object.entries(period?.regions || {}).map(([region, forecast]) => ({
         region: formatRegion(region),
-        forecastText: cleanOneMapValue(forecast?.text || ""),
-        forecastCode: cleanOneMapValue(forecast?.code || ""),
+        forecastText: cleanValue(forecast?.text || ""),
+        forecastCode: cleanValue(forecast?.code || ""),
       })),
     }))
     .filter((period) => period.regions.length > 0)
@@ -462,18 +297,18 @@ function normalizeOutlookForecast(forecast) {
   const wind = forecast.wind || {};
 
   return {
-    day: cleanOneMapValue(forecast.day || ""),
-    date: cleanOneMapValue(forecast.timestamp || ""),
+    day: cleanValue(forecast.day || ""),
+    date: cleanValue(forecast.timestamp || ""),
     dateKey: getDateKey(forecast.timestamp || ""),
-    forecastText: cleanOneMapValue(forecast.forecast?.text || forecast.forecast?.summary || ""),
-    summary: cleanOneMapValue(forecast.forecast?.summary || forecast.forecast?.text || ""),
-    forecastCode: cleanOneMapValue(forecast.forecast?.code || ""),
+    forecastText: cleanValue(forecast.forecast?.text || forecast.forecast?.summary || ""),
+    summary: cleanValue(forecast.forecast?.summary || forecast.forecast?.text || ""),
+    forecastCode: cleanValue(forecast.forecast?.code || ""),
     temperature: normalizeRange(forecast.temperature, "C"),
     humidity: normalizeRange(forecast.relativeHumidity, "%"),
     wind: {
-      direction: cleanOneMapValue(wind.direction || ""),
+      direction: cleanValue(wind.direction || ""),
       speed: normalizeRange(wind.speed, "km/h"),
-      label: [cleanOneMapValue(wind.direction || ""), normalizeRange(wind.speed, "km/h").label].filter(Boolean).join(", "),
+      label: [cleanValue(wind.direction || ""), normalizeRange(wind.speed, "km/h").label].filter(Boolean).join(", "),
     },
     sourceKind: "official",
     sourceLabel: "NEA official outlook",
@@ -605,11 +440,11 @@ function normalizeWeatherUnit(unit) {
   if (/celsius/i.test(unit)) return "C";
   if (/percentage|percent/i.test(unit)) return "%";
 
-  return cleanOneMapValue(unit || "");
+  return cleanValue(unit || "");
 }
 
 function getDateKey(value) {
-  const raw = cleanOneMapValue(value);
+  const raw = cleanValue(value);
   const match = raw.match(/^(\d{4}-\d{2}-\d{2})/);
   if (match) return match[1];
 
@@ -682,7 +517,7 @@ function formatWindDirection(degrees) {
 }
 
 function getWeatherParentCue(day) {
-  const forecast = normalizeSearchText(day.forecastText);
+  const forecast = normalizeText(day.forecastText);
   const high = day.temperature?.high;
 
   if (/thundery|shower|rain/.test(forecast)) return "Pack a wet-weather backup and check the sky before heading out.";
@@ -693,123 +528,30 @@ function getWeatherParentCue(day) {
 }
 
 function formatRegion(value) {
-  const region = cleanOneMapValue(value);
+  const region = cleanValue(value);
   return region ? region.charAt(0).toUpperCase() + region.slice(1).toLowerCase() : "";
 }
 
-async function fetchOneMapPlaces(query) {
-  const url = new URL("/api/common/elastic/search", oneMapBaseUrl);
-  url.searchParams.set("searchVal", query);
-  url.searchParams.set("returnGeom", "Y");
-  url.searchParams.set("getAddrDetails", "Y");
-  url.searchParams.set("pageNum", "1");
-
-  const authorization = await getOneMapAuthorizationHeader();
-  const response = await fetch(url, {
-    headers: {
-      accept: "application/json",
-      ...(authorization ? { Authorization: authorization } : {}),
-    },
-    signal: AbortSignal.timeout(ltaFetchTimeoutMs),
-  });
-
-  if (!response.ok) {
-    throw new Error(`OneMap search returned ${response.status}`);
-  }
-
-  const payload = await response.json();
-  const results = toArray(payload.results).map(normalizeOneMapPlace).filter(Boolean).slice(0, 5);
-  const warning =
-    payload.error && results.length === 0
-      ? payload.error
-      : !authorization
-        ? "OneMap token is not configured; place search may be limited."
-        : "";
+function getWeatherCacheMeta() {
+  if (!weatherCache) return null;
 
   return {
-    results,
-    warning,
+    expiresAt: new Date(weatherCache.expiresAtMs).toISOString(),
+    ttlSeconds: Math.max(0, Math.round((weatherCache.expiresAtMs - Date.now()) / 1000)),
+    sourceLabel: weatherCache.payload?.sourceLabel || "",
   };
 }
 
-async function getOneMapAuthorizationHeader() {
-  if (oneMapApiToken) return oneMapApiToken;
-  if (!oneMapEmail || !oneMapPassword) return "";
-
-  if (oneMapTokenCache && oneMapTokenCache.expiresAtMs > Date.now() + 5 * 60 * 1000) {
-    return oneMapTokenCache.token;
-  }
-
-  const tokenResponse = await fetch(new URL("/api/auth/post/getToken", oneMapBaseUrl), {
-    method: "POST",
-    headers: {
-      accept: "application/json",
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      email: oneMapEmail,
-      password: oneMapPassword,
-    }),
-    signal: AbortSignal.timeout(ltaFetchTimeoutMs),
-  });
-
-  if (!tokenResponse.ok) {
-    throw new Error(`OneMap token request returned ${tokenResponse.status}`);
-  }
-
-  const payload = await tokenResponse.json();
-  const token = payload.access_token || payload.token || "";
-
-  if (!token) {
-    throw new Error("OneMap token response did not include an access token.");
-  }
-
-  const expiresAtMs = getOneMapTokenExpiryMs(payload);
-
-  oneMapTokenCache = {
-    expiresAtMs,
-    token,
-  };
-
-  return token;
-}
-
-function normalizeOneMapPlace(place) {
-  const latitude = toNumber(place.LATITUDE ?? place.latitude);
-  const longitude = toNumber(place.LONGITUDE ?? place.LONGTITUDE ?? place.longitude ?? place.longtitude);
-
-  if (!isSingaporeCoordinate(latitude, longitude)) return null;
-
-  const label = cleanOneMapValue(place.SEARCHVAL || place.BUILDING || place.searchVal || place.building || "");
-  const address = cleanOneMapValue(place.ADDRESS || place.address || label);
-  const postalCode = cleanOneMapValue(place.POSTAL || place.postal || "");
-
-  return {
-    id: `onemap:${normalizeSearchText(label || address)}:${latitude.toFixed(6)},${longitude.toFixed(6)}`,
-    address,
-    label: label || address,
-    latitude,
-    longitude,
-    postalCode: postalCode === "NIL" ? "" : postalCode,
-  };
-}
-
-function getOneMapTokenExpiryMs(payload) {
-  const expiryTimestamp = Number(payload.expiry_timestamp || payload.expiryTimestamp || payload.expires_at || 0);
-
-  if (Number.isFinite(expiryTimestamp) && expiryTimestamp > 0) {
-    return expiryTimestamp > 1_000_000_000_000 ? expiryTimestamp : expiryTimestamp * 1000;
-  }
-
-  return Date.now() + 72 * 60 * 60 * 1000;
-}
-
-function cleanOneMapValue(value) {
+function cleanValue(value) {
   return String(value || "").trim();
 }
 
-function isSingaporeCoordinate(latitude, longitude) {
-  return Number.isFinite(latitude) && Number.isFinite(longitude) && latitude >= 1.15 && latitude <= 1.5 && longitude >= 103.55 && longitude <= 104.15;
+function normalizeText(value) {
+  return cleanValue(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function toNumber(value) {
@@ -821,102 +563,8 @@ function toArray(value) {
   return Array.isArray(value) ? value : [];
 }
 
-function scheduleAlignedLiveRefresh() {
-  if (alignedRefreshTimer) clearTimeout(alignedRefreshTimer);
-
-  alignedRefreshTimer = setTimeout(async () => {
-    try {
-      await ensureLiveCacheForCurrentSlot();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Unable to refresh LTA charger feed.";
-      console.warn(`Scheduled LTA refresh failed: ${message}`);
-    } finally {
-      scheduleAlignedLiveRefresh();
-    }
-  }, getMsUntilNextRefreshBoundary());
-}
-
-function buildLivePayload(cache, cacheStatus, warning = "") {
-  const cacheMeta = buildCacheMeta(cache.fetchedAtMs, cacheStatus);
-
-  return {
-    stations: cache.stations,
-    source: "lta-datamall",
-    sourceLabel: "Live LTA DataMall",
-    ltaConfigured: true,
-    updatedAt: cache.ltaUpdatedAt || "",
-    lastUpdatedTime: cache.ltaLastUpdatedTime || "",
-    count: cache.stations.length,
-    warning,
-    cache: cacheMeta,
-  };
-}
-
-async function buildSamplePayload(warning, ltaConfigured) {
-  const sample = await readSampleData();
-
-  return {
-    ...sample,
-    source: "sample",
-    sourceLabel: "Sample fallback",
-    ltaConfigured,
-    updatedAt: normalizeLtaTimestamp(sample.lastUpdatedTime) || sample.lastUpdatedTime || "",
-    warning,
-    cache: {
-      status: "sample",
-      ttlSeconds: Math.round(cacheTtlMs / 1000),
-      refreshedAt: sample.generatedAt,
-      expiresAt: null,
-      ageSeconds: null,
-    },
-  };
-}
-
-function buildCacheMeta(fetchedAtMs, status = "fresh") {
-  const expiresAtMs = getNextRefreshBoundaryMs(fetchedAtMs);
-
-  return {
-    status,
-    ttlSeconds: Math.max(0, Math.round((expiresAtMs - fetchedAtMs) / 1000)),
-    refreshedAt: new Date(fetchedAtMs).toISOString(),
-    expiresAt: new Date(expiresAtMs).toISOString(),
-    ageSeconds: Math.max(0, Math.round((Date.now() - fetchedAtMs) / 1000)),
-  };
-}
-
-function normalizeLtaTimestamp(value) {
-  if (typeof value !== "string") return "";
-
-  const match = value
-    .trim()
-    .match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/);
-
-  if (!match) return "";
-
-  const [, year, month, day, hour, minute, second = "00"] = match;
-  const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}+08:00`);
-
-  return Number.isNaN(date.getTime()) ? "" : date.toISOString();
-}
-
 function normalizePublicEnvValue(value) {
-  return String(value || "").trim();
-}
+  const normalized = cleanValue(value);
 
-function getCurrentRefreshSlotMs(nowMs = Date.now()) {
-  return Math.floor(nowMs / cacheTtlMs) * cacheTtlMs;
-}
-
-function getNextRefreshBoundaryMs(nowMs = Date.now()) {
-  return getCurrentRefreshSlotMs(nowMs) + cacheTtlMs;
-}
-
-function getMsUntilNextRefreshBoundary(nowMs = Date.now()) {
-  const remainder = nowMs % cacheTtlMs;
-
-  return remainder === 0 ? cacheTtlMs : cacheTtlMs - remainder;
-}
-
-function getSecondsUntilNextRefreshBoundary(nowMs = Date.now()) {
-  return Math.max(1, Math.ceil(getMsUntilNextRefreshBoundary(nowMs) / 1000));
+  return /^(undefined|null)$/i.test(normalized) ? "" : normalized;
 }

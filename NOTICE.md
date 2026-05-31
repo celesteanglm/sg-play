@@ -28,4 +28,4 @@ npm run data:playgrounds
 
 The checked-in GitHub Actions workflow runs this refresh hourly and commits only when `public/data/playgrounds.json` changes.
 
-The repository still contains legacy EV charger sample and provider files from the original reference app. They are not used by the PlaySG frontend.
+The server exposes PlaySG-specific app configuration, health, static asset, and weather endpoints only. It does not include LTA DataMall or OneMap credentialed endpoints.
