@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-03T07:13:02.482Z",
+  "generatedAt": "2026-07-01T06:45:01.913Z",
   "count": 173,
   "dataQuality": "Best-effort public playground map from official data.gov.sg datasets plus small curated overrides for known public playgrounds missing from official playground-specific fields. NParks point coordinates are indicative. Area values describe the managed-area or park polygon where available, not the exact play-equipment footprint.",
   "sources": [
@@ -61,7 +61,7 @@
       "coordinateLabel": "1.443635, 103.783157"
     },
     {
-      "id": "nparks-91846",
+      "id": "nparks-95752",
       "name": "Almond Crescent Playground",
       "rawName": "ALMOND CRESCENT PG",
       "type": "Dedicated playground",
@@ -84,7 +84,7 @@
       "coordinateLabel": "1.373212, 103.771981"
     },
     {
-      "id": "nparks-91888",
+      "id": "nparks-95600",
       "name": "Aroozoo Avenue Playground",
       "rawName": "AROOZOO AVE PG",
       "type": "Dedicated playground",
@@ -107,7 +107,7 @@
       "coordinateLabel": "1.355197, 103.885956"
     },
     {
-      "id": "nparks-92199",
+      "id": "nparks-95413",
       "name": "Banyan Villas Playground",
       "rawName": "BANYAN VILLAS PG",
       "type": "Dedicated playground",
@@ -130,7 +130,7 @@
       "coordinateLabel": "1.387279, 103.838853"
     },
     {
-      "id": "nparks-92138",
+      "id": "nparks-95542",
       "name": "Bedok Ria Crescent Playground",
       "rawName": "BEDOK RIA CRESCENT PG",
       "type": "Dedicated playground",
@@ -153,7 +153,7 @@
       "coordinateLabel": "1.327335, 103.953082"
     },
     {
-      "id": "nparks-92241",
+      "id": "nparks-95455",
       "name": "Bedok Terrace Playground",
       "rawName": "BEDOK TERRACE PG",
       "type": "Dedicated playground",
@@ -176,7 +176,7 @@
       "coordinateLabel": "1.325544, 103.947506"
     },
     {
-      "id": "nparks-88797",
+      "id": "nparks-95727",
       "name": "Begonia Road Playground",
       "rawName": "BEGONIA RD PG",
       "type": "Dedicated playground",
@@ -199,7 +199,7 @@
       "coordinateLabel": "1.387820, 103.863290"
     },
     {
-      "id": "nparks-92015",
+      "id": "nparks-95576",
       "name": "Beng Wan Road Playground",
       "rawName": "BENG WAN RD PG",
       "type": "Dedicated playground",
@@ -222,7 +222,7 @@
       "coordinateLabel": "1.323806, 103.865835"
     },
     {
-      "id": "nparks-92098",
+      "id": "nparks-95701",
       "name": "Binchang Rise Playground",
       "rawName": "BINCHANG RISE PG",
       "type": "Dedicated playground",
@@ -295,7 +295,7 @@
       "coordinateLabel": "1.350009, 103.764622"
     },
     {
-      "id": "nparks-92253",
+      "id": "nparks-95467",
       "name": "Burgundy Crescent Playground",
       "rawName": "BURGUNDY CRESCENT PLAYGROUND",
       "type": "Dedicated playground",
@@ -318,7 +318,7 @@
       "coordinateLabel": "1.339827, 103.760905"
     },
     {
-      "id": "nparks-91910",
+      "id": "nparks-95622",
       "name": "Butterfly Avenue Playground",
       "rawName": "BUTTERFLY AVE PG",
       "type": "Dedicated playground",
@@ -341,7 +341,7 @@
       "coordinateLabel": "1.334434, 103.877337"
     },
     {
-      "id": "nparks-91977",
+      "id": "nparks-95810",
       "name": "Cactus Road Playground",
       "rawName": "CACTUS RD PG",
       "type": "Dedicated playground",
@@ -364,7 +364,7 @@
       "coordinateLabel": "1.390109, 103.852236"
     },
     {
-      "id": "nparks-91878",
+      "id": "nparks-95590",
       "name": "Carmichael Road Playground",
       "rawName": "CARMICHAEL RD PG",
       "type": "Dedicated playground",
@@ -387,7 +387,7 @@
       "coordinateLabel": "1.342681, 103.863007"
     },
     {
-      "id": "nparks-92153",
+      "id": "nparks-95372",
       "name": "Cashew Crescent Fc Playground",
       "rawName": "CASHEW CRESCENT FC PG",
       "type": "Dedicated playground",
@@ -410,7 +410,7 @@
       "coordinateLabel": "1.372245, 103.769495"
     },
     {
-      "id": "nparks-91959",
+      "id": "nparks-95792",
       "name": "Cashew Link Playground",
       "rawName": "CASHEW LINK PG",
       "type": "Dedicated playground",
@@ -433,7 +433,7 @@
       "coordinateLabel": "1.371359, 103.768925"
     },
     {
-      "id": "nparks-92133",
+      "id": "nparks-95537",
       "name": "Cashew Road Playground",
       "rawName": "CASHEW RD PG",
       "type": "Dedicated playground",
@@ -481,7 +481,7 @@
       "coordinateLabel": "1.383159, 104.001754"
     },
     {
-      "id": "nparks-92250",
+      "id": "nparks-95464",
       "name": "Changi Heights Playground",
       "rawName": "CHANGI HEIGHTS PG",
       "type": "Dedicated playground",
@@ -504,7 +504,7 @@
       "coordinateLabel": "1.362844, 103.972204"
     },
     {
-      "id": "nparks-91911",
+      "id": "nparks-95623",
       "name": "Chempaka Avenue Playground",
       "rawName": "CHEMPAKA AVE PG",
       "type": "Dedicated playground",
@@ -527,7 +527,7 @@
       "coordinateLabel": "1.331874, 103.875616"
     },
     {
-      "id": "nparks-88808",
+      "id": "nparks-95738",
       "name": "Cheng Soon Garden Playground",
       "rawName": "CHENG SOON GARDEN PG",
       "type": "Dedicated playground",
@@ -550,7 +550,7 @@
       "coordinateLabel": "1.335886, 103.771683"
     },
     {
-      "id": "nparks-92134",
+      "id": "nparks-95538",
       "name": "Chestnut Drive Playground",
       "rawName": "CHESTNUT DR PG",
       "type": "Dedicated playground",
@@ -573,7 +573,7 @@
       "coordinateLabel": "1.367634, 103.768830"
     },
     {
-      "id": "nparks-88809",
+      "id": "nparks-95739",
       "name": "Chu Yen Playground",
       "rawName": "CHU YEN PLAYGROUND",
       "type": "Dedicated playground",
@@ -596,7 +596,7 @@
       "coordinateLabel": "1.358697, 103.758976"
     },
     {
-      "id": "nparks-92184",
+      "id": "nparks-95365",
       "name": "Chuan Green Playground",
       "rawName": "CHUAN GREEN PG",
       "type": "Dedicated playground",
@@ -619,7 +619,7 @@
       "coordinateLabel": "1.360480, 103.866008"
     },
     {
-      "id": "nparks-91986",
+      "id": "nparks-95818",
       "name": "Chuan Walk Playground",
       "rawName": "CHUAN WALK PG",
       "type": "Dedicated playground",
@@ -642,7 +642,7 @@
       "coordinateLabel": "1.357222, 103.867553"
     },
     {
-      "id": "nparks-92030",
+      "id": "nparks-95633",
       "name": "Chwee Chian Playground",
       "rawName": "CHWEE CHIAN PLAYGROUND",
       "type": "Dedicated playground",
@@ -665,7 +665,7 @@
       "coordinateLabel": "1.279573, 103.788954"
     },
     {
-      "id": "nparks-92122",
+      "id": "nparks-95526",
       "name": "Clementi Crescent Playground",
       "rawName": "CLEMENTI CRESCENT PG",
       "type": "Dedicated playground",
@@ -713,7 +713,7 @@
       "coordinateLabel": "1.298934, 103.767617"
     },
     {
-      "id": "nparks-91877",
+      "id": "nparks-95783",
       "name": "Clover Crescent Playground",
       "rawName": "CLOVER CRESCENT PG",
       "type": "Dedicated playground",
@@ -736,7 +736,7 @@
       "coordinateLabel": "1.351048, 103.844576"
     },
     {
-      "id": "nparks-92100",
+      "id": "nparks-95703",
       "name": "Clover Way Playground",
       "rawName": "CLOVER WAY PG",
       "type": "Dedicated playground",
@@ -759,7 +759,7 @@
       "coordinateLabel": "1.350177, 103.846021"
     },
     {
-      "id": "nparks-92191",
+      "id": "nparks-95405",
       "name": "Countryside Playground",
       "rawName": "COUNTRYSIDE PG",
       "type": "Dedicated playground",
@@ -782,7 +782,7 @@
       "coordinateLabel": "1.390188, 103.838408"
     },
     {
-      "id": "nparks-88801",
+      "id": "nparks-95731",
       "name": "Dedap Place Playground",
       "rawName": "DEDAP PLACE PG",
       "type": "Dedicated playground",
@@ -805,7 +805,7 @@
       "coordinateLabel": "1.387798, 103.868413"
     },
     {
-      "id": "nparks-88790",
+      "id": "nparks-95720",
       "name": "Eastwood Park Playground",
       "rawName": "EASTWOOD PK PG",
       "type": "Dedicated playground",
@@ -828,7 +828,7 @@
       "coordinateLabel": "1.323160, 103.957549"
     },
     {
-      "id": "nparks-91875",
+      "id": "nparks-95781",
       "name": "Elias Terrace Playground",
       "rawName": "ELIAS TERRACE PG",
       "type": "Dedicated playground",
@@ -851,7 +851,7 @@
       "coordinateLabel": "1.372228, 103.941084"
     },
     {
-      "id": "nparks-92186",
+      "id": "nparks-95400",
       "name": "Ellington Square Playground",
       "rawName": "ELLINGTON SQUARE PLAYGROUND",
       "type": "Dedicated playground",
@@ -874,7 +874,7 @@
       "coordinateLabel": "1.372002, 103.834530"
     },
     {
-      "id": "nparks-88810",
+      "id": "nparks-95740",
       "name": "Eng Kong Garden Playground",
       "rawName": "ENG KONG GARDEN PG",
       "type": "Dedicated playground",
@@ -897,7 +897,7 @@
       "coordinateLabel": "1.336924, 103.769163"
     },
     {
-      "id": "nparks-91960",
+      "id": "nparks-95793",
       "name": "Faber Hills Playground",
       "rawName": "FABER HILLS PLAYGROUND",
       "type": "Dedicated playground",
@@ -920,7 +920,7 @@
       "coordinateLabel": "1.319767, 103.757976"
     },
     {
-      "id": "nparks-92193",
+      "id": "nparks-95407",
       "name": "Florissa Park Playground",
       "rawName": "FLORISSA PK PG",
       "type": "Dedicated playground",
@@ -943,7 +943,7 @@
       "coordinateLabel": "1.386973, 103.835073"
     },
     {
-      "id": "nparks-92194",
+      "id": "nparks-95408",
       "name": "Fudu Walk Playground",
       "rawName": "FUDU WALK PG",
       "type": "Dedicated playground",
@@ -966,7 +966,7 @@
       "coordinateLabel": "1.389835, 103.837234"
     },
     {
-      "id": "nparks-92101",
+      "id": "nparks-95704",
       "name": "Fulton Avenue Playground",
       "rawName": "FULTON AVE PG",
       "type": "Dedicated playground",
@@ -989,7 +989,7 @@
       "coordinateLabel": "1.362107, 103.833521"
     },
     {
-      "id": "nparks-91980",
+      "id": "nparks-95812",
       "name": "Garden View Playground",
       "rawName": "GARDEN VIEW PG",
       "type": "Dedicated playground",
@@ -1012,7 +1012,7 @@
       "coordinateLabel": "1.360425, 103.865669"
     },
     {
-      "id": "nparks-92018",
+      "id": "nparks-95579",
       "name": "Gentle Drive Playground",
       "rawName": "GENTLE DR PG",
       "type": "Dedicated playground",
@@ -1035,7 +1035,7 @@
       "coordinateLabel": "1.320369, 103.840703"
     },
     {
-      "id": "nparks-88812",
+      "id": "nparks-95742",
       "name": "Golden Rise Playground",
       "rawName": "GOLDEN RISE PG",
       "type": "Dedicated playground",
@@ -1058,7 +1058,7 @@
       "coordinateLabel": "1.336324, 103.764869"
     },
     {
-      "id": "nparks-92017",
+      "id": "nparks-95578",
       "name": "Goldhill Avenue Playground",
       "rawName": "GOLDHILL AVE PG",
       "type": "Dedicated playground",
@@ -1081,7 +1081,7 @@
       "coordinateLabel": "1.321133, 103.833174"
     },
     {
-      "id": "nparks-92202",
+      "id": "nparks-95416",
       "name": "Goodlink Park Playground",
       "rawName": "GOODLINK PK PG",
       "type": "Dedicated playground",
@@ -1104,7 +1104,7 @@
       "coordinateLabel": "1.427300, 103.825393"
     },
     {
-      "id": "nparks-91862",
+      "id": "nparks-95768",
       "name": "Greenfield Drive Playground",
       "rawName": "GREENFIELD DR PG",
       "type": "Dedicated playground",
@@ -1127,7 +1127,7 @@
       "coordinateLabel": "1.313035, 103.917656"
     },
     {
-      "id": "nparks-92124",
+      "id": "nparks-95528",
       "name": "Greenleaf View Park Playground",
       "rawName": "GREENLEAF VIEW PK PG",
       "type": "Dedicated playground",
@@ -1150,7 +1150,7 @@
       "coordinateLabel": "1.322311, 103.788087"
     },
     {
-      "id": "nparks-88813",
+      "id": "nparks-95743",
       "name": "Greenridge Crescent Playground",
       "rawName": "GREENRIDGE CRESCENT PG",
       "type": "Dedicated playground",
@@ -1173,7 +1173,7 @@
       "coordinateLabel": "1.334280, 103.765763"
     },
     {
-      "id": "nparks-92041",
+      "id": "nparks-95644",
       "name": "Greenwood Crescent Playground",
       "rawName": "GREENWOOD CRESCENT PG",
       "type": "Dedicated playground",
@@ -1196,7 +1196,7 @@
       "coordinateLabel": "1.335506, 103.805487"
     },
     {
-      "id": "nparks-92125",
+      "id": "nparks-95529",
       "name": "Grove Lane Playground",
       "rawName": "GROVE LANE PG",
       "type": "Dedicated playground",
@@ -1219,7 +1219,7 @@
       "coordinateLabel": "1.313763, 103.784206"
     },
     {
-      "id": "nparks-92239",
+      "id": "nparks-95453",
       "name": "Harvey Crescent Playground",
       "rawName": "HARVEY CRESCENT PG",
       "type": "Dedicated playground",
@@ -1242,7 +1242,7 @@
       "coordinateLabel": "1.340659, 103.955192"
     },
     {
-      "id": "nparks-92097",
+      "id": "nparks-95700",
       "name": "Highgate Walk Playground",
       "rawName": "HIGHGATE WALK PLAYGROUND",
       "type": "Dedicated playground",
@@ -1265,7 +1265,7 @@
       "coordinateLabel": "1.340417, 103.765924"
     },
     {
-      "id": "nparks-92252",
+      "id": "nparks-95466",
       "name": "Hillview Crescent Playground",
       "rawName": "HILLVIEW CRESCENT PLAYGROUND",
       "type": "Dedicated playground",
@@ -1288,7 +1288,7 @@
       "coordinateLabel": "1.355262, 103.761162"
     },
     {
-      "id": "nparks-88805",
+      "id": "nparks-95735",
       "name": "Holland Green Playground",
       "rawName": "HOLLAND GREEN PG",
       "type": "Dedicated playground",
@@ -1311,7 +1311,7 @@
       "coordinateLabel": "1.326811, 103.782578"
     },
     {
-      "id": "nparks-88804",
+      "id": "nparks-95734",
       "name": "Holland Grove View Playground",
       "rawName": "HOLLAND GROVE VIEW PG",
       "type": "Dedicated playground",
@@ -1334,7 +1334,7 @@
       "coordinateLabel": "1.312930, 103.781222"
     },
     {
-      "id": "nparks-92012",
+      "id": "nparks-95573",
       "name": "Hooper Road Playground",
       "rawName": "HOOPER RD PG",
       "type": "Dedicated playground",
@@ -1357,7 +1357,7 @@
       "coordinateLabel": "1.312399, 103.843204"
     },
     {
-      "id": "nparks-88816",
+      "id": "nparks-95746",
       "name": "Hoover Park (lor Pisang Hijau Playground)",
       "rawName": "HOOVER PARK (LOR PISANG HIJAU PLAYGROUND)",
       "type": "Dedicated playground",
@@ -1405,7 +1405,7 @@
       "coordinateLabel": "1.278839, 103.799779"
     },
     {
-      "id": "nparks-92123",
+      "id": "nparks-95527",
       "name": "Hua Guan Crescent Playground",
       "rawName": "HUA GUAN CRESCENT PG",
       "type": "Dedicated playground",
@@ -1428,7 +1428,7 @@
       "coordinateLabel": "1.337011, 103.785060"
     },
     {
-      "id": "nparks-92078",
+      "id": "nparks-95681",
       "name": "Irau Drive Playground",
       "rawName": "IRAU DRIVE PLAYGROUND",
       "type": "Dedicated playground",
@@ -1451,7 +1451,7 @@
       "coordinateLabel": "1.461944, 103.840069"
     },
     {
-      "id": "nparks-92263",
+      "id": "nparks-95786",
       "name": "Island Gdns Walk Playground",
       "rawName": "ISLAND GDNS WALK PG",
       "type": "Dedicated playground",
@@ -1474,7 +1474,7 @@
       "coordinateLabel": "1.361999, 103.828439"
     },
     {
-      "id": "nparks-92230",
+      "id": "nparks-95444",
       "name": "Jalan Angin Laut Playground",
       "rawName": "JLN ANGIN LAUT PG",
       "type": "Dedicated playground",
@@ -1497,7 +1497,7 @@
       "coordinateLabel": "1.337184, 103.956225"
     },
     {
-      "id": "nparks-88785",
+      "id": "nparks-95715",
       "name": "Jalan Buloh Perindu Playground",
       "rawName": "JLN BULOH PERINDU PG",
       "type": "Dedicated playground",
@@ -1520,7 +1520,7 @@
       "coordinateLabel": "1.308483, 103.919384"
     },
     {
-      "id": "nparks-92232",
+      "id": "nparks-95446",
       "name": "Jalan Chempaka Kuning Playground",
       "rawName": "JLN CHEMPAKA KUNING PG",
       "type": "Dedicated playground",
@@ -1543,7 +1543,7 @@
       "coordinateLabel": "1.329757, 103.950164"
     },
     {
-      "id": "nparks-88814",
+      "id": "nparks-95744",
       "name": "Jalan Dermawan Playground",
       "rawName": "JALAN DERMAWAN PLAYGROUND",
       "type": "Dedicated playground",
@@ -1566,7 +1566,7 @@
       "coordinateLabel": "1.360639, 103.758606"
     },
     {
-      "id": "nparks-92126",
+      "id": "nparks-95530",
       "name": "Jalan Kebaya Playground",
       "rawName": "JLN KEBAYA PG",
       "type": "Dedicated playground",
@@ -1589,7 +1589,7 @@
       "coordinateLabel": "1.314115, 103.780246"
     },
     {
-      "id": "nparks-91890",
+      "id": "nparks-95602",
       "name": "Jalan Kelichap Playground",
       "rawName": "JLN KELICHAP PG",
       "type": "Dedicated playground",
@@ -1612,7 +1612,7 @@
       "coordinateLabel": "1.346782, 103.881825"
     },
     {
-      "id": "nparks-92246",
+      "id": "nparks-95460",
       "name": "Jalan Limau Kasturi Playground",
       "rawName": "JLN LIMAU KASTURI PG",
       "type": "Dedicated playground",
@@ -1635,7 +1635,7 @@
       "coordinateLabel": "1.323974, 103.946389"
     },
     {
-      "id": "nparks-92229",
+      "id": "nparks-95443",
       "name": "Jalan Limau Manis Playground",
       "rawName": "JLN LIMAU MANIS PG",
       "type": "Dedicated playground",
@@ -1658,7 +1658,7 @@
       "coordinateLabel": "1.324734, 103.949045"
     },
     {
-      "id": "nparks-91922",
+      "id": "nparks-95478",
       "name": "Jalan Mas Kuning Playground",
       "rawName": "JALAN MAS KUNING PLAYGROUND",
       "type": "Dedicated playground",
@@ -1681,7 +1681,7 @@
       "coordinateLabel": "1.307852, 103.763525"
     },
     {
-      "id": "nparks-91923",
+      "id": "nparks-95479",
       "name": "Jalan Mas Puteh Playground",
       "rawName": "JALAN MAS PUTEH PLAYGROUND",
       "type": "Dedicated playground",
@@ -1704,7 +1704,7 @@
       "coordinateLabel": "1.308986, 103.762007"
     },
     {
-      "id": "nparks-88798",
+      "id": "nparks-95728",
       "name": "Jalan Naung Playground",
       "rawName": "JLN NAUNG PG",
       "type": "Dedicated playground",
@@ -1727,7 +1727,7 @@
       "coordinateLabel": "1.369563, 103.892822"
     },
     {
-      "id": "nparks-92233",
+      "id": "nparks-95447",
       "name": "Jalan Pari Burong Playground",
       "rawName": "JLN PARI BURONG PG",
       "type": "Dedicated playground",
@@ -1750,7 +1750,7 @@
       "coordinateLabel": "1.333830, 103.946962"
     },
     {
-      "id": "nparks-92234",
+      "id": "nparks-95448",
       "name": "Jalan Pari Dedap Playground",
       "rawName": "JLN PARI DEDAP PG",
       "type": "Dedicated playground",
@@ -1773,7 +1773,7 @@
       "coordinateLabel": "1.333021, 103.943880"
     },
     {
-      "id": "nparks-92235",
+      "id": "nparks-95449",
       "name": "Jalan Pelatok Playground",
       "rawName": "JLN PELATOK PG",
       "type": "Dedicated playground",
@@ -1796,7 +1796,7 @@
       "coordinateLabel": "1.346144, 103.960340"
     },
     {
-      "id": "nparks-92264",
+      "id": "nparks-95787",
       "name": "Jalan Pintau Playground",
       "rawName": "JLN PINTAU PG",
       "type": "Dedicated playground",
@@ -1819,7 +1819,7 @@
       "coordinateLabel": "1.353946, 103.839973"
     },
     {
-      "id": "nparks-91981",
+      "id": "nparks-95813",
       "name": "Jalan Riang Playground",
       "rawName": "JLN RIANG PG",
       "type": "Dedicated playground",
@@ -1842,7 +1842,7 @@
       "coordinateLabel": "1.347143, 103.867395"
     },
     {
-      "id": "nparks-88791",
+      "id": "nparks-95721",
       "name": "Jalan Selaseh Playground",
       "rawName": "JLN SELASEH PG",
       "type": "Dedicated playground",
@@ -1865,7 +1865,7 @@
       "coordinateLabel": "1.385602, 103.873382"
     },
     {
-      "id": "nparks-91938",
+      "id": "nparks-95494",
       "name": "Jalan Senang Playground",
       "rawName": "JLN SENANG PG",
       "type": "Dedicated playground",
@@ -1888,7 +1888,7 @@
       "coordinateLabel": "1.329015, 103.915569"
     },
     {
-      "id": "nparks-88815",
+      "id": "nparks-95745",
       "name": "Jalan Tekukor Playground",
       "rawName": "JALAN TEKUKOR PLAYGROUND",
       "type": "Dedicated playground",
@@ -1911,7 +1911,7 @@
       "coordinateLabel": "1.346138, 103.766776"
     },
     {
-      "id": "nparks-92265",
+      "id": "nparks-95788",
       "name": "Jupiter Playground",
       "rawName": "JUPITER PLAYGROUND",
       "type": "Dedicated playground",
@@ -1959,7 +1959,7 @@
       "coordinateLabel": "1.337980, 103.707875"
     },
     {
-      "id": "nparks-92247",
+      "id": "nparks-95461",
       "name": "Kew Avenue Playground",
       "rawName": "KEW AVE PG",
       "type": "Dedicated playground",
@@ -1982,7 +1982,7 @@
       "coordinateLabel": "1.321627, 103.948451"
     },
     {
-      "id": "nparks-92248",
+      "id": "nparks-95462",
       "name": "Kew Crescent Playground",
       "rawName": "KEW CRESCENT PG",
       "type": "Dedicated playground",
@@ -2005,7 +2005,7 @@
       "coordinateLabel": "1.319188, 103.948586"
     },
     {
-      "id": "nparks-92242",
+      "id": "nparks-95456",
       "name": "Kew Drive Playground",
       "rawName": "KEW DR PG",
       "type": "Dedicated playground",
@@ -2028,7 +2028,7 @@
       "coordinateLabel": "1.320710, 103.951754"
     },
     {
-      "id": "nparks-92046",
+      "id": "nparks-95649",
       "name": "King's Drive Playground",
       "rawName": "KING'S DR PG",
       "type": "Dedicated playground",
@@ -2051,7 +2051,7 @@
       "coordinateLabel": "1.319087, 103.806062"
     },
     {
-      "id": "nparks-92112",
+      "id": "nparks-95516",
       "name": "Lakeside Grove Playground",
       "rawName": "LAKESIDE GROVE PLAYGROUND",
       "type": "Dedicated playground",
@@ -2074,7 +2074,7 @@
       "coordinateLabel": "1.340073, 103.718594"
     },
     {
-      "id": "nparks-92195",
+      "id": "nparks-95409",
       "name": "Lentor Green Playground",
       "rawName": "LENTOR GREEN PG",
       "type": "Dedicated playground",
@@ -2097,7 +2097,7 @@
       "coordinateLabel": "1.385286, 103.837056"
     },
     {
-      "id": "nparks-92196",
+      "id": "nparks-95410",
       "name": "Lentor Grove Playground",
       "rawName": "LENTOR GROVE PG",
       "type": "Dedicated playground",
@@ -2120,7 +2120,7 @@
       "coordinateLabel": "1.386385, 103.838371"
     },
     {
-      "id": "nparks-92197",
+      "id": "nparks-95411",
       "name": "Lentor Road Playground",
       "rawName": "LENTOR RD PG",
       "type": "Dedicated playground",
@@ -2143,7 +2143,7 @@
       "coordinateLabel": "1.388292, 103.837572"
     },
     {
-      "id": "nparks-92192",
+      "id": "nparks-95406",
       "name": "Lentor Street Playground",
       "rawName": "LENTOR STREET PG",
       "type": "Dedicated playground",
@@ -2166,7 +2166,7 @@
       "coordinateLabel": "1.390098, 103.834277"
     },
     {
-      "id": "nparks-92198",
+      "id": "nparks-95412",
       "name": "Lentor Vale Playground",
       "rawName": "LENTOR VALE PG",
       "type": "Dedicated playground",
@@ -2189,7 +2189,7 @@
       "coordinateLabel": "1.388054, 103.836146"
     },
     {
-      "id": "nparks-91921",
+      "id": "nparks-95477",
       "name": "Lentor Walk Playground",
       "rawName": "LENTOR WALK PG",
       "type": "Dedicated playground",
@@ -2212,7 +2212,7 @@
       "coordinateLabel": "1.388631, 103.838383"
     },
     {
-      "id": "nparks-91951",
+      "id": "nparks-95507",
       "name": "Lilac Drive Playground",
       "rawName": "LILAC DR PG",
       "type": "Dedicated playground",
@@ -2235,7 +2235,7 @@
       "coordinateLabel": "1.381151, 103.861144"
     },
     {
-      "id": "nparks-92243",
+      "id": "nparks-95457",
       "name": "Limau Garden Playground",
       "rawName": "LIMAU GARDEN PG",
       "type": "Dedicated playground",
@@ -2258,7 +2258,7 @@
       "coordinateLabel": "1.322482, 103.950691"
     },
     {
-      "id": "nparks-92249",
+      "id": "nparks-95463",
       "name": "Limau Villas Playground",
       "rawName": "LIMAU VILLAS PG",
       "type": "Dedicated playground",
@@ -2281,7 +2281,7 @@
       "coordinateLabel": "1.323872, 103.950514"
     },
     {
-      "id": "nparks-91901",
+      "id": "nparks-95613",
       "name": "Lorong 40 Geylang Playground",
       "rawName": "LORONG 40 GEYLANG PG",
       "type": "Dedicated playground",
@@ -2304,7 +2304,7 @@
       "coordinateLabel": "1.313633, 103.889369"
     },
     {
-      "id": "nparks-92080",
+      "id": "nparks-95683",
       "name": "Lorong Kemunchup Playground",
       "rawName": "LORONG KEMUNCHUP PLAYGROUND",
       "type": "Dedicated playground",
@@ -2327,7 +2327,7 @@
       "coordinateLabel": "1.360393, 103.760933"
     },
     {
-      "id": "nparks-92228",
+      "id": "nparks-95442",
       "name": "Loyang View Playground",
       "rawName": "LOYANG VIEW PG",
       "type": "Dedicated playground",
@@ -2350,7 +2350,7 @@
       "coordinateLabel": "1.363040, 103.965637"
     },
     {
-      "id": "nparks-92244",
+      "id": "nparks-95458",
       "name": "Lucky Gardens Playground",
       "rawName": "LUCKY GARDENS PG",
       "type": "Dedicated playground",
@@ -2373,7 +2373,7 @@
       "coordinateLabel": "1.319287, 103.941376"
     },
     {
-      "id": "nparks-92227",
+      "id": "nparks-95441",
       "name": "Mariam Walk Playground",
       "rawName": "MARIAM WALK PG",
       "type": "Dedicated playground",
@@ -2396,7 +2396,7 @@
       "coordinateLabel": "1.359547, 103.968547"
     },
     {
-      "id": "nparks-92240",
+      "id": "nparks-95454",
       "name": "Mariam Way Playground",
       "rawName": "MARIAM WAY PG",
       "type": "Dedicated playground",
@@ -2419,7 +2419,7 @@
       "coordinateLabel": "1.361945, 103.966233"
     },
     {
-      "id": "nparks-92189",
+      "id": "nparks-95403",
       "name": "Mayflower Crescent Playground",
       "rawName": "MAYFLOWER CRESCENT PG",
       "type": "Dedicated playground",
@@ -2442,7 +2442,7 @@
       "coordinateLabel": "1.372732, 103.839529"
     },
     {
-      "id": "nparks-91982",
+      "id": "nparks-95814",
       "name": "Mei Hwan Crescent Playground",
       "rawName": "MEI HWAN CRESCENT PG",
       "type": "Dedicated playground",
@@ -2465,7 +2465,7 @@
       "coordinateLabel": "1.352767, 103.861743"
     },
     {
-      "id": "nparks-91983",
+      "id": "nparks-95815",
       "name": "Mei Hwan Drive Playground",
       "rawName": "MEI HWAN DR PG",
       "type": "Dedicated playground",
@@ -2488,7 +2488,7 @@
       "coordinateLabel": "1.353350, 103.863473"
     },
     {
-      "id": "nparks-92231",
+      "id": "nparks-95445",
       "name": "Mera Terrace Playground",
       "rawName": "MERA TERRACE PG",
       "type": "Dedicated playground",
@@ -2511,7 +2511,7 @@
       "coordinateLabel": "1.347404, 103.963506"
     },
     {
-      "id": "nparks-92236",
+      "id": "nparks-95450",
       "name": "Meragi Road Playground",
       "rawName": "MERAGI RD PG",
       "type": "Dedicated playground",
@@ -2534,7 +2534,7 @@
       "coordinateLabel": "1.344383, 103.960283"
     },
     {
-      "id": "nparks-88786",
+      "id": "nparks-95716",
       "name": "Meyer Road Playground",
       "rawName": "MEYER RD PG",
       "type": "Dedicated playground",
@@ -2557,7 +2557,7 @@
       "coordinateLabel": "1.298569, 103.894197"
     },
     {
-      "id": "nparks-88792",
+      "id": "nparks-95722",
       "name": "Mimosa Road Playground",
       "rawName": "MIMOSA RD PG",
       "type": "Dedicated playground",
@@ -2580,7 +2580,7 @@
       "coordinateLabel": "1.384192, 103.863044"
     },
     {
-      "id": "nparks-92175",
+      "id": "nparks-95394",
       "name": "Mimosa Terrace Playground",
       "rawName": "MIMOSA TERRACE PG",
       "type": "Dedicated playground",
@@ -2603,7 +2603,7 @@
       "coordinateLabel": "1.384050, 103.860450"
     },
     {
-      "id": "nparks-91864",
+      "id": "nparks-95770",
       "name": "Mimosa Walk Playground",
       "rawName": "MIMOSA WALK PG",
       "type": "Dedicated playground",
@@ -2626,7 +2626,7 @@
       "coordinateLabel": "1.383105, 103.861460"
     },
     {
-      "id": "nparks-92127",
+      "id": "nparks-95531",
       "name": "Mount Sinai Plain Playground",
       "rawName": "MOUNT SINAI PLAIN PG",
       "type": "Dedicated playground",
@@ -2649,7 +2649,7 @@
       "coordinateLabel": "1.315721, 103.781097"
     },
     {
-      "id": "nparks-88793",
+      "id": "nparks-95723",
       "name": "Mugliston Park Playground",
       "rawName": "MUGLISTON PK PG",
       "type": "Dedicated playground",
@@ -2672,7 +2672,7 @@
       "coordinateLabel": "1.385446, 103.877906"
     },
     {
-      "id": "nparks-88794",
+      "id": "nparks-95724",
       "name": "Neram Crescent Playground",
       "rawName": "NERAM CRESCENT PG",
       "type": "Dedicated playground",
@@ -2695,7 +2695,7 @@
       "coordinateLabel": "1.385589, 103.865744"
     },
     {
-      "id": "nparks-92042",
+      "id": "nparks-95645",
       "name": "Orchid Village Playground",
       "rawName": "ORCHID VILLAGE PG",
       "type": "Dedicated playground",
@@ -2718,7 +2718,7 @@
       "coordinateLabel": "1.335704, 103.801713"
     },
     {
-      "id": "nparks-92174",
+      "id": "nparks-95393",
       "name": "Park Villas Terrace Playground",
       "rawName": "PK VILLAS TERRACE PG",
       "type": "Dedicated playground",
@@ -2741,7 +2741,7 @@
       "coordinateLabel": "1.368993, 103.879964"
     },
     {
-      "id": "nparks-88799",
+      "id": "nparks-95729",
       "name": "Parry Road Playground",
       "rawName": "PARRY RD PG",
       "type": "Dedicated playground",
@@ -2764,7 +2764,7 @@
       "coordinateLabel": "1.366029, 103.877504"
     },
     {
-      "id": "nparks-92176",
+      "id": "nparks-95395",
       "name": "Pavilion Park Playground",
       "rawName": "PAVILION PARK PLAYGROUND",
       "type": "Dedicated playground",
@@ -2787,7 +2787,7 @@
       "coordinateLabel": "1.372286, 103.751977"
     },
     {
-      "id": "nparks-92084",
+      "id": "nparks-95687",
       "name": "Pavilion Playground II",
       "rawName": "PAVILION PLAYGROUND II",
       "type": "Dedicated playground",
@@ -2810,7 +2810,7 @@
       "coordinateLabel": "1.368340, 103.753434"
     },
     {
-      "id": "nparks-92266",
+      "id": "nparks-95789",
       "name": "Pemimpin Place Playground",
       "rawName": "PEMIMPIN PLACE PG",
       "type": "Dedicated playground",
@@ -2833,7 +2833,7 @@
       "coordinateLabel": "1.353370, 103.842720"
     },
     {
-      "id": "nparks-92238",
+      "id": "nparks-95452",
       "name": "Pesari Walk Playground",
       "rawName": "PESARI WALK PG",
       "type": "Dedicated playground",
@@ -2856,7 +2856,7 @@
       "coordinateLabel": "1.324430, 103.953979"
     },
     {
-      "id": "nparks-92201",
+      "id": "nparks-95415",
       "name": "Platina Road Playground",
       "rawName": "PLATINA RD PG",
       "type": "Dedicated playground",
@@ -2879,7 +2879,7 @@
       "coordinateLabel": "1.427545, 103.826119"
     },
     {
-      "id": "nparks-88802",
+      "id": "nparks-95732",
       "name": "Poh Huat Road Playground",
       "rawName": "POH HUAT RD PG",
       "type": "Dedicated playground",
@@ -2902,7 +2902,7 @@
       "coordinateLabel": "1.366937, 103.881611"
     },
     {
-      "id": "nparks-88800",
+      "id": "nparks-95730",
       "name": "Saraca Road Playground",
       "rawName": "SARACA RD PG",
       "type": "Dedicated playground",
@@ -2925,7 +2925,7 @@
       "coordinateLabel": "1.386669, 103.858637"
     },
     {
-      "id": "nparks-92251",
+      "id": "nparks-95465",
       "name": "Savoy Park Playground",
       "rawName": "SAVOY PK PG",
       "type": "Dedicated playground",
@@ -2948,7 +2948,7 @@
       "coordinateLabel": "1.333414, 103.769927"
     },
     {
-      "id": "nparks-88803",
+      "id": "nparks-95733",
       "name": "Seletar Terrace Playground",
       "rawName": "SELETAR TERRACE PG",
       "type": "Dedicated playground",
@@ -2971,7 +2971,7 @@
       "coordinateLabel": "1.381483, 103.868774"
     },
     {
-      "id": "nparks-92245",
+      "id": "nparks-95459",
       "name": "Sennett Avenue Playground",
       "rawName": "SENNETT AVE PG",
       "type": "Dedicated playground",
@@ -2994,7 +2994,7 @@
       "coordinateLabel": "1.316967, 103.936280"
     },
     {
-      "id": "nparks-92190",
+      "id": "nparks-95404",
       "name": "Serenade Walk Playground",
       "rawName": "SERENADE WALK PG",
       "type": "Dedicated playground",
@@ -3017,7 +3017,7 @@
       "coordinateLabel": "1.379921, 103.834560"
     },
     {
-      "id": "nparks-91961",
+      "id": "nparks-95794",
       "name": "Shangri-La Playground",
       "rawName": "SHANGRI-LA PLAYGROUND",
       "type": "Dedicated playground",
@@ -3040,7 +3040,7 @@
       "coordinateLabel": "1.371021, 103.832392"
     },
     {
-      "id": "nparks-92117",
+      "id": "nparks-95521",
       "name": "Shelford Road Playground",
       "rawName": "SHELFORD RD PG",
       "type": "Dedicated playground",
@@ -3063,7 +3063,7 @@
       "coordinateLabel": "1.328370, 103.810432"
     },
     {
-      "id": "nparks-92045",
+      "id": "nparks-95648",
       "name": "Sixth Avenue Playground",
       "rawName": "SIXTH AVE PG",
       "type": "Dedicated playground",
@@ -3086,7 +3086,7 @@
       "coordinateLabel": "1.322436, 103.791281"
     },
     {
-      "id": "nparks-92014",
+      "id": "nparks-95575",
       "name": "Somme Road Playground",
       "rawName": "SOMME RD PG",
       "type": "Dedicated playground",
@@ -3109,7 +3109,7 @@
       "coordinateLabel": "1.311484, 103.858152"
     },
     {
-      "id": "nparks-91998",
+      "id": "nparks-95559",
       "name": "Soo Chow Walk Playground",
       "rawName": "SOO CHOW WALK PG",
       "type": "Dedicated playground",
@@ -3132,7 +3132,7 @@
       "coordinateLabel": "1.353647, 103.832028"
     },
     {
-      "id": "nparks-92205",
+      "id": "nparks-95419",
       "name": "Springleaf Avenue Playground",
       "rawName": "SPRINGLEAF AVE PG",
       "type": "Dedicated playground",
@@ -3155,7 +3155,7 @@
       "coordinateLabel": "1.400904, 103.822598"
     },
     {
-      "id": "nparks-92203",
+      "id": "nparks-95417",
       "name": "Springleaf Garden Playground",
       "rawName": "SPRINGLEAF GARDEN PG",
       "type": "Dedicated playground",
@@ -3178,7 +3178,7 @@
       "coordinateLabel": "1.398040, 103.822323"
     },
     {
-      "id": "nparks-92135",
+      "id": "nparks-95539",
       "name": "Stratton Walk Playground",
       "rawName": "STRATTON WALK PG",
       "type": "Dedicated playground",
@@ -3201,7 +3201,7 @@
       "coordinateLabel": "1.379195, 103.866921"
     },
     {
-      "id": "nparks-92173",
+      "id": "nparks-95392",
       "name": "Street Anne's Wood Playground",
       "rawName": "ST ANNE'S WOOD PG",
       "type": "Dedicated playground",
@@ -3224,7 +3224,7 @@
       "coordinateLabel": "1.391640, 103.903736"
     },
     {
-      "id": "nparks-91892",
+      "id": "nparks-95604",
       "name": "Street Michael's Playground",
       "rawName": "ST MICHAEL'S PG",
       "type": "Dedicated playground",
@@ -3247,7 +3247,7 @@
       "coordinateLabel": "1.326228, 103.864888"
     },
     {
-      "id": "nparks-92185",
+      "id": "nparks-95399",
       "name": "Street. Nicholas View Playground",
       "rawName": "ST. NICHOLAS VIEW PLAYGROUND",
       "type": "Dedicated playground",
@@ -3270,7 +3270,7 @@
       "coordinateLabel": "1.371626, 103.832785"
     },
     {
-      "id": "nparks-92237",
+      "id": "nparks-95451",
       "name": "Sunbird Circle Playground",
       "rawName": "SUNBIRD CIRCLE PG",
       "type": "Dedicated playground",
@@ -3293,7 +3293,7 @@
       "coordinateLabel": "1.339091, 103.958240"
     },
     {
-      "id": "nparks-91962",
+      "id": "nparks-95795",
       "name": "Sunrise Close Playground",
       "rawName": "SUNRISE CLOSE PG",
       "type": "Dedicated playground",
@@ -3316,7 +3316,7 @@
       "coordinateLabel": "1.387012, 103.857510"
     },
     {
-      "id": "nparks-91963",
+      "id": "nparks-95796",
       "name": "Sunrise Drive Playground I",
       "rawName": "SUNRISE DR PG I",
       "type": "Dedicated playground",
@@ -3339,7 +3339,7 @@
       "coordinateLabel": "1.388305, 103.857371"
     },
     {
-      "id": "nparks-91978",
+      "id": "nparks-95811",
       "name": "Sunrise Drive Playground II",
       "rawName": "SUNRISE DR PG II",
       "type": "Dedicated playground",
@@ -3362,7 +3362,7 @@
       "coordinateLabel": "1.390301, 103.855252"
     },
     {
-      "id": "nparks-91964",
+      "id": "nparks-95797",
       "name": "Sunrise Place Playground",
       "rawName": "SUNRISE PLACE PG",
       "type": "Dedicated playground",
@@ -3385,7 +3385,7 @@
       "coordinateLabel": "1.386943, 103.856600"
     },
     {
-      "id": "nparks-91965",
+      "id": "nparks-95798",
       "name": "Sunrise Way Playground",
       "rawName": "SUNRISE WAY PG",
       "type": "Dedicated playground",
@@ -3408,7 +3408,7 @@
       "coordinateLabel": "1.387674, 103.856680"
     },
     {
-      "id": "nparks-92085",
+      "id": "nparks-95688",
       "name": "Sunset Way Playground",
       "rawName": "SUNSET WAY PG",
       "type": "Dedicated playground",
@@ -3431,7 +3431,7 @@
       "coordinateLabel": "1.326788, 103.766406"
     },
     {
-      "id": "nparks-91984",
+      "id": "nparks-95816",
       "name": "Tai Hwan Terrace Playground",
       "rawName": "TAI HWAN TERRACE PG",
       "type": "Dedicated playground",
@@ -3454,7 +3454,7 @@
       "coordinateLabel": "1.356446, 103.860339"
     },
     {
-      "id": "nparks-91885",
+      "id": "nparks-95597",
       "name": "Tai Keng Gardens Playground",
       "rawName": "TAI KENG GARDENS PG",
       "type": "Dedicated playground",
@@ -3477,7 +3477,7 @@
       "coordinateLabel": "1.346171, 103.885055"
     },
     {
-      "id": "nparks-91889",
+      "id": "nparks-95601",
       "name": "Tai Keng Place Playground",
       "rawName": "TAI KENG PLACE PG",
       "type": "Dedicated playground",
@@ -3500,7 +3500,7 @@
       "coordinateLabel": "1.345041, 103.884841"
     },
     {
-      "id": "nparks-92089",
+      "id": "nparks-95692",
       "name": "Taman Kembangan Playground",
       "rawName": "TAMAN KEMBANGAN PG",
       "type": "Dedicated playground",
@@ -3523,7 +3523,7 @@
       "coordinateLabel": "1.325003, 103.914402"
     },
     {
-      "id": "nparks-91925",
+      "id": "nparks-95481",
       "name": "Taman Mas Merah Playground",
       "rawName": "TAMAN MAS MERAH PLAYGROUND",
       "type": "Dedicated playground",
@@ -3546,7 +3546,7 @@
       "coordinateLabel": "1.308703, 103.764726"
     },
     {
-      "id": "nparks-88795",
+      "id": "nparks-95725",
       "name": "Tamarind Road Playground",
       "rawName": "TAMARIND RD PG",
       "type": "Dedicated playground",
@@ -3569,7 +3569,7 @@
       "coordinateLabel": "1.389699, 103.860202"
     },
     {
-      "id": "nparks-92226",
+      "id": "nparks-95440",
       "name": "Tanah Merah Playground",
       "rawName": "TANAH MERAH PG",
       "type": "Dedicated playground",
@@ -3592,7 +3592,7 @@
       "coordinateLabel": "1.329029, 103.946876"
     },
     {
-      "id": "nparks-88784",
+      "id": "nparks-95714",
       "name": "Tanjong Katong Road South Playground",
       "rawName": "TANJONG KATONG RD SOUTH PG",
       "type": "Dedicated playground",
@@ -3615,7 +3615,7 @@
       "coordinateLabel": "1.300174, 103.897322"
     },
     {
-      "id": "nparks-91966",
+      "id": "nparks-95799",
       "name": "Teacher's Estate Playground",
       "rawName": "TEACHER`S ESTATE PG",
       "type": "Dedicated playground",
@@ -3638,7 +3638,7 @@
       "coordinateLabel": "1.381992, 103.829200"
     },
     {
-      "id": "nparks-91994",
+      "id": "nparks-95555",
       "name": "The Inglewood Playground",
       "rawName": "THE INGLEWOOD PG",
       "type": "Dedicated playground",
@@ -3661,7 +3661,7 @@
       "coordinateLabel": "1.361074, 103.830052"
     },
     {
-      "id": "nparks-91967",
+      "id": "nparks-95800",
       "name": "Thomson Green Playground",
       "rawName": "THOMSON GREEN PG",
       "type": "Dedicated playground",
@@ -3684,7 +3684,7 @@
       "coordinateLabel": "1.378692, 103.832623"
     },
     {
-      "id": "nparks-92010",
+      "id": "nparks-95571",
       "name": "Thomson Road Playground",
       "rawName": "THOMSON RD PG",
       "type": "Dedicated playground",
@@ -3707,7 +3707,7 @@
       "coordinateLabel": "1.316260, 103.843709"
     },
     {
-      "id": "nparks-91968",
+      "id": "nparks-95801",
       "name": "Thomson Walk Playground",
       "rawName": "THOMSON WALK PG",
       "type": "Dedicated playground",
@@ -3730,7 +3730,7 @@
       "coordinateLabel": "1.376001, 103.832486"
     },
     {
-      "id": "nparks-92204",
+      "id": "nparks-95418",
       "name": "Thong Soon Green Playground",
       "rawName": "THONG SOON GREEN PG",
       "type": "Dedicated playground",
@@ -3753,7 +3753,7 @@
       "coordinateLabel": "1.400055, 103.818389"
     },
     {
-      "id": "nparks-92102",
+      "id": "nparks-95705",
       "name": "Victoria Park Playground",
       "rawName": "VICTORIA PARK PLAYGROUND",
       "type": "Dedicated playground",
@@ -3776,7 +3776,7 @@
       "coordinateLabel": "1.321903, 103.801810"
     },
     {
-      "id": "nparks-92090",
+      "id": "nparks-95693",
       "name": "Waringin Park Playground",
       "rawName": "WARINGIN PK PG",
       "type": "Dedicated playground",
@@ -3799,7 +3799,7 @@
       "coordinateLabel": "1.323023, 103.919179"
     },
     {
-      "id": "nparks-92043",
+      "id": "nparks-95646",
       "name": "Watten Heights Playground",
       "rawName": "WATTEN HEIGHTS PG",
       "type": "Dedicated playground",
@@ -3822,7 +3822,7 @@
       "coordinateLabel": "1.331510, 103.808184"
     },
     {
-      "id": "nparks-91926",
+      "id": "nparks-95482",
       "name": "West Coast Green Playground",
       "rawName": "WEST COAST GREEN PLAYGROUND",
       "type": "Dedicated playground",
@@ -3870,7 +3870,7 @@
       "coordinateLabel": "1.297474, 103.762833"
     },
     {
-      "id": "nparks-91850",
+      "id": "nparks-95756",
       "name": "West Coast Place Playground",
       "rawName": "WEST COAST PLACE PLAYGROUND",
       "type": "Dedicated playground",
@@ -3893,7 +3893,7 @@
       "coordinateLabel": "1.314254, 103.758450"
     },
     {
-      "id": "nparks-92114",
+      "id": "nparks-95518",
       "name": "Westville Playground",
       "rawName": "WESTVILLE PLAYGROUND",
       "type": "Dedicated playground",
@@ -3916,7 +3916,7 @@
       "coordinateLabel": "1.353602, 103.699536"
     },
     {
-      "id": "nparks-92113",
+      "id": "nparks-95517",
       "name": "Westwood Park Playground",
       "rawName": "WESTWOOD PARK PLAYGROUND",
       "type": "Dedicated playground",
@@ -3989,7 +3989,7 @@
       "coordinateLabel": "1.453356, 103.781318"
     },
     {
-      "id": "nparks-91975",
+      "id": "nparks-95808",
       "name": "Yio Chu Kang Gardens Playground",
       "rawName": "YIO CHU KANG GARDENS PG",
       "type": "Dedicated playground",
